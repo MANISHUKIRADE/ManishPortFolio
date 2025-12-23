@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { Group, Mesh } from 'three'
 
 interface AnimatedHumanProps {
@@ -12,7 +12,6 @@ const AnimatedHuman = ({ position = [0, 0, 0], scale = 1 }: AnimatedHumanProps) 
   const headRef = useRef<Mesh>(null)
   const leftArmRef = useRef<Mesh>(null)
   const rightArmRef = useRef<Mesh>(null)
-  const { viewport } = useThree()
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
 
   useEffect(() => {

@@ -10,6 +10,7 @@ const RotatingCube = ({ position = [0, 0, 0] }: RotatingCubeProps) => {
   const meshRef = useRef<Mesh>(null)
 
   useFrame((state, delta) => {
+    console.log('delta', state)
     if (meshRef.current) {
       meshRef.current.rotation.x += delta * 0.5
       meshRef.current.rotation.y += delta * 0.5

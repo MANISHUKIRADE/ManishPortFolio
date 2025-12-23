@@ -1,7 +1,6 @@
 import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Points, Vector3 } from 'three'
-import * as THREE from 'three'
+import { Points } from 'three'
 
 const ParticleField = () => {
   const pointsRef = useRef<Points>(null)
