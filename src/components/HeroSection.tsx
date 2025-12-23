@@ -102,7 +102,7 @@ const HeroSection = () => {
                 ease: 'easeInOut',
               }}
             >
-              MANISH
+              MANISH UKIRADE
             </motion.h1>
             
             {/* Subtitle with space theme */}

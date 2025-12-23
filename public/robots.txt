@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://manish-port-folio.vercel.app/sitemap.xml
+
+# Disallow chatbot API endpoints
+Disallow: /api/
+
