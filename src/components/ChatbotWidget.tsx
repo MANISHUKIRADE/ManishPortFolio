@@ -79,7 +79,7 @@ const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => 
     setMessages((prev: Message[]) => [...prev, assistantMessage])
 
     try {
-      const apiUrl = (import.meta.env.VITE_API_URL as string) || 'http://localhost:3001'
+      const apiUrl = (import.meta.env.VITE_API_URL as string) || 'https://ragbackend-pj8k.onrender.com'
       console.log('Sending request to:', `${apiUrl}/api/chat`)
       
       const response = await fetch(`${apiUrl}/api/chat`, {
@@ -168,13 +168,13 @@ const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => 
           if (lastMessage && lastMessage.role === 'assistant' && !lastMessage.content) {
             updated[updated.length - 1] = {
               ...lastMessage,
-              content: 'Unable to connect to the server. Please make sure the backend is running on http://localhost:3001',
+              content: 'Unable to connect to the server. Please make sure the backend is running on https://ragbackend-pj8k.onrender.com',
             }
           } else {
             updated.push({
               id: (Date.now() + 1).toString(),
               role: 'assistant',
-              content: 'Unable to connect to the server. Please make sure the backend is running on http://localhost:3001',
+              content: 'Unable to connect to the server. Please make sure the backend is running on https://ragbackend-pj8k.onrender.com',
               timestamp: new Date(),
             })
           }
