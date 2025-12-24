@@ -5,10 +5,13 @@ import Satellite from './3D/Satellite'
 import Planet from './3D/Planet'
 import Asteroid from './3D/Asteroid'
 import StarField from './3D/StarField'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import HolographicGlitch from './animations/HolographicGlitch'
+import ParticleSystem from './animations/ParticleSystem'
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const [isHoveringCTA, setIsHoveringCTA] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,23 +34,68 @@ const HeroSection = () => {
       ref={sectionRef}
       className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Space Theme 3D Background */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950 via-purple-950 to-slate-950">
+      {/* Realistic Space Background */}
+      <div className="absolute inset-0 z-0 bg-black">
+        {/* Deep space gradient with subtle color */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-950 to-black opacity-90" />
+        
+        {/* Distant nebula clouds */}
+        <div className="absolute inset-0">
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl"
+            style={{
+              background: 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
+            }}
+            animate={{
+              x: [0, 50, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl"
+            style={{
+              background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
+            }}
+            animate={{
+              x: [0, -40, 0],
+              y: [0, -20, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        </div>
+
         <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
-          <ambientLight intensity={0.3} />
-          <pointLight position={[10, 10, 10]} intensity={1} color="#60a5fa" />
-          <pointLight position={[-10, 5, 5]} intensity={0.5} color="#8b5cf6" />
-          <pointLight position={[0, -10, 0]} intensity={0.3} color="#ec4899" />
+          {/* Realistic starlight */}
+          <ambientLight intensity={0.1} />
+          <pointLight position={[10, 10, 10]} intensity={0.8} color="#ffffff" />
+          <pointLight position={[-10, 5, 5]} intensity={0.4} color="#ffffff" />
+          <pointLight position={[0, -10, 0]} intensity={0.2} color="#ffffff" />
           
-          {/* Star Field */}
-          <StarField count={8000} speed={0.05} />
+          {/* Enhanced Star Field - More stars for realism */}
+          <StarField count={15000} speed={0.02} />
           
-          {/* Central Planet (Sirius-inspired) */}
-          <Planet position={[-4, 2, -5]} size={1.2} color="#fbbf24" speed={0.3} rings={true} />
+          {/* Distant star layer */}
+          <StarField count={5000} speed={0.01} />
           
-          {/* Smaller Planets */}
-          <Planet position={[5, -1, -6]} size={0.8} color="#3b82f6" speed={0.4} />
-          <Planet position={[-6, -2, -4]} size={0.6} color="#8b5cf6" speed={0.5} />
+          {/* Central Planet (Gas Giant with rings - like Saturn) */}
+          <Planet position={[-4, 2, -5]} size={1.2} color="#d4a574" speed={0.3} rings={true} />
+          
+          {/* Smaller Planets - Realistic colors */}
+          {/* Earth-like planet */}
+          <Planet position={[5, -1, -6]} size={0.8} color="#4a7c59" speed={0.4} />
+          {/* Mars-like planet */}
+          <Planet position={[-6, -2, -4]} size={0.6} color="#cd5c5c" speed={0.5} />
           
           {/* Satellites */}
           <Satellite position={[0, 3, -3]} speed={0.8} />
@@ -60,8 +108,13 @@ const HeroSection = () => {
           <Asteroid position={[4, 0, -4]} size={0.25} speed={1.2} />
           <Asteroid position={[-4, 1, -2]} size={0.18} speed={1.6} />
           
-          <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+          <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} />
         </Canvas>
+      </div>
+
+      {/* Subtle cosmic dust particles */}
+      <div className="absolute inset-0 z-[1] pointer-events-none opacity-30">
+        <ParticleSystem count={50} speed={0.2} size={{ min: 0.5, max: 1.5 }} colors={['#ffffff', '#e0e0e0', '#c0c0c0']} />
       </div>
 
       {/* Content */}
@@ -77,33 +130,60 @@ const HeroSection = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="mb-6"
+            className="mb-6 relative"
           >
-            <motion.h1
-              className="text-7xl md:text-9xl font-extrabold mb-4 tracking-tight"
-              style={{
-                background: 'linear-gradient(135deg, #60a5fa 0%, #8b5cf6 50%, #ec4899 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                textShadow: '0 0 80px rgba(96, 165, 250, 0.5)',
-                filter: 'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
-              }}
-              animate={{
-                filter: [
-                  'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
-                  'drop-shadow(0 0 50px rgba(236, 72, 153, 0.8))',
-                  'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
-                ],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            >
-              MANISH UKIRADE
-            </motion.h1>
+            <HolographicGlitch intensity={0.08} frequency={4}>
+              <motion.h1
+                className="text-7xl md:text-9xl font-extrabold mb-4 tracking-tight relative"
+                style={{
+                  background: 'linear-gradient(135deg, #60a5fa 0%, #8b5cf6 50%, #ec4899 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 0 80px rgba(96, 165, 250, 0.5)',
+                  filter: 'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
+                }}
+                animate={{
+                  filter: [
+                    'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
+                    'drop-shadow(0 0 50px rgba(236, 72, 153, 0.8))',
+                    'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                MANISH UKIRADE
+              </motion.h1>
+            </HolographicGlitch>
+            
+            {/* Subtle starlight rays */}
+            {[...Array(6)].map((_, i) => {
+              const angle = (i * 360) / 6
+              return (
+                <motion.div
+                  key={i}
+                  className="absolute top-1/2 left-1/2 w-[1px] h-32 bg-white/20"
+                  style={{
+                    transformOrigin: 'top center',
+                    transform: `rotate(${angle}deg) translateY(-80px)`,
+                  }}
+                  animate={{
+                    opacity: [0, 0.3, 0],
+                    scaleY: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    delay: i * 0.5,
+                    ease: 'easeInOut',
+                  }}
+                />
+              )
+            })}
             
             {/* Subtitle with space theme */}
             <motion.div
@@ -119,17 +199,21 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Clean Tagline */}
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 1 }}
-            className="text-xl md:text-3xl text-slate-200 mb-4 font-light tracking-wide"
-            style={{
-              textShadow: '0 0 20px rgba(148, 163, 184, 0.5)',
-            }}
+            className="relative"
           >
-            Fullstack Web Developer | AI/ML Engineer | Tech Lead
-          </motion.p>
+            <motion.p
+              className="text-xl md:text-3xl text-slate-200 mb-4 font-light tracking-wide relative"
+              style={{
+                textShadow: '0 0 30px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              Fullstack Web Developer | AI/ML Engineer | Tech Lead
+            </motion.p>
+          </motion.div>
           
           {/* Clean Description */}
           <motion.p
@@ -146,29 +230,93 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 1 }}
-            className="flex gap-6 justify-center flex-wrap"
+            className="flex gap-6 justify-center flex-wrap relative"
           >
             <motion.a
               href="#projects"
+              onHoverStart={() => setIsHoveringCTA(true)}
+              onHoverEnd={() => setIsHoveringCTA(false)}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white font-semibold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 border border-blue-400/30"
+              className="relative px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white font-semibold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 border border-blue-400/30 overflow-hidden"
               style={{
                 boxShadow: '0 0 30px rgba(59, 130, 246, 0.4)',
               }}
             >
               Explore Projects
+              {/* Particle explosion on hover */}
+              {isHoveringCTA && (
+                <>
+                  {[...Array(20)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute top-1/2 left-1/2 w-2 h-2 bg-blue-400 rounded-full"
+                      initial={{
+                        x: 0,
+                        y: 0,
+                        opacity: 1,
+                        scale: 0,
+                      }}
+                      animate={{
+                        x: Math.cos((i * 360) / 20 * Math.PI / 180) * 100,
+                        y: Math.sin((i * 360) / 20 * Math.PI / 180) * 100,
+                        opacity: [1, 0],
+                        scale: [0, 1, 0],
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        ease: 'easeOut',
+                      }}
+                      style={{
+                        boxShadow: '0 0 10px #60a5fa',
+                      }}
+                    />
+                  ))}
+                </>
+              )}
             </motion.a>
             <motion.a
               href="#contact"
+              onHoverStart={() => setIsHoveringCTA(true)}
+              onHoverEnd={() => setIsHoveringCTA(false)}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="px-10 py-4 bg-slate-900/80 backdrop-blur-sm border-2 border-purple-500/50 rounded-full text-white font-semibold text-lg hover:border-purple-400 transition-all duration-300"
+              className="relative px-10 py-4 bg-slate-900/80 backdrop-blur-sm border-2 border-purple-500/50 rounded-full text-white font-semibold text-lg hover:border-purple-400 transition-all duration-300 overflow-hidden"
               style={{
                 boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)',
               }}
             >
               Connect
+              {/* Particle explosion on hover */}
+              {isHoveringCTA && (
+                <>
+                  {[...Array(20)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute top-1/2 left-1/2 w-2 h-2 bg-purple-400 rounded-full"
+                      initial={{
+                        x: 0,
+                        y: 0,
+                        opacity: 1,
+                        scale: 0,
+                      }}
+                      animate={{
+                        x: Math.cos((i * 360) / 20 * Math.PI / 180) * 100,
+                        y: Math.sin((i * 360) / 20 * Math.PI / 180) * 100,
+                        opacity: [1, 0],
+                        scale: [0, 1, 0],
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        ease: 'easeOut',
+                      }}
+                      style={{
+                        boxShadow: '0 0 10px #8b5cf6',
+                      }}
+                    />
+                  ))}
+                </>
+              )}
             </motion.a>
           </motion.div>
         </motion.div>

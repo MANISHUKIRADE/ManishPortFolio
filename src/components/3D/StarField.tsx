@@ -20,23 +20,29 @@ const StarField = ({ count = 5000, speed = 0.1 }: StarFieldProps) => {
   }, [count])
 
   const colors = useMemo(() => {
-    const colors = new Float32Array(count * 3)
+    const colorArray = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
       const color = new THREE.Color()
-      // Mix of blue, white, and purple stars
       const rand = Math.random()
-      if (rand < 0.3) {
-        color.setRGB(0.9, 0.9, 1.0) // Blue-white
-      } else if (rand < 0.6) {
-        color.setRGB(1.0, 1.0, 1.0) // White
+      // More realistic star colors based on temperature
+      if (rand < 0.5) {
+        // White/blue-white stars (hot)
+        color.setRGB(0.95, 0.95, 1.0)
+      } else if (rand < 0.75) {
+        // Yellow-white stars (medium)
+        color.setRGB(1.0, 0.98, 0.9)
+      } else if (rand < 0.9) {
+        // Yellow stars (cooler)
+        color.setRGB(1.0, 0.95, 0.8)
       } else {
-        color.setRGB(0.8, 0.7, 1.0) // Purple-white
+        // Red stars (coolest)
+        color.setRGB(1.0, 0.8, 0.7)
       }
-      colors[i * 3] = color.r
-      colors[i * 3 + 1] = color.g
-      colors[i * 3 + 2] = color.b
+      colorArray[i * 3] = color.r
+      colorArray[i * 3 + 1] = color.g
+      colorArray[i * 3 + 2] = color.b
     }
-    return colors
+    return colorArray
   }, [count])
 
   useFrame((state) => {
@@ -62,11 +68,12 @@ const StarField = ({ count = 5000, speed = 0.1 }: StarFieldProps) => {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.1}
+        size={0.12}
         vertexColors
         transparent
-        opacity={0.8}
+        opacity={0.9}
         sizeAttenuation
+        blending={THREE.AdditiveBlending}
       />
     </points>
   )

@@ -1,6 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Building2, Calendar, TrendingUp, Award, Zap, ArrowRight, MapPin, X } from 'lucide-react'
+import ScanningLine from './animations/ScanningLine'
+import HolographicGlitch from './animations/HolographicGlitch'
+import ParticleSystem from './animations/ParticleSystem'
+import EnergyConnection from './animations/EnergyConnection'
 
 interface CareerNode {
   company: string
@@ -78,12 +82,34 @@ const careerData: CareerNode[] = [
 
 const CareerJourneySection = () => {
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
+  const expandedViewRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+
+  // Auto-scroll to expanded view on mobile when opened
+  useEffect(() => {
+    if (selectedNode !== null && expandedViewRef.current && window.innerWidth < 768) {
+      // Small delay to ensure animation has started
+      setTimeout(() => {
+        expandedViewRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest',
+        })
+      }, 100)
+    }
+  }, [selectedNode])
 
   return (
-    <section id="career" className="relative py-12 px-4 overflow-hidden">
+    <section id="career" ref={sectionRef} className="relative py-12 px-4 overflow-hidden">
       {/* Elegant Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
+      
+      {/* Particle System */}
+      <ParticleSystem count={25} speed={0.3} size={{ min: 1, max: 2 }} colors={['#3b82f6', '#8b5cf6', '#ec4899']} />
+      
+      {/* Scanning Lines */}
+      <ScanningLine direction="horizontal" speed={4} />
       
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
@@ -114,13 +140,22 @@ const CareerJourneySection = () => {
         <AnimatePresence mode="wait">
           {selectedNode !== null && (
             <motion.div
+              ref={expandedViewRef}
               key={selectedNode}
               initial={{ opacity: 0, y: -50, height: 0 }}
               animate={{ opacity: 1, y: 0, height: 'auto' }}
               exit={{ opacity: 0, y: -50, height: 0 }}
               transition={{ duration: 0.5 }}
-              className={`relative mb-8 p-6 rounded-2xl border-2 ${careerData[selectedNode].gradient} bg-slate-900/80 backdrop-blur-md shadow-2xl shadow-blue-500/20 overflow-hidden`}
+              className={`relative mb-8 p-6 rounded-2xl border-2 ${careerData[selectedNode].gradient} bg-slate-900/80 backdrop-blur-md shadow-2xl shadow-blue-500/20 overflow-hidden scroll-mt-20`}
             >
+              {/* Scanning effect */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <ScanningLine direction="horizontal" speed={2} />
+              </div>
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <ScanningLine direction="vertical" speed={3} />
+              </div>
+              
               <button
                 onClick={() => setSelectedNode(null)}
                 className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-10"
@@ -130,9 +165,11 @@ const CareerJourneySection = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Left Column: Company Info */}
                 <div>
-                  <h3 className={`text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${careerData[selectedNode].gradient}`}>
-                    {careerData[selectedNode].company}
-                  </h3>
+                  <HolographicGlitch intensity={0.05} frequency={3}>
+                    <h3 className={`text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${careerData[selectedNode].gradient}`}>
+                      {careerData[selectedNode].company}
+                    </h3>
+                  </HolographicGlitch>
                   <p className="text-lg text-slate-300 mb-3">{careerData[selectedNode].role}</p>
                   <div className="flex items-center gap-4 text-sm text-slate-400 mb-4">
                     <div className="flex items-center gap-2">
@@ -177,11 +214,54 @@ const CareerJourneySection = () => {
           )}
         </AnimatePresence>
 
-        {/* 3D Timeline Visualization */}
-   
+        {/* Timeline Energy Beam */}
+        <div className="relative h-[2px] mb-8 mx-auto max-w-5xl">
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400 to-transparent"
+            style={{
+              boxShadow: '0 0 20px rgba(96, 165, 250, 0.5)',
+            }}
+            animate={{
+              opacity: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+            }}
+          />
+          {/* Energy pulse */}
+          <motion.div
+            className="absolute top-1/2 left-0 w-4 h-4 bg-blue-400 rounded-full"
+            style={{
+              boxShadow: '0 0 20px #60a5fa',
+              transform: 'translateY(-50%)',
+            }}
+            animate={{
+              x: ['0%', '100%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          />
+        </div>
 
         {/* Elegant Career Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr relative">
+          {/* Energy connections between cards */}
+          {careerData.map((node, index) => {
+            if (index === careerData.length - 1) return null
+            return (
+              <EnergyConnection
+                key={`connection-${index}`}
+                from={{ x: (index % 4) * 25 + 12.5, y: 50 }}
+                to={{ x: ((index + 1) % 4) * 25 + 12.5, y: 50 }}
+                color={node.color}
+                className="hidden lg:block"
+              />
+            )
+          })}
           {careerData.map((node, index) => {
             const isSelected = selectedNode === index
             return (
@@ -190,8 +270,21 @@ const CareerJourneySection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                onClick={() => {
-                  setSelectedNode(isSelected ? null : index)
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  const newSelectedNode = isSelected ? null : index
+                  setSelectedNode(newSelectedNode)
+                  
+                  // On mobile only, scroll to top of section when opening
+                  if (newSelectedNode !== null && window.innerWidth < 768 && sectionRef.current) {
+                    setTimeout(() => {
+                      sectionRef.current?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                      })
+                    }, 50)
+                  }
                 }}
                 animate={{
                   scale: isSelected ? 1.08 : 1,
@@ -223,6 +316,13 @@ const CareerJourneySection = () => {
                       : 'border-slate-800 hover:border-slate-700'
                   }`}
                 >
+                  {/* Holographic projection effect */}
+                  {isSelected && (
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                      <ScanningLine direction="horizontal" speed={2} />
+                    </div>
+                  )}
+                  
                   {/* Gradient Background */}
                   <motion.div
                     animate={{
@@ -239,7 +339,7 @@ const CareerJourneySection = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="absolute inset-0 overflow-hidden"
+                      className="absolute inset-0 overflow-hidden pointer-events-none"
                     >
                       {[...Array(20)].map((_, i) => (
                         <motion.div
@@ -271,11 +371,17 @@ const CareerJourneySection = () => {
                     <div className="mb-3">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
-                          <h3 className={`text-xl font-bold mb-1 transition-colors duration-300 ${
-                            isSelected ? 'text-blue-400' : 'text-white group-hover:text-blue-300'
-                          }`}>
-                            {node.company}
-                          </h3>
+                          {isSelected ? (
+                            <HolographicGlitch intensity={0.05} frequency={3}>
+                              <h3 className="text-xl font-bold mb-1 text-blue-400">
+                                {node.company}
+                              </h3>
+                            </HolographicGlitch>
+                          ) : (
+                            <h3 className="text-xl font-bold mb-1 transition-colors duration-300 text-white group-hover:text-blue-300">
+                              {node.company}
+                            </h3>
+                          )}
                           <p className="text-slate-400 text-sm mb-2">{node.role}</p>
                         </div>
                         <motion.div

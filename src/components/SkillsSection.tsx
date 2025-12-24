@@ -12,6 +12,11 @@ import {
   TrendingUp,
   CheckCircle2
 } from 'lucide-react'
+import NeuralNetwork from './animations/NeuralNetwork'
+import DataStream from './animations/DataStream'
+import ScanningLine from './animations/ScanningLine'
+import HolographicGlitch from './animations/HolographicGlitch'
+import ParticleSystem from './animations/ParticleSystem'
 
 interface Skill {
   name: string
@@ -104,6 +109,14 @@ const SkillsSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent" />
       
+      {/* Neural Network Visualization */}
+      <div className="absolute inset-0 opacity-30">
+        <NeuralNetwork nodeCount={25} connectionDistance={200} color="#8b5cf6" />
+      </div>
+
+      {/* Particle System */}
+      <ParticleSystem count={30} speed={0.3} size={{ min: 1, max: 2 }} colors={['#8b5cf6', '#ec4899', '#60a5fa']} />
+      
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -163,11 +176,19 @@ const SkillsSection = () => {
                         {category.icon}
                       </div>
                     </div>
-                    <h3 className={`text-base font-bold transition-colors duration-300 ${
-                      selectedCategory === categoryIndex ? 'text-purple-400' : 'text-white group-hover:text-purple-300'
-                    }`}>
-                      {category.title}
-                    </h3>
+                    {selectedCategory === categoryIndex ? (
+                      <HolographicGlitch intensity={0.05} frequency={3}>
+                        <h3 className="text-base font-bold text-purple-400">
+                          {category.title}
+                        </h3>
+                      </HolographicGlitch>
+                    ) : (
+                      <h3 className={`text-base font-bold transition-colors duration-300 ${
+                        'text-white group-hover:text-purple-300'
+                      }`}>
+                        {category.title}
+                      </h3>
+                    )}
                   </div>
                   
                   {/* Skills List */}
@@ -192,21 +213,53 @@ const SkillsSection = () => {
                           <span className="text-xs text-slate-500">{skill.level}%</span>
                         </div>
                         <div className="h-2 bg-slate-800 rounded-full overflow-hidden relative">
+                          {/* Data Stream Background */}
+                          {hoveredSkill === skill.name && (
+                            <div className="absolute inset-0 pointer-events-none">
+                              <DataStream direction="right" speed={1.5} count={5} color={skill.color} />
+                            </div>
+                          )}
+                          
+                          {/* Scanning Line */}
+                          {hoveredSkill === skill.name && (
+                            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                              <ScanningLine direction="horizontal" speed={2} color={skill.color} />
+                            </div>
+                          )}
+                          
                           <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: `${skill.level}%` }}
                             viewport={{ once: true }}
                             transition={{ duration: 1, delay: (categoryIndex * 0.1) + (skillIndex * 0.1) }}
-                            className="h-full rounded-full relative"
+                            className="h-full rounded-full relative overflow-hidden"
                             style={{
                               background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`,
                             }}
                             animate={{
                               boxShadow: hoveredSkill === skill.name
-                                ? `0 0 15px ${skill.color}80`
+                                ? `0 0 15px ${skill.color}80, 0 0 30px ${skill.color}40`
                                 : 'none',
                             }}
                           >
+                            {/* Holographic scan effect */}
+                            {hoveredSkill === skill.name && (
+                              <motion.div
+                                className="absolute inset-0"
+                                style={{
+                                  background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)`,
+                                }}
+                                animate={{
+                                  x: ['-100%', '200%'],
+                                }}
+                                transition={{
+                                  duration: 1.5,
+                                  repeat: Infinity,
+                                  ease: 'linear',
+                                }}
+                              />
+                            )}
+                            
                             {/* Shimmer effect */}
                             <motion.div
                               className="absolute inset-0 bg-white"
@@ -242,7 +295,7 @@ const SkillsSection = () => {
                 
                 {/* Glow Effect */}
                 <div
-                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
+                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${
                     selectedCategory === categoryIndex ? 'opacity-100' : ''
                   }`}
                   style={{
@@ -263,6 +316,42 @@ const SkillsSection = () => {
           transition={{ duration: 0.8 }}
           className="relative h-[350px] md:h-[400px] rounded-2xl border border-slate-800/50 bg-gradient-to-b from-slate-900/50 to-slate-950/50 backdrop-blur-sm overflow-hidden mb-8"
         >
+          {/* Scanning overlay */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <ScanningLine direction="horizontal" speed={3} />
+          </div>
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <ScanningLine direction="vertical" speed={4} />
+          </div>
+          
+          {/* Particle nodes around globe */}
+          {[...Array(12)].map((_, i) => {
+            const angle = (i * 360) / 12
+            const radius = 180
+            return (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 bg-purple-400 rounded-full"
+                style={{
+                  left: '50%',
+                  top: '50%',
+                  transformOrigin: 'center',
+                }}
+                animate={{
+                  x: [0, Math.cos(angle * Math.PI / 180) * radius, 0],
+                  y: [0, Math.sin(angle * Math.PI / 180) * radius, 0],
+                  opacity: [0.3, 1, 0.3],
+                  scale: [0.5, 1, 0.5],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  delay: i * 0.2,
+                }}
+              />
+            )
+          })}
+          
           <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
             <ambientLight intensity={0.6} />
             <pointLight position={[10, 10, 10]} intensity={1.5} color="#ffffff" />

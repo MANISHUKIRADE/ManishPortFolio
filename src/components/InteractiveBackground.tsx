@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import HolographicGrid from './animations/HolographicGrid'
 
 const InteractiveBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -13,22 +14,30 @@ const InteractiveBackground = () => {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
+    const colors = ['#60a5fa', '#8b5cf6', '#ec4899']
+    
     const particles: Array<{
       x: number
       y: number
       vx: number
       vy: number
       size: number
+      color: string
+      life: number
+      maxLife: number
     }> = []
 
-    // Create particles
-    for (let i = 0; i < 50; i++) {
+    // Create particles with colors
+    for (let i = 0; i < 80; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 0.5,
         vy: (Math.random() - 0.5) * 0.5,
         size: Math.random() * 3 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: Math.random(),
+        maxLife: 1,
       })
     }
 
@@ -54,34 +63,57 @@ const InteractiveBackground = () => {
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
 
-        // Attract to mouse
+        // Enhanced mouse interaction - energy field
         const dx = mouseX - particle.x
         const dy = mouseY - particle.y
         const distance = Math.sqrt(dx * dx + dy * dy)
-        if (distance < 100) {
-          particle.vx += dx * 0.0001
-          particle.vy += dy * 0.0001
+        if (distance < 150) {
+          const force = (150 - distance) / 150
+          particle.vx += (dx / distance) * force * 0.01
+          particle.vy += (dy / distance) * force * 0.01
         }
 
-        // Draw particle
+        // Update life for color shifting
+        particle.life += 0.01
+        if (particle.life > particle.maxLife) particle.life = 0
+
+        // Color shifting based on position and life
+        const hueShift = Math.sin(particle.life * Math.PI * 2) * 30
+        const r = parseInt(particle.color.slice(1, 3), 16)
+        const g = parseInt(particle.color.slice(3, 5), 16)
+        const b = parseInt(particle.color.slice(5, 7), 16)
+
+        // Draw particle with glow
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(59, 130, 246, ${0.5})`
+        ctx.fillStyle = particle.color
+        ctx.globalAlpha = 0.6 + Math.sin(particle.life * Math.PI * 2) * 0.4
         ctx.fill()
+        
+        // Glow effect
+        ctx.beginPath()
+        ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2)
+        ctx.fillStyle = particle.color
+        ctx.globalAlpha = 0.2
+        ctx.fill()
+        ctx.globalAlpha = 1
 
-        // Draw connections
+        // Draw enhanced connections with energy effect
         particles.slice(i + 1).forEach((otherParticle) => {
           const dx = particle.x - otherParticle.x
           const dy = particle.y - otherParticle.y
           const distance = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 150) {
+          if (distance < 200) {
+            const opacity = 0.3 * (1 - distance / 200)
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(otherParticle.x, otherParticle.y)
-            ctx.strokeStyle = `rgba(59, 130, 246, ${0.2 * (1 - distance / 150)})`
-            ctx.lineWidth = 0.5
+            ctx.strokeStyle = particle.color
+            ctx.globalAlpha = opacity
+            ctx.lineWidth = 1
             ctx.stroke()
+            ctx.globalAlpha = 1
           }
         })
       })
@@ -105,11 +137,15 @@ const InteractiveBackground = () => {
   }, [])
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 -z-10 opacity-30"
-      style={{ pointerEvents: 'none' }}
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 -z-10 opacity-40"
+        style={{ pointerEvents: 'none' }}
+      />
+      {/* Holographic Grid Overlay */}
+      <HolographicGrid spacing={80} color="#60a5fa" opacity={0.03} />
+    </>
   )
 }
 

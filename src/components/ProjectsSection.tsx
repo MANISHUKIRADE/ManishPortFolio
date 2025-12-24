@@ -1,5 +1,9 @@
 import { motion } from 'framer-motion'
 import ProjectCard from './ProjectCard'
+import DataStream from './animations/DataStream'
+import HolographicGrid from './animations/HolographicGrid'
+import ParticleSystem from './animations/ParticleSystem'
+import { useState } from 'react'
 
 const projects = [
   {
@@ -59,9 +63,22 @@ const projects = [
 ]
 
 const ProjectsSection = () => {
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+
   return (
-    <section id="projects" className="py-20 px-4 bg-slate-900/50">
-      <div className="max-w-7xl mx-auto">
+    <section id="projects" className="py-20 px-4 bg-slate-900/50 relative overflow-hidden">
+      {/* Matrix Code Rain Background */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <DataStream direction="down" speed={3} count={30} color="#60a5fa" />
+      </div>
+
+      {/* Holographic Grid */}
+      <HolographicGrid spacing={60} color="#60a5fa" opacity={0.05} />
+
+      {/* Particle System */}
+      <ParticleSystem count={25} speed={0.3} size={{ min: 1, max: 2 }} />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -77,9 +94,28 @@ const ProjectsSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
           {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+            <div
+              key={project.id}
+              className="relative"
+              onMouseEnter={() => setHoveredCard(index)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <ProjectCard project={project} index={index} />
+              {/* Energy connections between cards */}
+              {hoveredCard !== null && hoveredCard !== index && (
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.3 }}
+                  style={{
+                    background: `radial-gradient(circle at center, rgba(96, 165, 250, 0.2), transparent 70%)`,
+                    filter: 'blur(20px)',
+                  }}
+                />
+              )}
+            </div>
           ))}
         </div>
       </div>

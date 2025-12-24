@@ -3,14 +3,22 @@ import { Download } from 'lucide-react'
 import { Canvas } from '@react-three/fiber'
 import StarField from './3D/StarField'
 import { OrbitControls } from '@react-three/drei'
+import ScanningLine from './animations/ScanningLine'
+import HolographicGlitch from './animations/HolographicGlitch'
+import DataStream from './animations/DataStream'
+import { useState } from 'react'
 
 const BlogSection = () => {
+  const [isDownloading, setIsDownloading] = useState(false)
+
   const handleResumeDownload = () => {
+    setIsDownloading(true)
     // Create a download link for resume
     const link = document.createElement('a')
     link.href = '/Resume.pdf' // Resume file in public folder
     link.download = 'Manish_Ukirade_Resume.pdf'
     link.click()
+    setTimeout(() => setIsDownloading(false), 2000)
   }
 
   return (
@@ -42,9 +50,11 @@ const BlogSection = () => {
           >
             Resume
           </motion.span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent">
-            Download My Resume
-          </h2>
+          <HolographicGlitch intensity={0.05} frequency={4}>
+            <h2 className="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent">
+              Download My Resume
+            </h2>
+          </HolographicGlitch>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
             Get my complete professional profile and experience
           </p>
@@ -63,6 +73,30 @@ const BlogSection = () => {
             onClick={handleResumeDownload}
             className="relative group cursor-pointer max-w-lg mx-auto p-8 rounded-2xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-md overflow-hidden"
           >
+            {/* Scanning Beam */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <ScanningLine direction="horizontal" speed={3} />
+            </div>
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(139, 92, 246, 0.2) 90deg, transparent 180deg)',
+              }}
+              animate={{ rotate: 360 }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+            
+            {/* Data Transfer Animation */}
+            {isDownloading && (
+              <div className="absolute inset-0 pointer-events-none">
+                <DataStream direction="down" speed={1} count={10} color="#8b5cf6" />
+              </div>
+            )}
+            
             {/* Animated Background */}
             <motion.div
               animate={{
@@ -73,7 +107,7 @@ const BlogSection = () => {
                 ],
               }}
               transition={{ duration: 3, repeat: Infinity }}
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
             />
             
             <div className="relative z-10 flex flex-col items-center gap-6">
@@ -124,7 +158,7 @@ const BlogSection = () => {
                 duration: 2,
                 repeat: Infinity,
               }}
-              className="absolute inset-0 rounded-2xl"
+              className="absolute inset-0 rounded-2xl pointer-events-none"
               style={{
                 background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.4), transparent 70%)',
                 filter: 'blur(30px)',
