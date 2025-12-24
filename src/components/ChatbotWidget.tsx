@@ -18,13 +18,29 @@ const quickPrompts = [
 
 // Helper function to remove reasoning/thinking tags from content
 const removeReasoningTags = (content: string): string => {
-  return content
-    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+  if (!content) return ''
+  
+  let cleaned = content
+    // Remove complete reasoning tags
+    .replace(/<think>[\s\S]*?<\/redacted_reasoning>/gi, '')
     .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
     .replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '')
-    .replace(/<think>[\s\S]*?<\/redacted_reasoning>/gi, '')
-    .replace(/<think>[\s\S]*?<\/redacted_reasoning>/gi, '')
-    .trim()
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    // Remove partial tags (in case streaming breaks them)
+    .replace(/<think>[\s\S]*$/gi, '')
+    .replace(/<thinking>[\s\S]*$/gi, '')
+    .replace(/<reasoning>[\s\S]*$/gi, '')
+    .replace(/<think>[\s\S]*$/gi, '')
+    // Remove data: JSON patterns that might contain reasoning
+    .replace(/data:\s*\{[^}]*"content":"[^"]*redacted_reasoning[^"]*"\}[^\n]*/gi, '')
+    // Remove [DONE] markers
+    .replace(/\[DONE\]/gi, '')
+    // Remove empty JSON objects
+    .replace(/data:\s*\{\s*"content"\s*:\s*""\s*\}/gi, '')
+    .replace(/data:\s*\{\s*\}/gi, '')
+  
+  return cleaned.trim()
 }
 
 const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => {
@@ -124,26 +140,43 @@ const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.slice(6).trim()
-            if (data === '[DONE]') {
+            if (data === '[DONE]' || data.includes('[DONE]')) {
               setIsLoading(false)
+              // Clean up any remaining reasoning tags in the final message
+              setMessages((prev: Message[]) => {
+                const updated = [...prev]
+                const lastMessage = updated[updated.length - 1]
+                if (lastMessage && lastMessage.role === 'assistant') {
+                  updated[updated.length - 1] = {
+                    ...lastMessage,
+                    content: removeReasoningTags(lastMessage.content),
+                  }
+                }
+                return updated
+              })
               return
             }
+
+            // Skip empty data lines
+            if (!data || data === '{}') continue
 
             try {
               const parsed = JSON.parse(data)
               if (parsed.content) {
                 // Remove reasoning tags before adding to message
                 const cleanContent = removeReasoningTags(parsed.content)
-                if (cleanContent) {
+                // Skip empty content after cleaning
+                if (cleanContent && cleanContent.length > 0) {
                   setMessages((prev: Message[]) => {
                     const updated = [...prev]
                     const lastMessage = updated[updated.length - 1]
                     if (lastMessage && lastMessage.role === 'assistant') {
-                      // Remove reasoning tags from accumulated content too
+                      // Get current content and clean it, then append new content
                       const currentContent = removeReasoningTags(lastMessage.content)
+                      const newContent = currentContent + cleanContent
                       updated[updated.length - 1] = {
                         ...lastMessage,
-                        content: currentContent + cleanContent,
+                        content: removeReasoningTags(newContent),
                       }
                     }
                     return updated
@@ -151,7 +184,8 @@ const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => 
                 }
               }
             } catch (e) {
-              // Ignore parse errors for incomplete JSON
+              // Ignore parse errors for incomplete JSON or malformed data
+              // This is normal during streaming
             }
           }
         }
