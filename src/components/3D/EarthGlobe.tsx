@@ -29,7 +29,7 @@ function CameraController() {
   ]
   
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout
+    let timeoutId: ReturnType<typeof setTimeout>
     
     const animateToLocation = (index: number) => {
       if (index >= locations.length) {
