@@ -2,6 +2,7 @@ import { useState } from 'react'
 import HeroSection from './components/HeroSection'
 import ProjectsSection from './components/ProjectsSection'
 import SkillsSection from './components/SkillsSection'
+import CareerJourneySection from './components/CareerJourneySection'
 import ContactSection from './components/ContactSection'
 import ChatbotWidget from './components/ChatbotWidget'
 import Navbar from './components/Navbar'
@@ -21,6 +22,7 @@ function App() {
           <HeroSection />
           <ProjectsSection />
           <SkillsSection />
+          <CareerJourneySection />
           <ContactSection />
         </main>
         <ChatbotWidget 

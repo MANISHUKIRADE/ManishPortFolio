@@ -41,8 +41,8 @@ const ContactSection = () => {
               { 
                 icon: Github, 
                 label: 'GitHub', 
-                href: 'https://github.com',
-                text: 'GitHub'
+                href: 'https://github.com/MANISHUKIRADE',
+                text: 'GitHub Profile'
               },
             ].map((social, index) => (
               <motion.a
