@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Mesh, Vector3 } from 'three'
+import { Mesh } from 'three'
 import * as THREE from 'three'
 
 interface PlanetProps {

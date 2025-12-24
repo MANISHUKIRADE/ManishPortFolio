@@ -77,12 +77,6 @@ const InteractiveBackground = () => {
         particle.life += 0.01
         if (particle.life > particle.maxLife) particle.life = 0
 
-        // Color shifting based on position and life
-        const hueShift = Math.sin(particle.life * Math.PI * 2) * 30
-        const r = parseInt(particle.color.slice(1, 3), 16)
-        const g = parseInt(particle.color.slice(3, 5), 16)
-        const b = parseInt(particle.color.slice(5, 7), 16)
-
         // Draw particle with glow
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)

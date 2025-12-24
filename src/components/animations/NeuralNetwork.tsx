@@ -75,7 +75,7 @@ const NeuralNetwork = ({
       })
 
       // Draw connections
-      nodesRef.current.forEach((node, i) => {
+      nodesRef.current.forEach((node) => {
         node.connections.forEach((connIndex) => {
           const other = nodesRef.current[connIndex]
           const dx = other.x - node.x

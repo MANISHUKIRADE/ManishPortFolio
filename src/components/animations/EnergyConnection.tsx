@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
 
 interface EnergyConnectionProps {
   from: { x: number; y: number }
@@ -16,19 +15,6 @@ const EnergyConnection = ({
   pulseSpeed = 1.5,
   className = '',
 }: EnergyConnectionProps) => {
-  const [pathLength, setPathLength] = useState(0)
-  const pathRef = useRef<SVGPathElement>(null)
-
-  useEffect(() => {
-    if (pathRef.current) {
-      setPathLength(pathRef.current.getTotalLength())
-    }
-  }, [])
-
-  const dx = to.x - from.x
-  const dy = to.y - from.y
-  const distance = Math.sqrt(dx * dx + dy * dy)
-  const angle = Math.atan2(dy, dx) * (180 / Math.PI)
 
   return (
     <div className={`absolute pointer-events-none ${className}`}>
@@ -49,7 +35,6 @@ const EnergyConnection = ({
           </linearGradient>
         </defs>
         <motion.line
-          ref={pathRef}
           x1={`${from.x}%`}
           y1={`${from.y}%`}
           x2={`${to.x}%`}
