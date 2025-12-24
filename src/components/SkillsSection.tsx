@@ -125,7 +125,7 @@ const SkillsSection = () => {
             Skills & Technologies
           </h2>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            A comprehensive toolkit for building scalable platforms and AI-powered solutions
+            Fullstack web development and AI/ML expertise - Building end-to-end web applications and intelligent solutions
           </p>
         </motion.div>
 
@@ -264,10 +264,12 @@ const SkillsSection = () => {
           className="relative h-[350px] md:h-[400px] rounded-2xl border border-slate-800/50 bg-gradient-to-b from-slate-900/50 to-slate-950/50 backdrop-blur-sm overflow-hidden mb-8"
         >
           <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-            <ambientLight intensity={0.8} />
-            <pointLight position={[10, 10, 10]} intensity={1.2} color="#ffffff" />
-            <pointLight position={[-10, -10, -10]} intensity={0.6} color="#8b5cf6" />
-            <directionalLight position={[5, 5, 5]} intensity={0.5} />
+            <ambientLight intensity={0.6} />
+            <pointLight position={[10, 10, 10]} intensity={1.5} color="#ffffff" />
+            <pointLight position={[-10, 10, 10]} intensity={1} color="#93c5fd" />
+            <pointLight position={[0, -10, 5]} intensity={0.8} color="#60a5fa" />
+            <directionalLight position={[5, 5, 5]} intensity={0.8} color="#ffffff" />
+            <directionalLight position={[-5, -5, -5]} intensity={0.3} color="#8b5cf6" />
             <EarthGlobe />
             <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
           </Canvas>

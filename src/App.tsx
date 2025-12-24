@@ -3,6 +3,7 @@ import HeroSection from './components/HeroSection'
 import ProjectsSection from './components/ProjectsSection'
 import SkillsSection from './components/SkillsSection'
 import CareerJourneySection from './components/CareerJourneySection'
+import BlogSection from './components/BlogSection'
 import ContactSection from './components/ContactSection'
 import ChatbotWidget from './components/ChatbotWidget'
 import Navbar from './components/Navbar'
@@ -23,6 +24,7 @@ function App() {
           <ProjectsSection />
           <SkillsSection />
           <CareerJourneySection />
+          <BlogSection />
           <ContactSection />
         </main>
         <ChatbotWidget 

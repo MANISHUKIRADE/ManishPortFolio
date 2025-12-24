@@ -1,8 +1,5 @@
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Text } from '@react-three/drei'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useRef, useState } from 'react'
-import { Group, Mesh } from 'three'
+import { useState } from 'react'
 import { Building2, Calendar, TrendingUp, Award, Zap, ArrowRight, MapPin, X } from 'lucide-react'
 
 interface CareerNode {
@@ -79,124 +76,8 @@ const careerData: CareerNode[] = [
   },
 ]
 
-function CareerNode3D({ node, index, isHovered, isSelected, onHover, onClick }: { 
-  node: CareerNode
-  index: number
-  isHovered: boolean
-  isSelected: boolean
-  onHover: (hovered: boolean) => void
-  onClick: () => void
-}) {
-  const meshRef = useRef<Mesh>(null)
-  const groupRef = useRef<Group>(null)
-  const ringRef = useRef<Mesh>(null)
-  
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.003
-      meshRef.current.position.y = node.position[1] + Math.sin(state.clock.elapsedTime * 0.4 + index) * 0.1
-    }
-    if (ringRef.current) {
-      ringRef.current.rotation.z += 0.01
-    }
-    if (groupRef.current) {
-      const scale = (isHovered || isSelected) ? 1.15 : 1
-      groupRef.current.scale.lerp({ x: scale, y: scale, z: scale } as any, 0.1)
-    }
-  })
-
-  return (
-    <group ref={groupRef} position={node.position}>
-      {/* Outer Glow Ring */}
-      <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.1, 0.04, 16, 100]} />
-        <meshStandardMaterial
-          color={node.color}
-          emissive={node.color}
-          emissiveIntensity={(isHovered || isSelected) ? 0.6 : 0.2}
-          transparent
-          opacity={0.5}
-        />
-      </mesh>
-      
-      {/* Main Company Sphere */}
-      <mesh
-        ref={meshRef}
-        onPointerEnter={() => onHover(true)}
-        onPointerLeave={() => onHover(false)}
-        onClick={onClick}
-      >
-        <sphereGeometry args={[0.6, 32, 32]} />
-        <meshStandardMaterial
-          color={node.color}
-          emissive={node.color}
-          emissiveIntensity={(isHovered || isSelected) ? 0.5 : 0.25}
-          metalness={0.8}
-          roughness={0.2}
-        />
-      </mesh>
-      
-      {/* Company Name */}
-      <Text
-        position={[0, 1.4, 0]}
-        fontSize={0.3}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={3.5}
-        textAlign="center"
-        font="/fonts/inter-bold.woff"
-      >
-        {node.company}
-      </Text>
-      
-      {/* Role */}
-      <Text
-        position={[0, 1.05, 0]}
-        fontSize={0.2}
-        color="#94a3b8"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {node.role}
-      </Text>
-    </group>
-  )
-}
-
-function TimelineConnections({ nodes }: { nodes: CareerNode[] }) {
-  return (
-    <>
-      {nodes.slice(0, -1).map((node, index) => {
-        const nextNode = nodes[index + 1]
-        return (
-          <line key={`connection-${index}`}>
-            <bufferGeometry>
-              <bufferAttribute
-                attach="attributes-position"
-                count={2}
-                array={new Float32Array([
-                  ...node.position,
-                  ...nextNode.position,
-                ])}
-                itemSize={3}
-              />
-            </bufferGeometry>
-            <lineBasicMaterial 
-              color="#475569" 
-              opacity={0.2}
-              transparent
-            />
-          </line>
-        )
-      })}
-    </>
-  )
-}
-
 const CareerJourneySection = () => {
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
-  const [hoveredNode, setHoveredNode] = useState<number | null>(null)
 
   return (
     <section id="career" className="relative py-12 px-4 overflow-hidden">
@@ -309,27 +190,80 @@ const CareerJourneySection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
                 onClick={() => {
                   setSelectedNode(isSelected ? null : index)
-                  setHoveredNode(index)
                 }}
-                onMouseEnter={() => setHoveredNode(index)}
-                onMouseLeave={() => setHoveredNode(null)}
-                className={`group relative cursor-pointer transition-all duration-500 h-full ${
-                  isSelected ? 'scale-105 z-10' : 'hover:scale-[1.02]'
+                animate={{
+                  scale: isSelected ? 1.08 : 1,
+                  y: isSelected ? -8 : 0,
+                  rotateY: isSelected ? 0 : 0,
+                }}
+                transition={{
+                  delay: index * 0.1,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20,
+                }}
+                className={`group relative cursor-pointer h-full ${
+                  isSelected ? 'z-10' : ''
                 }`}
               >
                 {/* Card Container */}
-                <div className={`relative h-full min-h-[320px] rounded-2xl overflow-hidden border-2 transition-all duration-500 ${
-                  isSelected 
-                    ? 'border-blue-400 shadow-2xl shadow-blue-500/20' 
-                    : 'border-slate-800 hover:border-slate-700'
-                }`}>
+                <motion.div
+                  animate={{
+                    borderColor: isSelected ? node.color : undefined,
+                    boxShadow: isSelected 
+                      ? `0 0 40px ${node.color}40, 0 0 80px ${node.color}20`
+                      : undefined,
+                  }}
+                  transition={{ duration: 0.5 }}
+                  className={`relative h-full min-h-[320px] rounded-2xl overflow-hidden border-2 transition-all duration-500 ${
+                    isSelected 
+                      ? 'border-blue-400 shadow-2xl shadow-blue-500/20' 
+                      : 'border-slate-800 hover:border-slate-700'
+                  }`}
+                >
                   {/* Gradient Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${node.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500 ${
-                    isSelected ? 'opacity-20' : ''
-                  }`} />
+                  <motion.div
+                    animate={{
+                      opacity: isSelected ? 0.3 : 0.1,
+                      scale: isSelected ? 1.05 : 1,
+                    }}
+                    transition={{ duration: 0.5 }}
+                    className={`absolute inset-0 bg-gradient-to-br ${node.gradient} group-hover:opacity-20 transition-opacity duration-500`}
+                  />
+                  
+                  {/* Space Particles Effect */}
+                  {isSelected && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 overflow-hidden"
+                    >
+                      {[...Array(20)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1 h-1 bg-blue-400 rounded-full"
+                          initial={{
+                            x: Math.random() * 100 + '%',
+                            y: Math.random() * 100 + '%',
+                            opacity: 0,
+                          }}
+                          animate={{
+                            y: [null, Math.random() * 100 + '%'],
+                            opacity: [0, 1, 0],
+                            scale: [0, 1, 0],
+                          }}
+                          transition={{
+                            duration: 2 + Math.random() * 2,
+                            repeat: Infinity,
+                            delay: Math.random() * 2,
+                          }}
+                        />
+                      ))}
+                    </motion.div>
+                  )}
                   
                   {/* Content Overlay */}
                   <div className="relative z-10 p-4 bg-slate-900/80 backdrop-blur-md h-full flex flex-col">
@@ -345,8 +279,15 @@ const CareerJourneySection = () => {
                           <p className="text-slate-400 text-sm mb-2">{node.role}</p>
                         </div>
                         <motion.div
-                          animate={{ rotate: isSelected ? 90 : 0 }}
-                          transition={{ duration: 0.3 }}
+                          animate={{ 
+                            rotate: isSelected ? [0, 10, -10, 0] : 0,
+                            scale: isSelected ? [1, 1.2, 1] : 1,
+                          }}
+                          transition={{ 
+                            duration: 0.6,
+                            repeat: isSelected ? Infinity : 0,
+                            repeatDelay: 1,
+                          }}
                         >
                           <Building2 className={`w-6 h-6 transition-colors duration-300 ${
                             isSelected ? 'text-blue-400' : 'text-slate-600 group-hover:text-blue-400'
@@ -381,15 +322,41 @@ const CareerJourneySection = () => {
                         {node.achievements.map((achievement, idx) => (
                           <motion.li
                             key={idx}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: isSelected ? idx * 0.05 : 0 }}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ 
+                              opacity: isSelected ? 1 : 0.8,
+                              x: isSelected ? 0 : -10,
+                            }}
+                            transition={{ 
+                              delay: isSelected ? idx * 0.1 : 0,
+                              type: "spring",
+                              stiffness: 200,
+                            }}
                             className="flex items-start gap-2 text-xs text-slate-300 leading-relaxed"
                           >
-                            <TrendingUp className={`w-3 h-3 mt-0.5 flex-shrink-0 transition-colors duration-300 ${
-                              isSelected ? 'text-blue-400' : 'text-slate-600'
-                            }`} />
-                            <span>{achievement}</span>
+                            <motion.div
+                              animate={{
+                                rotate: isSelected ? [0, 15, -15, 0] : 0,
+                                scale: isSelected ? [1, 1.2, 1] : 1,
+                              }}
+                              transition={{
+                                duration: 0.5,
+                                delay: idx * 0.1,
+                                repeat: isSelected ? Infinity : 0,
+                                repeatDelay: 2,
+                              }}
+                            >
+                              <TrendingUp className={`w-3 h-3 mt-0.5 flex-shrink-0 transition-colors duration-300 ${
+                                isSelected ? 'text-blue-400' : 'text-slate-600'
+                              }`} />
+                            </motion.div>
+                            <motion.span
+                              animate={{
+                                color: isSelected ? '#ffffff' : '#cbd5e1',
+                              }}
+                            >
+                              {achievement}
+                            </motion.span>
                           </motion.li>
                         ))}
                       </ul>
@@ -400,25 +367,50 @@ const CareerJourneySection = () => {
                       isSelected ? 'border-blue-400/30' : 'border-slate-800 group-hover:border-slate-700'
                     }`}>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-slate-500">Click to explore</span>
-                        <ArrowRight className={`w-4 h-4 transition-all duration-300 ${
-                          isSelected ? 'text-blue-400 translate-x-1' : 'text-slate-600 group-hover:text-blue-400 group-hover:translate-x-1'
-                        }`} />
+                        <motion.span
+                          animate={{
+                            color: isSelected ? '#60a5fa' : '#64748b',
+                          }}
+                          className="text-xs"
+                        >
+                          Click to explore
+                        </motion.span>
+                        <motion.div
+                          animate={{
+                            x: isSelected ? [0, 5, 0] : 0,
+                            rotate: isSelected ? [0, 15, 0] : 0,
+                          }}
+                          transition={{
+                            duration: 1,
+                            repeat: isSelected ? Infinity : 0,
+                            repeatDelay: 0.5,
+                          }}
+                        >
+                          <ArrowRight className={`w-4 h-4 transition-colors duration-300 ${
+                            isSelected ? 'text-blue-400' : 'text-slate-600 group-hover:text-blue-400'
+                          }`} />
+                        </motion.div>
                       </div>
                     </div>
                   </div>
                   
                   {/* Glow Effect */}
-                  <div 
-                    className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
-                      isSelected ? 'opacity-100' : ''
-                    }`}
+                  <motion.div
+                    animate={{
+                      opacity: isSelected ? 1 : 0,
+                      scale: isSelected ? [1, 1.1, 1] : 1,
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: isSelected ? Infinity : 0,
+                    }}
+                    className="absolute inset-0 rounded-2xl"
                     style={{
-                      background: `radial-gradient(circle at center, ${node.color}20, transparent 70%)`,
+                      background: `radial-gradient(circle at center, ${node.color}40, transparent 70%)`,
                       filter: 'blur(20px)',
                     } as React.CSSProperties}
                   />
-                </div>
+                </motion.div>
               </motion.div>
             )
           })}

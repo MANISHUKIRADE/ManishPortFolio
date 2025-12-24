@@ -128,7 +128,7 @@ const HeroSection = () => {
               textShadow: '0 0 20px rgba(148, 163, 184, 0.5)',
             }}
           >
-            Tech Lead | AI/ML Engineer | Cloud Architect
+            Fullstack Web Developer | AI/ML Engineer | Tech Lead
           </motion.p>
           
           {/* Clean Description */}
@@ -138,7 +138,7 @@ const HeroSection = () => {
             transition={{ delay: 0.9 }}
             className="text-sm md:text-base text-slate-400 mb-12 max-w-2xl px-4 font-light"
           >
-            Exploring the cosmos of technology, building scalable platforms and AI-powered solutions
+            Building scalable fullstack web applications and AI-powered solutions. Expert in modern web technologies and machine learning.
           </motion.p>
 
           {/* Clean CTA Buttons */}

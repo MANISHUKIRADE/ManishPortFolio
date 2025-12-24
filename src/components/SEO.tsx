@@ -9,9 +9,9 @@ interface SEOProps {
 }
 
 const SEO = ({ 
-  title = 'Manish Ukirade - Tech Lead | AI/ML Engineer | Cloud Architect',
-  description = 'Senior Product Manager and Tech Lead with 6+ years of experience in building scalable, cloud-native enterprise platforms. Expert in AI/ML, NLP, LLM solutions, cloud architecture (AWS, Azure, GCP), and DevOps.',
-  keywords = 'Manish Ukirade, Tech Lead, AI/ML Engineer, Cloud Architect, Node.js, Python, React, AWS, Azure, GCP, Docker, Kubernetes',
+  title = 'Manish Ukirade - Fullstack Web Developer | AI/ML Engineer | Tech Lead',
+  description = 'Fullstack Web Developer and AI/ML Engineer with 6+ years of experience building scalable web applications and AI-powered solutions. Expert in Node.js, React, Python, AI/ML, NLP, LLM, cloud architecture (AWS, Azure, GCP), and modern web technologies.',
+  keywords = 'Manish Ukirade, Fullstack Web Developer, Full Stack Developer, AI/ML Engineer, Machine Learning, Artificial Intelligence, Web Development, Node.js, React, Python, TypeScript, JavaScript, AI HR Consultant, NLP, LLM, AWS, Azure, GCP, Docker, Kubernetes, Fullstack Development, MERN Stack, MEAN Stack',
   image = 'https://manish-port-folio.vercel.app/og-image.jpg',
   url = 'https://manish-port-folio.vercel.app'
 }: SEOProps) => {
