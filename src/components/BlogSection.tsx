@@ -29,7 +29,7 @@ const BlogSection = () => {
 
   return (
     <>
-      <section id="blog" className="relative py-20 px-4 overflow-hidden min-h-[600px]">
+      <section id="blog" className="relative py-12 md:py-20 px-4 sm:px-6 overflow-hidden min-h-[400px] md:min-h-[600px]">
         {/* Space Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-purple-950 to-slate-950">
           <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
@@ -96,14 +96,14 @@ const BlogSection = () => {
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, type: 'spring' }}
-              className="inline-block text-purple-400 text-sm font-semibold uppercase tracking-wider mb-4"
+              className="inline-block text-purple-400 text-xs sm:text-sm font-semibold uppercase tracking-wider mb-3 md:mb-4"
             >
               Engineering Insights
             </motion.span>
             
             <HolographicGlitch intensity={0.05} frequency={4}>
               <motion.h2 
-                className="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-3 bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent px-2"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -114,7 +114,7 @@ const BlogSection = () => {
             </HolographicGlitch>
             
             <motion.p 
-              className="text-lg text-slate-200 max-w-2xl mx-auto font-medium"
+              className="text-base sm:text-lg text-slate-200 max-w-2xl mx-auto font-medium px-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -126,7 +126,7 @@ const BlogSection = () => {
 
           {/* Blog Cards Grid */}
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-2 sm:px-0"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

@@ -134,7 +134,7 @@ const HeroSection = () => {
           >
             <HolographicGlitch intensity={0.08} frequency={4}>
               <motion.h1
-                className="text-7xl md:text-9xl font-extrabold mb-4 tracking-tight relative"
+                className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-extrabold mb-3 sm:mb-4 tracking-tight relative px-2"
                 style={{
                   background: 'linear-gradient(135deg, #60a5fa 0%, #8b5cf6 50%, #ec4899 100%)',
                   WebkitBackgroundClip: 'text',
@@ -206,7 +206,7 @@ const HeroSection = () => {
             className="relative"
           >
             <motion.p
-              className="text-xl md:text-3xl text-slate-200 mb-4 font-light tracking-wide relative"
+              className="text-base sm:text-lg md:text-xl lg:text-3xl text-slate-200 mb-3 sm:mb-4 font-light tracking-wide relative px-4"
               style={{
                 textShadow: '0 0 30px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1)',
               }}
@@ -220,7 +220,7 @@ const HeroSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
-            className="text-sm md:text-base text-slate-400 mb-12 max-w-2xl px-4 font-light"
+            className="text-xs sm:text-sm md:text-base text-slate-400 mb-8 sm:mb-10 md:mb-12 max-w-2xl px-4 font-light"
           >
             Building scalable fullstack web applications and AI-powered solutions. Expert in modern web technologies and machine learning.
           </motion.p>
@@ -238,7 +238,7 @@ const HeroSection = () => {
               onHoverEnd={() => setIsHoveringCTA(false)}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              className="relative px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white font-semibold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 border border-blue-400/30 overflow-hidden"
+              className="relative px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white font-semibold text-sm sm:text-base md:text-lg shadow-2xl hover:shadow-blue-500/50 active:shadow-blue-500/50 transition-all duration-300 border border-blue-400/30 overflow-hidden touch-manipulation"
               style={{
                 boxShadow: '0 0 30px rgba(59, 130, 246, 0.4)',
               }}

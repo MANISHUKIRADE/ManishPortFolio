@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { BlogPost } from '../data/blogs'
 import ScanningLine from './animations/ScanningLine'
 import HolographicGlitch from './animations/HolographicGlitch'
@@ -14,6 +14,7 @@ interface BlogCardProps {
 
 const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
   const [isHovered, setIsHovered] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -24,8 +25,18 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [7.5, -7.5])
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [-7.5, 7.5])
 
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return
+    if (!cardRef.current || isMobile) return
 
     const rect = cardRef.current.getBoundingClientRect()
     const width = rect.width
@@ -52,15 +63,16 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      onHoverStart={() => setIsHovered(true)}
+      onHoverStart={() => !isMobile && setIsHovered(true)}
       onHoverEnd={handleMouseLeave}
-      onMouseMove={handleMouseMove}
+      onMouseMove={!isMobile ? handleMouseMove : undefined}
+      onTouchStart={() => setIsHovered(true)}
       style={{
-        rotateX,
-        rotateY,
+        rotateX: isMobile ? 0 : rotateX,
+        rotateY: isMobile ? 0 : rotateY,
         transformStyle: 'preserve-3d',
       }}
-      className="group relative bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden border border-slate-700/80 hover:border-purple-500/80 transition-all duration-300 cursor-pointer perspective-1000 shadow-xl shadow-black/20"
+      className="group relative bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden border border-slate-700/80 hover:border-purple-500/80 active:border-purple-500/80 transition-all duration-300 cursor-pointer perspective-1000 shadow-xl shadow-black/20 touch-none md:touch-auto"
       onClick={() => onReadMore(blog.slug)}
     >
       {/* Holographic Border Effect */}
@@ -103,7 +115,7 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
 
       {/* Image */}
       <motion.div 
-        className="relative h-64 overflow-hidden"
+        className="relative h-48 sm:h-56 md:h-64 overflow-hidden"
         style={{ transformStyle: 'preserve-3d' }}
       >
         <motion.img
@@ -153,15 +165,15 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
         )}
       </motion.div>
 
-      <div className="p-6 relative z-10">
+      <div className="p-4 sm:p-5 md:p-6 relative z-10">
         <HolographicGlitch intensity={isHovered ? 0.05 : 0} frequency={5}>
-          <h3 className="text-2xl font-bold text-white mb-3 line-clamp-2">{blog.title}</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 md:mb-3 line-clamp-2 leading-tight">{blog.title}</h3>
         </HolographicGlitch>
         
-        <p className="text-slate-200 mb-4 line-clamp-3 leading-relaxed">{blog.excerpt}</p>
+        <p className="text-sm sm:text-base text-slate-200 mb-3 md:mb-4 line-clamp-3 leading-relaxed">{blog.excerpt}</p>
 
         {/* Meta Information */}
-        <div className="flex items-center gap-4 mb-4 text-sm text-slate-300">
+        <div className="flex items-center gap-3 sm:gap-4 mb-3 md:mb-4 text-xs sm:text-sm text-slate-300 flex-wrap">
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
             <span>{new Date(blog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -173,7 +185,7 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
         </div>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 md:mb-4">
           {blog.tags.slice(0, 3).map((tag, tagIndex) => (
             <motion.span
               key={tag}
@@ -182,18 +194,18 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 + tagIndex * 0.1 }}
               whileHover={{ 
-                scale: 1.1,
+                scale: isMobile ? 1 : 1.1,
                 boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)'
               }}
-              className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs border border-purple-500/30 cursor-default"
+              className="px-2 sm:px-3 py-0.5 sm:py-1 bg-purple-500/20 text-purple-300 rounded-full text-[10px] sm:text-xs border border-purple-500/30 cursor-default"
             >
               {tag}
             </motion.span>
           ))}
           {blog.tags.length > 3 && (
             <motion.span 
-              className="px-3 py-1 bg-slate-700/50 text-slate-400 rounded-full text-xs"
-              whileHover={{ scale: 1.1 }}
+              className="px-2 sm:px-3 py-0.5 sm:py-1 bg-slate-700/50 text-slate-400 rounded-full text-[10px] sm:text-xs"
+              whileHover={{ scale: isMobile ? 1 : 1.1 }}
             >
               +{blog.tags.length - 3}
             </motion.span>
@@ -202,8 +214,8 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
 
         {/* Read More */}
         <motion.div
-          className="flex items-center gap-2 text-purple-400 font-semibold group-hover:text-purple-300 transition-colors"
-          whileHover={{ x: 5 }}
+          className="flex items-center gap-2 text-purple-400 font-semibold group-hover:text-purple-300 transition-colors text-sm sm:text-base"
+          whileHover={{ x: isMobile ? 0 : 5 }}
         >
           <motion.span
             animate={isHovered ? {

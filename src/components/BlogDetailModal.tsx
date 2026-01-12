@@ -120,9 +120,9 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-4 md:inset-8 lg:inset-16 z-50 overflow-hidden"
+            className="fixed inset-0 sm:inset-4 md:inset-8 lg:inset-16 z-50 overflow-hidden"
           >
-            <div className="h-full w-full bg-slate-900 rounded-2xl border border-purple-500/30 shadow-2xl overflow-hidden flex flex-col relative">
+            <div className="h-full w-full bg-slate-900 rounded-none sm:rounded-2xl border-0 sm:border border-purple-500/30 shadow-2xl overflow-hidden flex flex-col relative">
               {/* Scanning Lines Effect */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
                 <ScanningLine direction="horizontal" speed={3} />
@@ -146,7 +146,7 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
               />
               {/* Header */}
               <motion.div 
-                className="relative h-64 md:h-80 overflow-hidden"
+                className="relative h-48 sm:h-64 md:h-80 overflow-hidden"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -183,30 +183,30 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 bg-slate-900/80 backdrop-blur-sm rounded-full border border-purple-500/30 hover:bg-purple-600/20 transition-colors z-10"
+                  className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 bg-slate-900/90 backdrop-blur-sm rounded-full border border-purple-500/30 hover:bg-purple-600/20 active:bg-purple-600/20 transition-colors z-10 touch-manipulation"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </motion.button>
 
                 {/* Category Badge */}
-                <div className="absolute top-4 left-4 px-3 py-1 bg-purple-600/80 backdrop-blur-sm rounded-full border border-purple-400/30">
-                  <span className="text-xs font-semibold text-white">{blog.category}</span>
+                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-0.5 sm:py-1 bg-purple-600/80 backdrop-blur-sm rounded-full border border-purple-400/30">
+                  <span className="text-[10px] sm:text-xs font-semibold text-white">{blog.category}</span>
                 </div>
 
                 {/* Title and Meta */}
                 <motion.div 
-                  className="absolute bottom-0 left-0 right-0 p-6 md:p-8"
+                  className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
                   <HolographicGlitch intensity={0.03} frequency={3}>
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-2 sm:mb-3 md:mb-4 leading-tight">
                       {blog.title}
                     </h1>
                   </HolographicGlitch>
                   <motion.div 
-                    className="flex flex-wrap items-center gap-4 text-sm text-slate-300"
+                    className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm text-slate-300"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
@@ -228,15 +228,15 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
 
               {/* Content */}
               <motion.div 
-                className="flex-1 overflow-y-auto"
+                className="flex-1 overflow-y-auto overscroll-contain"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <div className="max-w-4xl mx-auto p-6 md:p-8 lg:p-12">
+                <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 lg:p-12">
                   {/* Tags */}
                   <motion.div 
-                    className="flex flex-wrap gap-2 mb-8"
+                    className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6 md:mb-8"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
@@ -248,7 +248,7 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.7 + tagIndex * 0.1, type: 'spring' }}
                         whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(139, 92, 246, 0.5)' }}
-                        className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm border border-purple-500/30 cursor-default"
+                        className="px-2 sm:px-3 py-0.5 sm:py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs sm:text-sm border border-purple-500/30 cursor-default"
                       >
                         {tag}
                       </motion.span>
@@ -257,32 +257,32 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
 
                   {/* Markdown Content */}
                   <motion.div 
-                    className="prose prose-invert prose-lg max-w-none"
+                    className="prose prose-invert prose-sm sm:prose-base md:prose-lg max-w-none"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 }}
                   >
-                    <div className="text-slate-300 leading-relaxed">
+                    <div className="text-slate-300 leading-relaxed text-sm sm:text-base">
                       {blog.content.split('\n').map((line, idx) => {
                         const trimmedLine = line.trim()
                         
                         if (trimmedLine.startsWith('# ')) {
-                          return <h1 key={idx} className="text-3xl font-bold text-white mt-8 mb-4">{trimmedLine.replace(/^#+\s/, '')}</h1>
+                          return <h1 key={idx} className="text-2xl sm:text-3xl font-bold text-white mt-6 sm:mt-8 mb-3 sm:mb-4">{trimmedLine.replace(/^#+\s/, '')}</h1>
                         } else if (trimmedLine.startsWith('## ')) {
-                          return <h2 key={idx} className="text-2xl font-bold text-white mt-6 mb-3">{trimmedLine.replace(/^#+\s/, '')}</h2>
+                          return <h2 key={idx} className="text-xl sm:text-2xl font-bold text-white mt-4 sm:mt-6 mb-2 sm:mb-3">{trimmedLine.replace(/^#+\s/, '')}</h2>
                         } else if (trimmedLine.startsWith('### ')) {
-                          return <h3 key={idx} className="text-xl font-bold text-white mt-4 mb-2">{trimmedLine.replace(/^#+\s/, '')}</h3>
+                          return <h3 key={idx} className="text-lg sm:text-xl font-bold text-white mt-3 sm:mt-4 mb-1 sm:mb-2">{trimmedLine.replace(/^#+\s/, '')}</h3>
                         } else if (trimmedLine.startsWith('- ')) {
-                          return <li key={idx} className="ml-6 mb-2 list-disc">{trimmedLine.replace(/^-\s/, '')}</li>
+                          return <li key={idx} className="ml-4 sm:ml-6 mb-1 sm:mb-2 list-disc text-sm sm:text-base">{trimmedLine.replace(/^-\s/, '')}</li>
                         } else if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
-                          return <p key={idx} className="font-bold text-white my-4">{trimmedLine.replace(/\*\*/g, '')}</p>
+                          return <p key={idx} className="font-bold text-white my-3 sm:my-4 text-base sm:text-lg">{trimmedLine.replace(/\*\*/g, '')}</p>
                         } else if (trimmedLine === '') {
-                          return <div key={idx} className="h-4" />
+                          return <div key={idx} className="h-2 sm:h-4" />
                         } else {
                           // Handle bold text within paragraphs
                           const parts = trimmedLine.split(/(\*\*.*?\*\*)/g)
                           return (
-                            <p key={idx} className="mb-4">
+                            <p key={idx} className="mb-3 sm:mb-4 text-sm sm:text-base">
                               {parts.map((part, partIdx) => {
                                 if (part.startsWith('**') && part.endsWith('**')) {
                                   return <strong key={partIdx} className="text-white font-semibold">{part.replace(/\*\*/g, '')}</strong>
@@ -300,17 +300,17 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
 
               {/* Footer */}
               <motion.div 
-                className="border-t border-slate-700 p-6 relative z-10"
+                className="border-t border-slate-700 p-4 sm:p-6 relative z-10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.9 }}
               >
-                <div className="max-w-4xl mx-auto flex justify-between items-center">
+                <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
                   <motion.button
                     whileHover={{ x: -5, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={onClose}
-                    className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors px-4 py-2 rounded-lg hover:bg-purple-500/10"
+                    className="flex items-center gap-2 text-purple-400 hover:text-purple-300 active:text-purple-300 transition-colors px-4 py-2 rounded-lg hover:bg-purple-500/10 touch-manipulation text-sm sm:text-base"
                   >
                     <motion.div
                       animate={{ x: [0, -3, 0] }}
@@ -321,7 +321,7 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                     <span>Back to Blogs</span>
                   </motion.button>
                   <motion.div 
-                    className="text-sm text-slate-400"
+                    className="text-xs sm:text-sm text-slate-400 text-center sm:text-right"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}

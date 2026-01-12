@@ -36,15 +36,15 @@ const ContactSection = () => {
           transition={{ duration: 0.8 }}
         >
           <HolographicGlitch intensity={0.05} frequency={4}>
-            <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent px-4">
               Get In Touch
             </h2>
           </HolographicGlitch>
-          <p className="text-xl text-slate-300 mb-12">
+          <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-10 md:mb-12 px-4">
             I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
           </p>
 
-          <div className="flex justify-center gap-6 flex-wrap">
+          <div className="flex justify-center gap-3 sm:gap-4 md:gap-6 flex-wrap px-4">
             {[
               { 
                 icon: Mail, 
@@ -84,7 +84,7 @@ const ContactSection = () => {
                 whileTap={{ scale: 0.9 }}
                 onHoverStart={() => setHoveredContact(social.label)}
                 onHoverEnd={() => setHoveredContact(null)}
-                className="relative p-4 bg-slate-800 rounded-lg border border-slate-700 hover:border-blue-500 transition-colors group flex flex-col items-center gap-2 min-w-[140px] overflow-hidden"
+                className="relative p-3 sm:p-4 bg-slate-800 rounded-lg border border-slate-700 hover:border-blue-500 active:border-blue-500 transition-colors group flex flex-col items-center gap-1.5 sm:gap-2 min-w-[120px] sm:min-w-[140px] overflow-hidden touch-manipulation"
               >
                 {/* Holographic projection effect */}
                 {hoveredContact === social.label && (
@@ -134,8 +134,8 @@ const ContactSection = () => {
                   </>
                 )}
                 
-                <social.icon className="w-8 h-8 text-slate-300 group-hover:text-blue-400 transition-colors relative z-10" />
-                <span className="text-sm text-slate-300 group-hover:text-white transition-colors relative z-10">{social.text}</span>
+                <social.icon className="w-6 h-6 sm:w-8 sm:h-8 text-slate-300 group-hover:text-blue-400 active:text-blue-400 transition-colors relative z-10" />
+                <span className="text-xs sm:text-sm text-slate-300 group-hover:text-white active:text-white transition-colors relative z-10 text-center">{social.text}</span>
                 <span className="sr-only">{social.label}</span>
               </motion.a>
             ))}
@@ -153,7 +153,7 @@ const ContactSection = () => {
               whileHover={{ scale: 1.05, y: -8 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleResumeDownload}
-              className="relative group cursor-pointer max-w-lg mx-auto p-8 rounded-2xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-md overflow-hidden"
+              className="relative group cursor-pointer max-w-lg mx-auto p-6 sm:p-8 rounded-xl sm:rounded-2xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-md overflow-hidden touch-manipulation mx-4 sm:mx-auto"
             >
               {/* Scanning Beam */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -192,7 +192,7 @@ const ContactSection = () => {
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
               />
               
-              <div className="relative z-10 flex flex-col items-center gap-6">
+              <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6">
                 <motion.div
                   animate={{
                     scale: [1, 1.1, 1],
@@ -203,14 +203,14 @@ const ContactSection = () => {
                     repeat: Infinity,
                     repeatDelay: 1,
                   }}
-                  className="p-6 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 opacity-20 group-hover:opacity-30 transition-opacity"
+                  className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 opacity-20 group-hover:opacity-30 active:opacity-30 transition-opacity"
                 >
-                  <Download className="w-12 h-12 text-purple-400" />
+                  <Download className="w-10 h-10 sm:w-12 sm:h-12 text-purple-400" />
                 </motion.div>
                 
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-white mb-2">Download Resume</h3>
-                  <p className="text-sm text-slate-400">Click to download my complete professional profile</p>
+                <div className="text-center px-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Download Resume</h3>
+                  <p className="text-xs sm:text-sm text-slate-400">Click to download my complete professional profile</p>
                 </div>
                 
                 <motion.div
@@ -223,10 +223,10 @@ const ContactSection = () => {
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
-                  className="flex items-center gap-2 px-6 py-3 bg-purple-600/20 rounded-lg border border-purple-500/30"
+                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-purple-600/20 rounded-lg border border-purple-500/30"
                 >
-                  <Download className="w-5 h-5 text-purple-400" />
-                  <span className="text-sm font-medium text-purple-300">Download PDF</span>
+                  <Download className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+                  <span className="text-xs sm:text-sm font-medium text-purple-300">Download PDF</span>
                 </motion.div>
               </div>
               
