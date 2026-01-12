@@ -6,7 +6,6 @@ import HolographicGlitch from './animations/HolographicGlitch'
 import HolographicGrid from './animations/HolographicGrid'
 import ParticleSystem from './animations/ParticleSystem'
 import DataStream from './animations/DataStream'
-import EnergyBeam from './animations/EnergyBeam'
 import { useState } from 'react'
 import { blogs } from '../data/blogs'
 import BlogCard from './BlogCard'
@@ -41,33 +40,32 @@ const BlogSection = () => {
           </Canvas>
         </div>
 
-        {/* Holographic Grid Background */}
-        <HolographicGrid spacing={80} color="#8b5cf6" opacity={0.08} />
+        {/* Dark overlay for better readability */}
+        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[1px] z-[1]" />
 
-        {/* Particle System */}
-        <ParticleSystem 
-          count={30} 
-          speed={0.4} 
-          size={{ min: 1, max: 3 }}
-          colors={['#8b5cf6', '#ec4899', '#a855f7']}
-        />
-
-        {/* Data Stream Animation */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <DataStream direction="down" speed={2} count={15} color="#8b5cf6" />
+        {/* Holographic Grid Background - reduced opacity */}
+        <div className="absolute inset-0 z-[2]">
+          <HolographicGrid spacing={80} color="#8b5cf6" opacity={0.03} />
         </div>
 
-        {/* Energy Beams */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <EnergyBeam 
-            from={{ x: 0, y: 50 }}
-            to={{ x: 100, y: 50 }}
-            color="#8b5cf6" 
-            intensity={0.3}
+        {/* Particle System - reduced count and opacity */}
+        <div className="absolute inset-0 z-[2] opacity-40">
+          <ParticleSystem 
+            count={15} 
+            speed={0.3} 
+            size={{ min: 1, max: 2 }}
+            colors={['#8b5cf6', '#ec4899', '#a855f7']}
           />
         </div>
 
+        {/* Data Stream Animation - reduced opacity */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none z-[2]">
+          <DataStream direction="down" speed={2} count={10} color="#8b5cf6" />
+        </div>
+
         <div className="max-w-7xl mx-auto relative z-10">
+          {/* Additional backdrop for content area */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/20 to-transparent pointer-events-none" />
           {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -116,7 +114,7 @@ const BlogSection = () => {
             </HolographicGlitch>
             
             <motion.p 
-              className="text-lg text-slate-400 max-w-2xl mx-auto"
+              className="text-lg text-slate-200 max-w-2xl mx-auto font-medium"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

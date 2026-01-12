@@ -60,7 +60,7 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
         rotateY,
         transformStyle: 'preserve-3d',
       }}
-      className="group relative bg-slate-800/50 rounded-xl overflow-hidden border border-slate-700 hover:border-purple-500 transition-all duration-300 cursor-pointer perspective-1000"
+      className="group relative bg-slate-800/80 backdrop-blur-sm rounded-xl overflow-hidden border border-slate-700/80 hover:border-purple-500/80 transition-all duration-300 cursor-pointer perspective-1000 shadow-xl shadow-black/20"
       onClick={() => onReadMore(blog.slug)}
     >
       {/* Holographic Border Effect */}
@@ -115,7 +115,7 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
           }}
           transition={{ duration: 0.5 }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/70 to-transparent" />
         
         {/* Animated Category Badge */}
         <motion.div 
@@ -158,10 +158,10 @@ const BlogCard = ({ blog, index, onReadMore }: BlogCardProps) => {
           <h3 className="text-2xl font-bold text-white mb-3 line-clamp-2">{blog.title}</h3>
         </HolographicGlitch>
         
-        <p className="text-slate-300 mb-4 line-clamp-3">{blog.excerpt}</p>
+        <p className="text-slate-200 mb-4 line-clamp-3 leading-relaxed">{blog.excerpt}</p>
 
         {/* Meta Information */}
-        <div className="flex items-center gap-4 mb-4 text-sm text-slate-400">
+        <div className="flex items-center gap-4 mb-4 text-sm text-slate-300">
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
             <span>{new Date(blog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
