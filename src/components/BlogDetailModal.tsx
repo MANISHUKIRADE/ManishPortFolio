@@ -15,12 +15,33 @@ interface BlogDetailModalProps {
 const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
+      // Prevent body scroll and save scroll position
+      const scrollY = window.scrollY
+      const body = document.body
+      const html = document.documentElement
+      
+      // Add class for CSS-based scroll lock
+      body.classList.add('modal-open')
+      
+      // Prevent scroll with inline styles as fallback
+      body.style.position = 'fixed'
+      body.style.top = `-${scrollY}px`
+      body.style.width = '100%'
+      body.style.overflow = 'hidden'
+      html.style.overflow = 'hidden'
+      
+      return () => {
+        // Remove class
+        body.classList.remove('modal-open')
+        
+        // Restore scroll position and styles
+        body.style.position = ''
+        body.style.top = ''
+        body.style.width = ''
+        body.style.overflow = ''
+        html.style.overflow = ''
+        window.scrollTo(0, scrollY)
+      }
     }
   }, [isOpen])
 
@@ -95,7 +116,9 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            onTouchMove={(e) => e.preventDefault()}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overscroll-none"
+            style={{ touchAction: 'none' }}
           >
             <motion.div
               className="absolute inset-0"
@@ -120,9 +143,12 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 sm:inset-4 md:inset-8 lg:inset-16 z-50 overflow-hidden"
+            className="fixed inset-0 sm:inset-4 md:inset-8 lg:inset-16 z-50 overflow-hidden pointer-events-none"
           >
-            <div className="h-full w-full bg-slate-900 rounded-none sm:rounded-2xl border-0 sm:border border-purple-500/30 shadow-2xl overflow-hidden flex flex-col relative">
+            <div 
+              className="h-full w-full bg-slate-900 rounded-none sm:rounded-2xl border-0 sm:border border-purple-500/30 shadow-2xl flex flex-col relative pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Scanning Lines Effect */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
                 <ScanningLine direction="horizontal" speed={3} />
@@ -228,10 +254,15 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
 
               {/* Content */}
               <motion.div 
-                className="flex-1 overflow-y-auto overscroll-contain"
+                className="flex-1 overflow-y-auto overscroll-contain modal-content"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
+                style={{ 
+                  WebkitOverflowScrolling: 'touch',
+                  overscrollBehavior: 'contain',
+                  maxHeight: '100%'
+                }}
               >
                 <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 lg:p-12">
                   {/* Tags */}
