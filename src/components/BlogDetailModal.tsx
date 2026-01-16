@@ -297,6 +297,26 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                       {blog.content.split('\n').map((line, idx) => {
                         const trimmedLine = line.trim()
                         
+                        // Handle images - format: ![alt text](image-url)
+                        if (trimmedLine.startsWith('![') && trimmedLine.includes('](') && trimmedLine.endsWith(')')) {
+                          const match = trimmedLine.match(/!\[([^\]]+)\]\(([^)]+)\)/)
+                          if (match) {
+                            const [, alt, src] = match
+                            return (
+                              <div key={idx} className="my-6 sm:my-8">
+                                <img 
+                                  src={src} 
+                                  alt={alt} 
+                                  className="w-full rounded-lg border border-slate-700/50 shadow-xl"
+                                />
+                                {alt && alt !== 'image' && (
+                                  <p className="text-xs sm:text-sm text-slate-400 mt-2 text-center italic">{alt}</p>
+                                )}
+                              </div>
+                            )
+                          }
+                        }
+                        
                         if (trimmedLine.startsWith('# ')) {
                           return <h1 key={idx} className="text-2xl sm:text-3xl font-bold text-white mt-6 sm:mt-8 mb-3 sm:mb-4">{trimmedLine.replace(/^#+\s/, '')}</h1>
                         } else if (trimmedLine.startsWith('## ')) {

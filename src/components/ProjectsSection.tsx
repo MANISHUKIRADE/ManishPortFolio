@@ -60,6 +60,15 @@ const projects = [
     github: 'https://github.com',
     live: 'https://example.com',
   },
+  {
+    id: 7,
+    title: 'Employee Attrition Prediction Analysis',
+    description: 'Built a production-ready CatBoost ML model predicting employee attrition with 83.48% accuracy. Engineered 122 features from survey data, achieving 82% recall for identifying employees who will leave. Deployed as early warning system for proactive retention.',
+    tech: ['Python', 'CatBoost', 'Machine Learning', 'Feature Engineering', 'Data Science', 'HR Analytics'],
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
+    github: 'https://github.com',
+    live: 'https://example.com',
+  },
 ]
 
 const ProjectsSection = () => {
