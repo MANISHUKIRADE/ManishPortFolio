@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import HeroSection from './components/HeroSection'
+import CapabilitiesSection from './components/CapabilitiesSection'
 import ProjectsSection from './components/ProjectsSection'
 import SkillsSection from './components/SkillsSection'
 import CareerJourneySection from './components/CareerJourneySection'
@@ -16,11 +17,12 @@ function App() {
   return (
     <>
       <SEO />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-x-hidden">
+      <div className="min-h-screen bg-nexus-950 relative overflow-x-hidden">
         <InteractiveBackground />
         <Navbar />
         <main>
           <HeroSection />
+          <CapabilitiesSection />
           <ProjectsSection />
           <SkillsSection />
           <CareerJourneySection />

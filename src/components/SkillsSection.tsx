@@ -15,8 +15,7 @@ import {
 import NeuralNetwork from './animations/NeuralNetwork'
 import DataStream from './animations/DataStream'
 import ScanningLine from './animations/ScanningLine'
-import HolographicGlitch from './animations/HolographicGlitch'
-import ParticleSystem from './animations/ParticleSystem'
+import SectionHeader from './ui/SectionHeader'
 
 interface Skill {
   name: string
@@ -47,11 +46,11 @@ const skillCategories: SkillCategory[] = [
   {
     title: 'Frontend & Frameworks',
     icon: <Zap className="w-6 h-6" />,
-    gradient: 'from-purple-600 to-pink-500',
+    gradient: 'from-violet-600 to-cyan-500',
     skills: [
       { name: 'React.js', level: 90, color: '#61dafb' },
+      { name: 'Next.js', level: 85, color: '#ffffff' },
       { name: 'Vue.js', level: 85, color: '#4fc08d' },
-      { name: 'AngularJS', level: 80, color: '#dd0031' },
     ],
   },
   {
@@ -65,14 +64,34 @@ const skillCategories: SkillCategory[] = [
     ],
   },
   {
+    title: 'Generative AI & RAG',
+    icon: <Brain className="w-6 h-6" />,
+    gradient: 'from-cyan-600 to-teal-500',
+    skills: [
+      { name: 'Generative AI', level: 90, color: '#22d3ee' },
+      { name: 'LangChain', level: 88, color: '#1c3c3c' },
+      { name: 'RAG Systems', level: 90, color: '#2dd4bf' },
+      { name: 'Prompt Engineering', level: 88, color: '#67e8f9' },
+      { name: 'ChromaDB', level: 85, color: '#ff6b35' },
+      { name: 'Vector Databases', level: 85, color: '#8b5cf6' },
+      { name: 'Pinecone', level: 80, color: '#000000' },
+      { name: 'FastAPI', level: 88, color: '#009688' },
+      { name: 'MLflow', level: 82, color: '#0194e2' },
+      { name: 'Hugging Face', level: 85, color: '#ffd21e' },
+      { name: 'Agentic AI', level: 85, color: '#ec4899' },
+      { name: 'OpenAI API', level: 88, color: '#10a37f' },
+      { name: 'Groq', level: 80, color: '#f55036' },
+    ],
+  },
+  {
     title: 'AI/ML & NLP',
     icon: <Brain className="w-6 h-6" />,
     gradient: 'from-pink-600 to-rose-500',
     skills: [
-      { name: 'AI/ML', level: 85, color: '#ff6b6b' },
+      { name: 'AI/ML', level: 88, color: '#ff6b6b' },
       { name: 'NLP/LLM', level: 88, color: '#9b59b6' },
       { name: 'TensorFlow', level: 82, color: '#ff6f00' },
-      { name: 'RASA', level: 80, color: '#5a17ee' },
+      { name: 'CatBoost', level: 85, color: '#3b8eed' },
     ],
   },
   {
@@ -106,41 +125,20 @@ const SkillsSection = () => {
   return (
     <section id="skills" className="relative py-12 px-4 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent" />
-      
-      {/* Neural Network Visualization */}
-      <div className="absolute inset-0 opacity-30">
-        <NeuralNetwork nodeCount={25} connectionDistance={200} color="#8b5cf6" />
+      <div className="absolute inset-0 bg-nexus-950" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent" />
+
+      <div className="absolute inset-0 opacity-20">
+        <NeuralNetwork nodeCount={25} connectionDistance={200} color="#22d3ee" />
       </div>
 
-      {/* Particle System */}
-      <ParticleSystem count={30} speed={0.3} size={{ min: 1, max: 2 }} colors={['#8b5cf6', '#ec4899', '#60a5fa']} />
-      
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
-        >
-          <motion.span
-            initial={{ opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-block text-purple-400 text-sm font-semibold uppercase tracking-wider mb-4"
-          >
-            Technical Expertise
-          </motion.span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-purple-100 to-pink-100 bg-clip-text text-transparent">
-            Skills & Technologies
-          </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Fullstack web development and AI/ML expertise - Building end-to-end web applications and intelligent solutions
-          </p>
-        </motion.div>
+        <SectionHeader
+          eyebrow="Technical Expertise"
+          title="Skills & Technologies"
+          description="Fullstack web development and AI/ML—building end-to-end applications and intelligent systems for production."
+          className="mb-10"
+        />
 
         {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
@@ -159,7 +157,7 @@ const SkillsSection = () => {
               {/* Category Card */}
               <div className={`relative h-full rounded-2xl overflow-hidden border-2 transition-all duration-500 ${
                 selectedCategory === categoryIndex
-                  ? 'border-purple-400 shadow-2xl shadow-purple-500/20'
+                  ? 'border-cyan-400/60 shadow-2xl shadow-cyan-500/15'
                   : 'border-slate-800 hover:border-slate-700'
               }`}>
                 {/* Gradient Background */}
@@ -172,23 +170,19 @@ const SkillsSection = () => {
                   {/* Header */}
                   <div className="flex items-center gap-2 mb-3">
                     <div className={`p-2 rounded-xl bg-gradient-to-br ${category.gradient} opacity-20`}>
-                      <div className="text-purple-400">
+                      <div className="text-cyan-400">
                         {category.icon}
                       </div>
                     </div>
-                    {selectedCategory === categoryIndex ? (
-                      <HolographicGlitch intensity={0.05} frequency={3}>
-                        <h3 className="text-base font-bold text-purple-400">
-                          {category.title}
-                        </h3>
-                      </HolographicGlitch>
-                    ) : (
-                      <h3 className={`text-base font-bold transition-colors duration-300 ${
-                        'text-white group-hover:text-purple-300'
-                      }`}>
-                        {category.title}
-                      </h3>
-                    )}
+                    <h3
+                      className={`text-base font-bold transition-colors duration-300 ${
+                        selectedCategory === categoryIndex
+                          ? 'text-cyan-300'
+                          : 'text-white group-hover:text-cyan-200'
+                      }`}
+                    >
+                      {category.title}
+                    </h3>
                   </div>
                   
                   {/* Skills List */}
@@ -280,14 +274,14 @@ const SkillsSection = () => {
                   
                   {/* Footer */}
                   <div className={`mt-3 pt-3 border-t transition-colors duration-300 ${
-                    selectedCategory === categoryIndex ? 'border-purple-400/30' : 'border-slate-800 group-hover:border-slate-700'
+                    selectedCategory === categoryIndex ? 'border-cyan-400/30' : 'border-slate-800 group-hover:border-slate-700'
                   }`}>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-slate-500">
                         {category.skills.length} skills
                       </span>
                       <CheckCircle2 className={`w-4 h-4 transition-colors duration-300 ${
-                        selectedCategory === categoryIndex ? 'text-purple-400' : 'text-slate-600 group-hover:text-purple-400'
+                        selectedCategory === categoryIndex ? 'text-cyan-400' : 'text-slate-600 group-hover:text-cyan-400'
                       }`} />
                     </div>
                   </div>
@@ -299,7 +293,7 @@ const SkillsSection = () => {
                     selectedCategory === categoryIndex ? 'opacity-100' : ''
                   }`}
                   style={{
-                    background: `radial-gradient(circle at center, rgba(139, 92, 246, 0.2), transparent 70%)`,
+                    background: `radial-gradient(circle at center, rgba(34, 211, 238, 0.15), transparent 70%)`,
                     filter: 'blur(20px)',
                   } as React.CSSProperties}
                 />
@@ -331,7 +325,7 @@ const SkillsSection = () => {
             return (
               <motion.div
                 key={i}
-                className="absolute w-2 h-2 bg-purple-400 rounded-full"
+                className="absolute w-2 h-2 bg-cyan-400 rounded-full"
                 style={{
                   left: '50%',
                   top: '50%',
@@ -358,7 +352,7 @@ const SkillsSection = () => {
             <pointLight position={[-10, 10, 10]} intensity={1} color="#93c5fd" />
             <pointLight position={[0, -10, 5]} intensity={0.8} color="#60a5fa" />
             <directionalLight position={[5, 5, 5]} intensity={0.8} color="#ffffff" />
-            <directionalLight position={[-5, -5, -5]} intensity={0.3} color="#8b5cf6" />
+            <directionalLight position={[-5, -5, -5]} intensity={0.3} color="#2dd4bf" />
             <EarthGlobe />
             <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
           </Canvas>
@@ -374,7 +368,7 @@ const SkillsSection = () => {
           {[
             { label: 'Total Skills', value: skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0) },
             { label: 'Categories', value: skillCategories.length },
-            { label: 'Years Experience', value: '6+' },
+            { label: 'Years Experience', value: '6.7+' },
             { label: 'Expertise Level', value: '85%+' },
           ].map((stat, index) => (
             <motion.div
@@ -385,7 +379,7 @@ const SkillsSection = () => {
               transition={{ delay: index * 0.1 }}
               className="text-center p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-800/50"
             >
-              <div className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-1">
+              <div className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 mb-1">
                 {stat.value}
               </div>
               <div className="text-xs text-slate-400">{stat.label}</div>

@@ -1,343 +1,179 @@
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
 import { motion } from 'framer-motion'
-import Satellite from './3D/Satellite'
-import Planet from './3D/Planet'
-import Asteroid from './3D/Asteroid'
-import StarField from './3D/StarField'
-import { useEffect, useRef, useState } from 'react'
-import HolographicGlitch from './animations/HolographicGlitch'
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import SpaceScene from './3D/SpaceScene'
+import HolographicGrid from './animations/HolographicGrid'
 import ParticleSystem from './animations/ParticleSystem'
+
+const stats = [
+  { value: '6.7+', label: 'Years Experience' },
+  { value: '10+', label: 'Enterprise Clients' },
+  { value: '3', label: 'Compliance Certifications' },
+  { value: '83%', label: 'ML Model Accuracy' },
+]
+
+const spaceColors = ['#22d3ee', '#2dd4bf', '#e0f2fe', '#67e8f9']
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const [isHoveringCTA, setIsHoveringCTA] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
       if (sectionRef.current) {
-        const scrolled = window.scrollY
-        const parallax = scrolled * 0.5
+        const parallax = window.scrollY * 0.25
         sectionRef.current.style.transform = `translateY(${parallax}px)`
       }
     }
-
     window.addEventListener('scroll', handleScroll)
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
     <section
       id="home"
       ref={sectionRef}
-      className="relative h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16"
     >
-      {/* Realistic Space Background */}
       <div className="absolute inset-0 z-0 bg-black">
-        {/* Deep space gradient with subtle color */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-950 to-black opacity-90" />
-        
-        {/* Distant nebula clouds */}
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl"
-            style={{
-              background: 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
-            }}
-            animate={{
-              x: [0, 50, 0],
-              y: [0, 30, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl"
-            style={{
-              background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
-            }}
-            animate={{
-              x: [0, -40, 0],
-              y: [0, -20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        </div>
-
-        <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
-          {/* Realistic starlight */}
-          <ambientLight intensity={0.1} />
-          <pointLight position={[10, 10, 10]} intensity={0.8} color="#ffffff" />
-          <pointLight position={[-10, 5, 5]} intensity={0.4} color="#ffffff" />
-          <pointLight position={[0, -10, 0]} intensity={0.2} color="#ffffff" />
-          
-          {/* Enhanced Star Field - More stars for realism */}
-          <StarField count={15000} speed={0.02} />
-          
-          {/* Distant star layer */}
-          <StarField count={5000} speed={0.01} />
-          
-          {/* Central Planet (Gas Giant with rings - like Saturn) */}
-          <Planet position={[-4, 2, -5]} size={1.2} color="#d4a574" speed={0.3} rings={true} />
-          
-          {/* Smaller Planets - Realistic colors */}
-          {/* Earth-like planet */}
-          <Planet position={[5, -1, -6]} size={0.8} color="#4a7c59" speed={0.4} />
-          {/* Mars-like planet */}
-          <Planet position={[-6, -2, -4]} size={0.6} color="#cd5c5c" speed={0.5} />
-          
-          {/* Satellites */}
-          <Satellite position={[0, 3, -3]} speed={0.8} />
-          <Satellite position={[3, -2, -4]} speed={1.2} />
-          <Satellite position={[-3, 1, -5]} speed={0.6} />
-          
-          {/* Asteroids */}
-          <Asteroid position={[2, 2, -2]} size={0.2} speed={1.5} />
-          <Asteroid position={[-2, -1, -3]} size={0.15} speed={1.8} />
-          <Asteroid position={[4, 0, -4]} size={0.25} speed={1.2} />
-          <Asteroid position={[-4, 1, -2]} size={0.18} speed={1.6} />
-          
-          <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} />
-        </Canvas>
+        <SpaceScene variant="hero" className="opacity-90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-nexus-950/40 via-nexus-950/70 to-nexus-950 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_30%,rgba(34,211,238,0.12),transparent_60%)] pointer-events-none" />
       </div>
 
-      {/* Subtle cosmic dust particles */}
-      <div className="absolute inset-0 z-[1] pointer-events-none opacity-30">
-        <ParticleSystem count={50} speed={0.2} size={{ min: 0.5, max: 1.5 }} colors={['#ffffff', '#e0e0e0', '#c0c0c0']} />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-4">
+      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          className="absolute top-1/4 left-1/5 w-96 h-96 rounded-full blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, rgba(34, 211, 238, 0.12) 0%, transparent 70%)',
+          }}
+          animate={{ x: [0, 40, 0], y: [0, 24, 0], scale: [1, 1.15, 1] }}
+          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/5 w-80 h-80 rounded-full blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, rgba(45, 212, 191, 0.08) 0%, transparent 70%)',
+          }}
+          animate={{ x: [0, -30, 0], y: [0, -16, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
+
+      <HolographicGrid spacing={56} color="#22d3ee" opacity={0.05} className="z-[2]" />
+
+      <div className="absolute inset-0 z-[2] pointer-events-none opacity-40">
+        <ParticleSystem count={40} speed={0.15} size={{ min: 0.5, max: 1.5 }} colors={spaceColors} interactive={false} />
+      </div>
+
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="flex flex-col items-center justify-center"
+          transition={{ duration: 0.8 }}
         >
-          {/* Main Title - Clean Space Theme */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="mb-6 relative"
+            transition={{ delay: 0.15 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md text-cyan-300 text-sm font-medium mb-8"
           >
-            <HolographicGlitch intensity={0.08} frequency={4}>
-              <motion.h1
-                className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-extrabold mb-3 sm:mb-4 tracking-tight relative px-2"
-                style={{
-                  background: 'linear-gradient(135deg, #60a5fa 0%, #8b5cf6 50%, #ec4899 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  textShadow: '0 0 80px rgba(96, 165, 250, 0.5)',
-                  filter: 'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
-                }}
-                animate={{
-                  filter: [
-                    'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
-                    'drop-shadow(0 0 50px rgba(236, 72, 153, 0.8))',
-                    'drop-shadow(0 0 30px rgba(139, 92, 246, 0.6))',
-                  ],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
-                MANISH UKIRADE
-              </motion.h1>
-            </HolographicGlitch>
-            
-            {/* Subtle starlight rays */}
-            {[...Array(6)].map((_, i) => {
-              const angle = (i * 360) / 6
-              return (
-                <motion.div
-                  key={i}
-                  className="absolute top-1/2 left-1/2 w-[1px] h-32 bg-white/20"
-                  style={{
-                    transformOrigin: 'top center',
-                    transform: `rotate(${angle}deg) translateY(-80px)`,
-                  }}
-                  animate={{
-                    opacity: [0, 0.3, 0],
-                    scaleY: [0, 1, 0],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    delay: i * 0.5,
-                    ease: 'easeInOut',
-                  }}
-                />
-              )
-            })}
-            
-            {/* Subtitle with space theme */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex items-center justify-center gap-3 mb-2"
-            >
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" style={{ boxShadow: '0 0 10px #fbbf24' }} />
-              <span className="text-yellow-400 font-semibold text-sm tracking-widest">SIRIUS</span>
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" style={{ boxShadow: '0 0 10px #fbbf24' }} />
-            </motion.div>
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <span className="font-mono text-xs sm:text-sm tracking-wide">
+              Generative AI · RAG Systems · Cloud & Compliance
+            </span>
           </motion.div>
 
-          {/* Clean Tagline */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 1 }}
-            className="relative"
+            transition={{ delay: 0.25, duration: 0.8 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 px-2"
           >
-            <motion.p
-              className="text-base sm:text-lg md:text-xl lg:text-3xl text-slate-200 mb-3 sm:mb-4 font-light tracking-wide relative px-4"
-              style={{
-                textShadow: '0 0 30px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1)',
-              }}
+            <span className="block text-slate-300 text-lg sm:text-xl md:text-2xl font-normal mb-3 tracking-wide">
+              Manish Ukirade
+            </span>
+            <span
+              className="bg-gradient-to-r from-cyan-300 via-teal-200 to-cyan-400 bg-clip-text text-transparent"
+              style={{ filter: 'drop-shadow(0 0 40px rgba(34, 211, 238, 0.35))' }}
             >
-              Fullstack Web Developer | AI/ML Engineer | Tech Lead
-            </motion.p>
-          </motion.div>
-          
-          {/* Clean Description */}
+              Building Production AI Systems
+            </span>
+          </motion.h1>
+
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
-            className="text-xs sm:text-sm md:text-base text-slate-400 mb-8 sm:mb-10 md:mb-12 max-w-2xl px-4 font-light"
+            transition={{ delay: 0.4 }}
+            className="text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed font-light drop-shadow-lg px-4"
           >
-            Building scalable fullstack web applications and AI-powered solutions. Expert in modern web technologies and machine learning.
+            Senior ML &amp; AI Engineer with 6.7 years shipping Generative AI platforms, RAG pipelines, and
+            enterprise cloud infrastructure. SOC 2 Type II. CyberCube certified. Multi-cloud — Azure, GCP, AWS.
           </motion.p>
 
-          {/* Clean CTA Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 1 }}
-            className="flex gap-6 justify-center flex-wrap relative"
+            transition={{ delay: 0.55 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
           >
             <motion.a
               href="#projects"
-              onHoverStart={() => setIsHoveringCTA(true)}
-              onHoverEnd={() => setIsHoveringCTA(false)}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white font-semibold text-sm sm:text-base md:text-lg shadow-2xl hover:shadow-blue-500/50 active:shadow-blue-500/50 transition-all duration-300 border border-blue-400/30 overflow-hidden touch-manipulation"
-              style={{
-                boxShadow: '0 0 30px rgba(59, 130, 246, 0.4)',
-              }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg bg-gradient-to-r from-cyan-600 to-teal-600 text-white font-semibold text-sm sm:text-base shadow-lg shadow-cyan-900/50 border border-cyan-400/40 backdrop-blur-sm"
             >
-              Explore Projects
-              {/* Particle explosion on hover */}
-              {isHoveringCTA && (
-                <>
-                  {[...Array(20)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute top-1/2 left-1/2 w-2 h-2 bg-blue-400 rounded-full"
-                      initial={{
-                        x: 0,
-                        y: 0,
-                        opacity: 1,
-                        scale: 0,
-                      }}
-                      animate={{
-                        x: Math.cos((i * 360) / 20 * Math.PI / 180) * 100,
-                        y: Math.sin((i * 360) / 20 * Math.PI / 180) * 100,
-                        opacity: [1, 0],
-                        scale: [0, 1, 0],
-                      }}
-                      transition={{
-                        duration: 0.8,
-                        ease: 'easeOut',
-                      }}
-                      style={{
-                        boxShadow: '0 0 10px #60a5fa',
-                      }}
-                    />
-                  ))}
-                </>
-              )}
+              View Work
+              <ArrowRight className="w-4 h-4" />
             </motion.a>
             <motion.a
               href="#contact"
-              onHoverStart={() => setIsHoveringCTA(true)}
-              onHoverEnd={() => setIsHoveringCTA(false)}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative px-10 py-4 bg-slate-900/80 backdrop-blur-sm border-2 border-purple-500/50 rounded-full text-white font-semibold text-lg hover:border-purple-400 transition-all duration-300 overflow-hidden"
-              style={{
-                boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)',
-              }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg bg-slate-900/70 backdrop-blur-md border border-slate-600/80 text-slate-200 font-semibold text-sm sm:text-base hover:border-cyan-500/50 hover:text-white transition-colors"
             >
-              Connect
-              {/* Particle explosion on hover */}
-              {isHoveringCTA && (
-                <>
-                  {[...Array(20)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute top-1/2 left-1/2 w-2 h-2 bg-purple-400 rounded-full"
-                      initial={{
-                        x: 0,
-                        y: 0,
-                        opacity: 1,
-                        scale: 0,
-                      }}
-                      animate={{
-                        x: Math.cos((i * 360) / 20 * Math.PI / 180) * 100,
-                        y: Math.sin((i * 360) / 20 * Math.PI / 180) * 100,
-                        opacity: [1, 0],
-                        scale: [0, 1, 0],
-                      }}
-                      transition={{
-                        duration: 0.8,
-                        ease: 'easeOut',
-                      }}
-                      style={{
-                        boxShadow: '0 0 10px #8b5cf6',
-                      }}
-                    />
-                  ))}
-                </>
-              )}
+              Get in Touch
             </motion.a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+          >
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 + i * 0.08 }}
+                className="rounded-xl border border-cyan-500/20 bg-slate-900/60 backdrop-blur-md px-4 py-5 shadow-[inset_0_0_20px_rgba(34,211,238,0.05)]"
+              >
+                <div className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300">
+                  {stat.value}
+                </div>
+                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">{stat.label}</div>
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
       >
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-slate-400 rounded-full flex justify-center"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="w-5 h-9 border border-cyan-500/40 rounded-full flex justify-center p-1 backdrop-blur-sm"
         >
           <motion.div
             animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1 h-3 bg-slate-400 rounded-full mt-2"
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-1 h-2 bg-cyan-400 rounded-full"
           />
         </motion.div>
       </motion.div>

@@ -164,7 +164,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         opacity: isMobile ? opacity : 1,
         transformStyle: 'preserve-3d',
       }}
-      className="group relative bg-slate-800/50 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500 transition-all duration-300 perspective-1000 touch-none md:touch-auto"
+      className="group relative bg-slate-900/60 rounded-xl overflow-hidden border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 perspective-1000 touch-none md:touch-auto backdrop-blur-sm"
     >
       {/* Holographic Border Effect */}
       <motion.div
@@ -179,7 +179,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         style={{
           border: '2px solid transparent',
           background: isHovered
-            ? 'linear-gradient(90deg, #60a5fa, #8b5cf6, #ec4899, #60a5fa)'
+            ? 'linear-gradient(90deg, #22d3ee, #2dd4bf, #0891b2, #22d3ee)'
             : 'transparent',
           backgroundSize: '200% 200%',
           backgroundClip: 'padding-box',
@@ -250,7 +250,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           {project.tech.map((tech) => (
             <span
               key={tech}
-              className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm border border-blue-500/30"
+              className="px-3 py-1 bg-cyan-500/10 text-cyan-300 rounded-full text-sm border border-cyan-500/25 font-mono text-xs"
             >
               {tech}
             </span>
@@ -290,9 +290,9 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           opacity: isHovered ? 1 : 0,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/15 to-teal-500/15 blur-xl" />
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10"
+          className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-teal-500/10"
           animate={{
             scale: isHovered ? [1, 1.1, 1] : 1,
           }}

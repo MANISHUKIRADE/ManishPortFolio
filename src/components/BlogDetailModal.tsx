@@ -3,6 +3,7 @@ import { X, Calendar, Clock, ArrowLeft } from 'lucide-react'
 import { BlogPost } from '../data/blogs'
 import { useEffect } from 'react'
 import SEO from './SEO'
+import { SITE_URL } from '../config/site'
 import ScanningLine from './animations/ScanningLine'
 import HolographicGlitch from './animations/HolographicGlitch'
 
@@ -67,16 +68,16 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
       author: {
         '@type': 'Person',
         name: blog.author,
-        url: 'https://manish-port-folio.vercel.app'
+        url: SITE_URL
       },
       publisher: {
         '@type': 'Person',
         name: blog.author,
-        url: 'https://manish-port-folio.vercel.app'
+        url: SITE_URL
       },
       mainEntityOfPage: {
         '@type': 'WebPage',
-        '@id': `https://manish-port-folio.vercel.app/blog/${blog.slug}`
+        '@id': `${SITE_URL}/blog/${blog.slug}`
       },
       keywords: blog.seo.keywords,
       articleSection: blog.category,
@@ -108,7 +109,7 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
             description={blog.seo.metaDescription}
             keywords={blog.seo.keywords}
             image={blog.image}
-            url={`https://manish-port-folio.vercel.app/blog/${blog.slug}`}
+            url={`${SITE_URL}/blog/${blog.slug}`}
           />
           {/* Backdrop */}
           <motion.div

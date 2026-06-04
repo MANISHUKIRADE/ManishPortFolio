@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import HolographicGrid from './animations/HolographicGrid'
 
+const NEXUS_COLORS = ['#22d3ee', '#2dd4bf', '#0891b2', '#e0f2fe']
+
 const InteractiveBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -14,8 +16,6 @@ const InteractiveBackground = () => {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
-    const colors = ['#60a5fa', '#8b5cf6', '#ec4899']
-    
     const particles: Array<{
       x: number
       y: number
@@ -27,15 +27,24 @@ const InteractiveBackground = () => {
       maxLife: number
     }> = []
 
-    // Create particles with colors
-    for (let i = 0; i < 80; i++) {
+    const stars: Array<{ x: number; y: number; size: number; twinkle: number }> = []
+    for (let i = 0; i < 120; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 1.2 + 0.3,
+        twinkle: Math.random() * Math.PI * 2,
+      })
+    }
+
+    for (let i = 0; i < 70; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 3 + 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 2.5 + 0.8,
+        color: NEXUS_COLORS[Math.floor(Math.random() * NEXUS_COLORS.length)],
         life: Math.random(),
         maxLife: 1,
       })
@@ -43,6 +52,7 @@ const InteractiveBackground = () => {
 
     let mouseX = 0
     let mouseY = 0
+    let frame = 0
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX
@@ -52,60 +62,60 @@ const InteractiveBackground = () => {
     window.addEventListener('mousemove', handleMouseMove)
 
     const animate = () => {
+      frame++
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+      stars.forEach((star) => {
+        const alpha = 0.25 + Math.sin(frame * 0.02 + star.twinkle) * 0.2
+        ctx.beginPath()
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(224, 242, 254, ${alpha})`
+        ctx.fill()
+      })
+
       particles.forEach((particle, i) => {
-        // Update position
         particle.x += particle.vx
         particle.y += particle.vy
 
-        // Bounce off edges
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
 
-        // Enhanced mouse interaction - energy field
         const dx = mouseX - particle.x
         const dy = mouseY - particle.y
         const distance = Math.sqrt(dx * dx + dy * dy)
-        if (distance < 150) {
-          const force = (150 - distance) / 150
-          particle.vx += (dx / distance) * force * 0.01
-          particle.vy += (dy / distance) * force * 0.01
+        if (distance < 140 && distance > 0) {
+          const force = (140 - distance) / 140
+          particle.vx += (dx / distance) * force * 0.008
+          particle.vy += (dy / distance) * force * 0.008
         }
 
-        // Update life for color shifting
         particle.life += 0.01
         if (particle.life > particle.maxLife) particle.life = 0
 
-        // Draw particle with glow
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fillStyle = particle.color
-        ctx.globalAlpha = 0.6 + Math.sin(particle.life * Math.PI * 2) * 0.4
+        ctx.globalAlpha = 0.45 + Math.sin(particle.life * Math.PI * 2) * 0.25
         ctx.fill()
-        
-        // Glow effect
+
         ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2)
+        ctx.arc(particle.x, particle.y, particle.size * 2.2, 0, Math.PI * 2)
         ctx.fillStyle = particle.color
-        ctx.globalAlpha = 0.2
+        ctx.globalAlpha = 0.12
         ctx.fill()
         ctx.globalAlpha = 1
 
-        // Draw enhanced connections with energy effect
-        particles.slice(i + 1).forEach((otherParticle) => {
-          const dx = particle.x - otherParticle.x
-          const dy = particle.y - otherParticle.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
-
-          if (distance < 200) {
-            const opacity = 0.3 * (1 - distance / 200)
+        particles.slice(i + 1).forEach((other) => {
+          const odx = particle.x - other.x
+          const ody = particle.y - other.y
+          const dist = Math.sqrt(odx * odx + ody * ody)
+          if (dist < 180) {
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
-            ctx.lineTo(otherParticle.x, otherParticle.y)
+            ctx.lineTo(other.x, other.y)
             ctx.strokeStyle = particle.color
-            ctx.globalAlpha = opacity
-            ctx.lineWidth = 1
+            ctx.globalAlpha = 0.15 * (1 - dist / 180)
+            ctx.lineWidth = 0.5
             ctx.stroke()
             ctx.globalAlpha = 1
           }
@@ -134,14 +144,12 @@ const InteractiveBackground = () => {
     <>
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 -z-10 opacity-40"
+        className="fixed inset-0 -z-10 opacity-30"
         style={{ pointerEvents: 'none' }}
       />
-      {/* Holographic Grid Overlay */}
-      <HolographicGrid spacing={80} color="#60a5fa" opacity={0.03} />
+      <HolographicGrid spacing={80} color="#22d3ee" opacity={0.02} />
     </>
   )
 }
 
 export default InteractiveBackground
-

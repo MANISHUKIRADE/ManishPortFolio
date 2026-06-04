@@ -1,22 +1,9 @@
-export interface BlogPost {
-  id: string
-  title: string
-  slug: string
-  excerpt: string
-  content: string
-  image: string
-  author: string
-  date: string
-  readTime: string
-  tags: string[]
-  category: string
-  seo: {
-    metaDescription: string
-    keywords: string
-  }
-}
+export type { BlogPost } from './blog-types'
+import type { BlogPost } from './blog-types'
+import { ragPipelineBlog } from './blog-rag-pipeline'
 
 export const blogs: BlogPost[] = [
+  ragPipelineBlog,
   {
     id: '1',
     title: 'Troubleshooting in Production: Understanding the Real Problem, Why It Happens, and How to Solve It',

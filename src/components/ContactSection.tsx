@@ -5,6 +5,7 @@ import HolographicGlitch from './animations/HolographicGlitch'
 import ParticleSystem from './animations/ParticleSystem'
 import DataStream from './animations/DataStream'
 import { useState } from 'react'
+import { SITE_EMAIL } from '../config/site'
 
 const ContactSection = () => {
   const [hoveredContact, setHoveredContact] = useState<string | null>(null)
@@ -21,9 +22,16 @@ const ContactSection = () => {
   }
 
   return (
-    <section id="contact" className="py-20 px-4 bg-slate-900 relative overflow-hidden">
-      {/* Particle System */}
-      <ParticleSystem count={30} speed={0.3} size={{ min: 1, max: 2 }} colors={['#60a5fa', '#8b5cf6', '#ec4899']} />
+    <section id="contact" className="py-20 px-4 bg-nexus-950 relative overflow-hidden">
+      <div
+        className="absolute inset-0 opacity-25 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(1px 1px at 25% 40%, rgba(34,211,238,0.5) 1px, transparent 0),
+            radial-gradient(1px 1px at 75% 60%, rgba(224,242,254,0.35) 1px, transparent 0)`,
+          backgroundSize: '180px 180px, 260px 260px',
+        }}
+      />
+      <ParticleSystem count={25} speed={0.2} size={{ min: 1, max: 2 }} colors={['#22d3ee', '#2dd4bf', '#e0f2fe']} interactive={false} />
       
       {/* Scanning Lines */}
       <ScanningLine direction="horizontal" speed={4} />
@@ -36,7 +44,7 @@ const ContactSection = () => {
           transition={{ duration: 0.8 }}
         >
           <HolographicGlitch intensity={0.05} frequency={4}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent px-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-cyan-300 to-teal-300 bg-clip-text text-transparent px-4">
               Get In Touch
             </h2>
           </HolographicGlitch>
@@ -49,8 +57,8 @@ const ContactSection = () => {
               { 
                 icon: Mail, 
                 label: 'Email', 
-                href: 'mailto:ukirademanish9797@gmail.com',
-                text: 'ukirademanish9797@gmail.com'
+                href: `mailto:${SITE_EMAIL}`,
+                text: SITE_EMAIL
               },
               { 
                 icon: Linkedin, 

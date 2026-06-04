@@ -10,10 +10,10 @@ interface Message {
 }
 
 const quickPrompts = [
-  'Tell me about KYARA - your AI HR consultant',
-  'What cloud platforms have you worked with?',
-  'Tell me about your AI/ML experience',
-  'What is your experience with enterprise platforms?',
+  'Tell me about your production RAG systems and Kyara',
+  'What compliance certifications have you led?',
+  'Describe your AWS to Azure migration',
+  'What Generative AI and LangChain experience do you have?',
 ]
 
 // Helper function to remove reasoning/thinking tags from content
@@ -48,7 +48,7 @@ const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => 
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'm your portfolio assistant. Ask me anything about Manish Ukirade's projects, AI/ML expertise, cloud architecture, or professional experience!",
+      content: "Hi! I'm Manish's AI assistant. Ask me about his production RAG systems, Generative AI work, cloud migrations, or compliance certifications. What would you like to know?",
       timestamp: new Date(),
     },
   ])

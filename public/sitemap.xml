@@ -3,65 +3,103 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  
-  <!-- Homepage -->
+
   <url>
-    <loc>https://manish-port-folio.vercel.app/</loc>
-    <lastmod>2024-12-23</lastmod>
+    <loc>https://manishukirade.com/</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- Sections -->
+
   <url>
-    <loc>https://manish-port-folio.vercel.app/#home</loc>
-    <lastmod>2024-12-23</lastmod>
+    <loc>https://manishukirade.com/#capabilities</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
+
   <url>
-    <loc>https://manish-port-folio.vercel.app/#projects</loc>
-    <lastmod>2024-12-23</lastmod>
+    <loc>https://manishukirade.com/#projects</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://manishukirade.com/#skills</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
   <url>
-    <loc>https://manish-port-folio.vercel.app/#skills</loc>
-    <lastmod>2024-12-23</lastmod>
+    <loc>https://manishukirade.com/#career</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
   <url>
-    <loc>https://manish-port-folio.vercel.app/#contact</loc>
-    <lastmod>2024-12-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://manish-port-folio.vercel.app/#blog</loc>
-    <lastmod>2024-12-23</lastmod>
+    <loc>https://manishukirade.com/#blog</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- Blog Posts -->
+
   <url>
-    <loc>https://manish-port-folio.vercel.app/blog/troubleshooting-in-production</loc>
+    <loc>https://manishukirade.com/#contact</loc>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://manishukirade.com/blog/production-rag-pipeline-kyara-lessons</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://manishukirade.com/blog/troubleshooting-in-production</loc>
     <lastmod>2024-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
+
   <url>
-    <loc>https://manish-port-folio.vercel.app/blog/employee-attrition-prediction-ml-models</loc>
+    <loc>https://manishukirade.com/blog/building-ai-powered-hr-solutions-kyara</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://manishukirade.com/blog/zero-downtime-cloud-migration-aws-azure</loc>
+    <lastmod>2025-02-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://manishukirade.com/blog/scaling-engineering-teams-tech-lead</loc>
+    <lastmod>2025-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://manishukirade.com/blog/building-resilient-systems-designing-for-failure</loc>
+    <lastmod>2025-04-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://manishukirade.com/blog/employee-attrition-prediction-ml-models</loc>
     <lastmod>2025-05-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
-</urlset>
 
+</urlset>

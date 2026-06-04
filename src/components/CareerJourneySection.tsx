@@ -26,7 +26,7 @@ const careerData: CareerNode[] = [
     position: [-4, 2.5, 0],
     achievements: [
       'Drove 2X revenue growth year-over-year',
-      'Built KYARA - AI HR Consultant',
+      'Built KYARA — production RAG & Generative AI HR platform',
       'Led SOC 2 Type II certification',
       'Migrated AWS to Azure in 15 days',
     ],
