@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Bot, User } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import TypewriterText from './ui/TypewriterText'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { useScrollLock } from '../hooks/useScrollLock'
 
 interface Message {
   id: string
@@ -49,6 +50,7 @@ const INITIAL_GREETING =
   "Hi! I'm Manish's AI assistant. Ask me about his production RAG systems, Generative AI work, cloud migrations, or compliance certifications. What would you like to know?"
 
 const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => {
+  useScrollLock(isOpen)
   const reducedMotion = usePrefersReducedMotion()
   const [greetingDone, setGreetingDone] = useState(reducedMotion)
   const [messages, setMessages] = useState<Message[]>([

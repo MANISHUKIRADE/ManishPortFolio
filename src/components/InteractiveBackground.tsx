@@ -165,25 +165,23 @@ const InteractiveBackground = () => {
 
   if (reducedMotion) {
     return (
-      <div
-        className="fixed inset-0 -z-10 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(34,211,238,0.08), transparent), #030712',
-        }}
-      />
+      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(34,211,238,0.08), transparent), #030712',
+          }}
+        />
+      </div>
     )
   }
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 -z-10 opacity-25"
-        style={{ pointerEvents: 'none' }}
-      />
+    <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-25" />
       <HolographicGrid spacing={80} color="#22d3ee" opacity={0.02} />
-    </>
+    </div>
   )
 }
 

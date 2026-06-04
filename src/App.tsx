@@ -24,7 +24,7 @@ function App() {
   return (
     <>
       <SEO />
-      <div className="min-h-screen bg-nexus-950 relative overflow-x-hidden">
+      <div className="min-h-screen bg-nexus-950 relative overflow-x-clip">
         <InteractiveBackground />
         <Navbar />
         <main>

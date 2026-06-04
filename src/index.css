@@ -8,14 +8,10 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-    'Ubuntu', 'Cantarell', sans-serif;
-  background-color: #030712;
-  color: #e2e8f0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+html {
+  overflow-x: clip;
+  scrollbar-gutter: stable;
+  width: 100%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -24,8 +20,21 @@ body {
   }
 }
 
-html {
-  overflow-x: hidden;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Ubuntu', 'Cantarell', sans-serif;
+  background-color: #030712;
+  color: #e2e8f0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  overflow-y: visible;
+  min-height: 100%;
+  width: 100%;
+}
+
+#root {
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -64,13 +73,6 @@ a,
   }
 }
 
-/* Prevent multiple scrollbars */
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-  position: relative;
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -101,11 +103,10 @@ html, body {
   }
 }
 
-/* Prevent body scroll when modal is open */
+/* Prevent body scroll when modal or chat is open */
 body.modal-open {
   overflow: hidden !important;
   position: fixed;
   width: 100%;
   height: 100%;
 }
-

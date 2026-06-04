@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Calendar, Clock, ArrowLeft } from 'lucide-react'
 import { BlogPost } from '../data/blogs'
 import { useEffect } from 'react'
+import { useScrollLock } from '../hooks/useScrollLock'
 import SEO from './SEO'
 import { SITE_URL } from '../config/site'
 import ScanningLine from './animations/ScanningLine'
@@ -14,37 +15,7 @@ interface BlogDetailModalProps {
 }
 
 const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
-  useEffect(() => {
-    if (isOpen) {
-      // Prevent body scroll and save scroll position
-      const scrollY = window.scrollY
-      const body = document.body
-      const html = document.documentElement
-      
-      // Add class for CSS-based scroll lock
-      body.classList.add('modal-open')
-      
-      // Prevent scroll with inline styles as fallback
-      body.style.position = 'fixed'
-      body.style.top = `-${scrollY}px`
-      body.style.width = '100%'
-      body.style.overflow = 'hidden'
-      html.style.overflow = 'hidden'
-      
-      return () => {
-        // Remove class
-        body.classList.remove('modal-open')
-        
-        // Restore scroll position and styles
-        body.style.position = ''
-        body.style.top = ''
-        body.style.width = ''
-        body.style.overflow = ''
-        html.style.overflow = ''
-        window.scrollTo(0, scrollY)
-      }
-    }
-  }, [isOpen])
+  useScrollLock(isOpen)
 
   // Inject blog structured data
   useEffect(() => {
