@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
-import EarthGlobe from './3D/EarthGlobe'
 import { useState } from 'react'
+import SkillsGlobeView from './3D/SkillsGlobeView'
 import { 
   Code2, 
   Cloud, 
@@ -12,10 +10,12 @@ import {
   TrendingUp,
   CheckCircle2
 } from 'lucide-react'
-import NeuralNetwork from './animations/NeuralNetwork'
 import DataStream from './animations/DataStream'
 import ScanningLine from './animations/ScanningLine'
 import SectionHeader from './ui/SectionHeader'
+import CssStarfield from './ui/CssStarfield'
+import { useCanHover } from '../hooks/useCanHover'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 interface Skill {
   name: string
@@ -121,16 +121,14 @@ const skillCategories: SkillCategory[] = [
 const SkillsSection = () => {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const canHover = useCanHover()
+  const reducedMotion = usePrefersReducedMotion()
 
   return (
     <section id="skills" className="relative py-12 px-4 overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-nexus-950" />
+      <CssStarfield />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent" />
-
-      <div className="absolute inset-0 opacity-20">
-        <NeuralNetwork nodeCount={25} connectionDistance={200} color="#22d3ee" />
-      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
@@ -138,6 +136,7 @@ const SkillsSection = () => {
           title="Skills & Technologies"
           description="Fullstack web development and AI/ML—building end-to-end applications and intelligent systems for production."
           className="mb-10"
+          typeTitle
         />
 
         {/* Skills Grid */}
@@ -208,16 +207,9 @@ const SkillsSection = () => {
                         </div>
                         <div className="h-2 bg-slate-800 rounded-full overflow-hidden relative">
                           {/* Data Stream Background */}
-                          {hoveredSkill === skill.name && (
+                          {canHover && hoveredSkill === skill.name && (
                             <div className="absolute inset-0 pointer-events-none">
-                              <DataStream direction="right" speed={1.5} count={5} color={skill.color} />
-                            </div>
-                          )}
-                          
-                          {/* Scanning Line */}
-                          {hoveredSkill === skill.name && (
-                            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                              <ScanningLine direction="horizontal" speed={2} color={skill.color} />
+                              <DataStream direction="right" speed={1.5} count={3} color={skill.color} />
                             </div>
                           )}
                           
@@ -237,35 +229,16 @@ const SkillsSection = () => {
                             }}
                           >
                             {/* Holographic scan effect */}
-                            {hoveredSkill === skill.name && (
+                            {canHover && hoveredSkill === skill.name && !reducedMotion && (
                               <motion.div
                                 className="absolute inset-0"
                                 style={{
-                                  background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)`,
+                                  background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent)`,
                                 }}
-                                animate={{
-                                  x: ['-100%', '200%'],
-                                }}
-                                transition={{
-                                  duration: 1.5,
-                                  repeat: Infinity,
-                                  ease: 'linear',
-                                }}
+                                animate={{ x: ['-100%', '200%'] }}
+                                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
                               />
                             )}
-                            
-                            {/* Shimmer effect */}
-                            <motion.div
-                              className="absolute inset-0 bg-white"
-                              initial={{ opacity: 0 }}
-                              animate={{
-                                opacity: hoveredSkill === skill.name ? [0, 0.6, 0] : 0,
-                              }}
-                              transition={{
-                                duration: 1.5,
-                                repeat: hoveredSkill === skill.name ? Infinity : 0,
-                              }}
-                            />
                           </motion.div>
                         </div>
                       </motion.div>
@@ -310,52 +283,12 @@ const SkillsSection = () => {
           transition={{ duration: 0.8 }}
           className="relative h-[350px] md:h-[400px] rounded-2xl border border-slate-800/50 bg-gradient-to-b from-slate-900/50 to-slate-950/50 backdrop-blur-sm overflow-hidden mb-8"
         >
-          {/* Scanning overlay */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <ScanningLine direction="horizontal" speed={3} />
-          </div>
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <ScanningLine direction="vertical" speed={4} />
-          </div>
-          
-          {/* Particle nodes around globe */}
-          {[...Array(12)].map((_, i) => {
-            const angle = (i * 360) / 12
-            const radius = 180
-            return (
-              <motion.div
-                key={i}
-                className="absolute w-2 h-2 bg-cyan-400 rounded-full"
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  transformOrigin: 'center',
-                }}
-                animate={{
-                  x: [0, Math.cos(angle * Math.PI / 180) * radius, 0],
-                  y: [0, Math.sin(angle * Math.PI / 180) * radius, 0],
-                  opacity: [0.3, 1, 0.3],
-                  scale: [0.5, 1, 0.5],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
-              />
-            )
-          })}
-          
-          <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-            <ambientLight intensity={0.6} />
-            <pointLight position={[10, 10, 10]} intensity={1.5} color="#ffffff" />
-            <pointLight position={[-10, 10, 10]} intensity={1} color="#93c5fd" />
-            <pointLight position={[0, -10, 5]} intensity={0.8} color="#60a5fa" />
-            <directionalLight position={[5, 5, 5]} intensity={0.8} color="#ffffff" />
-            <directionalLight position={[-5, -5, -5]} intensity={0.3} color="#2dd4bf" />
-            <EarthGlobe />
-            <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
-          </Canvas>
+          {canHover && !reducedMotion && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-50">
+              <ScanningLine direction="horizontal" speed={3} />
+            </div>
+          )}
+          <SkillsGlobeView />
         </motion.div>
 
         {/* Summary Stats */}

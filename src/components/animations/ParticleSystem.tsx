@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react'
+import { useInViewPause } from '../../hooks/useInViewPause'
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 
 interface Particle {
   x: number
@@ -18,27 +20,43 @@ interface ParticleSystemProps {
   size?: { min: number; max: number }
   className?: string
   interactive?: boolean
+  active?: boolean
 }
 
-const ParticleSystem = ({ 
+const ParticleSystem = ({
   count = 50,
-  colors = ['#60a5fa', '#8b5cf6', '#ec4899'],
+  colors = ['#22d3ee', '#2dd4bf', '#0891b2'],
   speed = 0.5,
   size = { min: 1, max: 3 },
   className = '',
-  interactive = true
+  interactive = true,
+  active: activeProp,
 }: ParticleSystemProps) => {
+  const [containerRef, inView] = useInViewPause<HTMLDivElement>()
+  const reducedMotion = usePrefersReducedMotion()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
   const mouseRef = useRef({ x: 0, y: 0 })
   const animationFrameRef = useRef<number>()
 
+  const isActive = activeProp !== undefined ? activeProp && inView : inView
+
   useEffect(() => {
+    if (reducedMotion || !isActive) {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+        animationFrameRef.current = undefined
+      }
+      return
+    }
+
     const canvas = canvasRef.current
     if (!canvas) return
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+
+    const drawConnections = count <= 30
 
     const resize = () => {
       canvas.width = canvas.offsetWidth
@@ -47,7 +65,6 @@ const ParticleSystem = ({
     resize()
     window.addEventListener('resize', resize)
 
-    // Initialize particles
     particlesRef.current = Array.from({ length: count }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -68,61 +85,60 @@ const ParticleSystem = ({
     }
 
     if (interactive) {
-      canvas.addEventListener('mousemove', handleMouseMove)
+      canvas.addEventListener('mousemove', handleMouseMove, { passive: true })
     }
 
+    let running = true
+
     const animate = () => {
+      if (!running) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       particlesRef.current.forEach((particle, i) => {
-        // Update position
         particle.x += particle.vx
         particle.y += particle.vy
 
-        // Bounce off edges
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
 
-        // Mouse interaction
         if (interactive) {
           const dx = mouseRef.current.x - particle.x
           const dy = mouseRef.current.y - particle.y
           const distance = Math.sqrt(dx * dx + dy * dy)
-          if (distance < 150) {
-            particle.vx += (dx / distance) * 0.01
-            particle.vy += (dy / distance) * 0.01
+          if (distance < 120 && distance > 0) {
+            particle.vx += (dx / distance) * 0.008
+            particle.vy += (dy / distance) * 0.008
           }
         }
 
-        // Update life
         particle.life += 0.01
         if (particle.life > particle.maxLife) particle.life = 0
 
-        // Draw particle
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fillStyle = particle.color
-        ctx.globalAlpha = 0.6 + Math.sin(particle.life * Math.PI * 2) * 0.4
+        ctx.globalAlpha = 0.5
         ctx.fill()
         ctx.globalAlpha = 1
 
-        // Draw connections
-        particlesRef.current.slice(i + 1).forEach((other) => {
-          const dx = particle.x - other.x
-          const dy = particle.y - other.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
-
-          if (distance < 150) {
-            ctx.beginPath()
-            ctx.moveTo(particle.x, particle.y)
-            ctx.lineTo(other.x, other.y)
-            ctx.strokeStyle = particle.color
-            ctx.globalAlpha = 0.2 * (1 - distance / 150)
-            ctx.lineWidth = 1
-            ctx.stroke()
-            ctx.globalAlpha = 1
+        if (drawConnections) {
+          for (let j = i + 1; j < particlesRef.current.length; j++) {
+            const other = particlesRef.current[j]
+            const dx = particle.x - other.x
+            const dy = particle.y - other.y
+            const distance = Math.sqrt(dx * dx + dy * dy)
+            if (distance < 120) {
+              ctx.beginPath()
+              ctx.moveTo(particle.x, particle.y)
+              ctx.lineTo(other.x, other.y)
+              ctx.strokeStyle = particle.color
+              ctx.globalAlpha = 0.12 * (1 - distance / 120)
+              ctx.lineWidth = 0.5
+              ctx.stroke()
+              ctx.globalAlpha = 1
+            }
           }
-        })
+        }
       })
 
       animationFrameRef.current = requestAnimationFrame(animate)
@@ -131,6 +147,7 @@ const ParticleSystem = ({
     animate()
 
     return () => {
+      running = false
       window.removeEventListener('resize', resize)
       if (interactive) {
         canvas.removeEventListener('mousemove', handleMouseMove)
@@ -139,16 +156,15 @@ const ParticleSystem = ({
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [count, colors, speed, size, interactive])
+  }, [count, colors, speed, size, interactive, isActive, reducedMotion])
+
+  if (reducedMotion) return null
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={`absolute inset-0 pointer-events-none ${className}`}
-      style={{ opacity: 0.6 }}
-    />
+    <div ref={containerRef} className={`absolute inset-0 pointer-events-none ${className}`}>
+      <canvas ref={canvasRef} className="w-full h-full" style={{ opacity: 0.5 }} />
+    </div>
   )
 }
 
 export default ParticleSystem
-

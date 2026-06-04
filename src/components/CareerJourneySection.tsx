@@ -3,8 +3,11 @@ import { useState, useRef, useEffect } from 'react'
 import { Building2, Calendar, TrendingUp, Award, Zap, ArrowRight, MapPin, X } from 'lucide-react'
 import ScanningLine from './animations/ScanningLine'
 import HolographicGlitch from './animations/HolographicGlitch'
-import ParticleSystem from './animations/ParticleSystem'
 import EnergyConnection from './animations/EnergyConnection'
+import SectionHeader from './ui/SectionHeader'
+import CssStarfield from './ui/CssStarfield'
+import { useCanHover } from '../hooks/useCanHover'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 interface CareerNode {
   company: string
@@ -84,6 +87,8 @@ const CareerJourneySection = () => {
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
   const expandedViewRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
+  const canHover = useCanHover()
+  const reducedMotion = usePrefersReducedMotion()
 
   // Auto-scroll to expanded view on mobile when opened
   useEffect(() => {
@@ -102,39 +107,24 @@ const CareerJourneySection = () => {
   return (
     <section id="career" ref={sectionRef} className="relative py-12 px-4 overflow-hidden">
       {/* Elegant Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
-      
-      {/* Particle System */}
-      <ParticleSystem count={25} speed={0.3} size={{ min: 1, max: 2 }} colors={['#3b82f6', '#8b5cf6', '#ec4899']} />
-      
-      {/* Scanning Lines */}
-      <ScanningLine direction="horizontal" speed={4} />
-      
+      <div className="absolute inset-0 bg-nexus-950" />
+      <CssStarfield />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent" />
+
+      {canHover && !reducedMotion && (
+        <div className="absolute inset-0 pointer-events-none opacity-30">
+          <ScanningLine direction="horizontal" speed={4} />
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
-        >
-          <motion.span
-            initial={{ opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-block text-blue-400 text-sm font-semibold uppercase tracking-wider mb-4"
-          >
-            Professional Journey
-          </motion.span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
-            Career Timeline
-          </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            6+ years of innovation, leadership, and technical excellence
-          </p>
-        </motion.div>
+        <SectionHeader
+          eyebrow="Professional Journey"
+          title="Career Timeline"
+          description="6.7+ years of innovation, leadership, and technical excellence"
+          typeTitle
+          className="mb-10"
+        />
 
         {/* Expanded Experience View */}
         <AnimatePresence mode="wait">

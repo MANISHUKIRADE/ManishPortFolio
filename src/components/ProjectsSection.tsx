@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import ProjectCard from './ProjectCard'
 import HolographicGrid from './animations/HolographicGrid'
-import ParticleSystem from './animations/ParticleSystem'
 import SectionHeader from './ui/SectionHeader'
+import CssStarfield from './ui/CssStarfield'
 import { useState } from 'react'
 
 const projects = [
@@ -64,26 +64,15 @@ const ProjectsSection = () => {
   return (
     <section id="projects" className="py-24 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-nexus-900/90" />
-      <div
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(1px 1px at 20% 30%, rgba(224,242,254,0.4) 1px, transparent 0),
-            radial-gradient(1px 1px at 60% 70%, rgba(34,211,238,0.35) 1px, transparent 0),
-            radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.25) 1px, transparent 0),
-            radial-gradient(1px 1px at 40% 80%, rgba(45,212,191,0.3) 1px, transparent 0)`,
-          backgroundSize: '200px 200px, 280px 280px, 240px 240px, 320px 320px',
-        }}
-      />
+      <CssStarfield />
       <HolographicGrid spacing={60} color="#22d3ee" opacity={0.04} />
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-        <ParticleSystem count={15} speed={0.1} colors={['#22d3ee', '#e0f2fe']} interactive={false} />
-      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
           eyebrow="Selected Work"
           title="Featured Projects"
           description="Production Generative AI, enterprise SaaS, ML systems, cloud migrations, and compliance engineering."
+          typeTitle
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">

@@ -1,15 +1,19 @@
 import { motion } from 'framer-motion'
 import { Mail, Linkedin, Github, Phone, Download } from 'lucide-react'
 import ScanningLine from './animations/ScanningLine'
-import HolographicGlitch from './animations/HolographicGlitch'
-import ParticleSystem from './animations/ParticleSystem'
 import DataStream from './animations/DataStream'
+import SectionHeader from './ui/SectionHeader'
+import CssStarfield from './ui/CssStarfield'
 import { useState } from 'react'
 import { SITE_EMAIL } from '../config/site'
+import { useCanHover } from '../hooks/useCanHover'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 const ContactSection = () => {
   const [hoveredContact, setHoveredContact] = useState<string | null>(null)
   const [isDownloading, setIsDownloading] = useState(false)
+  const canHover = useCanHover()
+  const reducedMotion = usePrefersReducedMotion()
 
   const handleResumeDownload = () => {
     setIsDownloading(true)
@@ -23,34 +27,27 @@ const ContactSection = () => {
 
   return (
     <section id="contact" className="py-20 px-4 bg-nexus-950 relative overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-25 pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(1px 1px at 25% 40%, rgba(34,211,238,0.5) 1px, transparent 0),
-            radial-gradient(1px 1px at 75% 60%, rgba(224,242,254,0.35) 1px, transparent 0)`,
-          backgroundSize: '180px 180px, 260px 260px',
-        }}
-      />
-      <ParticleSystem count={25} speed={0.2} size={{ min: 1, max: 2 }} colors={['#22d3ee', '#2dd4bf', '#e0f2fe']} interactive={false} />
-      
-      {/* Scanning Lines */}
-      <ScanningLine direction="horizontal" speed={4} />
-      
+      <CssStarfield />
+      {canHover && !reducedMotion && (
+        <div className="absolute inset-0 pointer-events-none opacity-40">
+          <ScanningLine direction="horizontal" speed={4} />
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: reducedMotion ? 0 : 0.8 }}
         >
-          <HolographicGlitch intensity={0.05} frequency={4}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-cyan-300 to-teal-300 bg-clip-text text-transparent px-4">
-              Get In Touch
-            </h2>
-          </HolographicGlitch>
-          <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-10 md:mb-12 px-4">
-            I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
-          </p>
+          <SectionHeader
+            eyebrow="Contact"
+            title="Get In Touch"
+            description="I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions."
+            typeTitle
+            className="mb-8"
+          />
 
           <div className="flex justify-center gap-3 sm:gap-4 md:gap-6 flex-wrap px-4">
             {[
@@ -95,7 +92,7 @@ const ContactSection = () => {
                 className="relative p-3 sm:p-4 bg-slate-800 rounded-lg border border-slate-700 hover:border-blue-500 active:border-blue-500 transition-colors group flex flex-col items-center gap-1.5 sm:gap-2 min-w-[120px] sm:min-w-[140px] overflow-hidden touch-manipulation"
               >
                 {/* Holographic projection effect */}
-                {hoveredContact === social.label && (
+                {canHover && hoveredContact === social.label && (
                   <>
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                       <ScanningLine direction="horizontal" speed={2} />
@@ -119,7 +116,7 @@ const ContactSection = () => {
                 )}
                 
                 {/* Energy waves */}
-                {hoveredContact === social.label && (
+                {canHover && hoveredContact === social.label && (
                   <>
                     {[...Array(3)].map((_, i) => (
                       <motion.div
@@ -161,7 +158,7 @@ const ContactSection = () => {
               whileHover={{ scale: 1.05, y: -8 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleResumeDownload}
-              className="relative group cursor-pointer max-w-lg mx-auto p-6 sm:p-8 rounded-xl sm:rounded-2xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-md overflow-hidden touch-manipulation mx-4 sm:mx-auto"
+              className="relative group cursor-pointer max-w-lg mx-auto p-6 sm:p-8 rounded-xl sm:rounded-2xl border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-900/20 to-teal-900/20 backdrop-blur-md overflow-hidden mx-4 sm:mx-auto"
             >
               {/* Scanning Beam */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">

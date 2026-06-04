@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
+import TypewriterText from './ui/TypewriterText'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 interface Message {
   id: string
@@ -43,12 +45,17 @@ const removeReasoningTags = (content: string): string => {
   return cleaned.trim()
 }
 
+const INITIAL_GREETING =
+  "Hi! I'm Manish's AI assistant. Ask me about his production RAG systems, Generative AI work, cloud migrations, or compliance certifications. What would you like to know?"
+
 const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => {
+  const reducedMotion = usePrefersReducedMotion()
+  const [greetingDone, setGreetingDone] = useState(reducedMotion)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'm Manish's AI assistant. Ask me about his production RAG systems, Generative AI work, cloud migrations, or compliance certifications. What would you like to know?",
+      content: reducedMotion ? INITIAL_GREETING : '',
       timestamp: new Date(),
     },
   ])
@@ -312,9 +319,21 @@ const ChatbotWidget = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => 
                     }`}
                   >
                     <div className="text-sm leading-relaxed break-words whitespace-pre-wrap">
-                      {message.role === 'assistant' ? (
-                        // Format assistant messages: highlight questions while preserving ALL spaces
-                        // Also remove any reasoning tags that might have slipped through
+                      {message.role === 'assistant' && message.id === '1' && !greetingDone ? (
+                        <TypewriterText
+                          text={INITIAL_GREETING}
+                          speed={28}
+                          showCursor
+                          onComplete={() => {
+                            setGreetingDone(true)
+                            setMessages((prev) =>
+                              prev.map((m) =>
+                                m.id === '1' ? { ...m, content: INITIAL_GREETING } : m
+                              )
+                            )
+                          }}
+                        />
+                      ) : message.role === 'assistant' ? (
                         (() => {
                           const content = removeReasoningTags(message.content)
                           // Find question sentences (text ending with ?)

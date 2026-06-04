@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion'
 import { Bot, Brain, Cloud, Code2, Link2, Shield } from 'lucide-react'
-import SpaceScene from './3D/SpaceScene'
 import SectionHeader from './ui/SectionHeader'
 import HolographicGrid from './animations/HolographicGrid'
-import ParticleSystem from './animations/ParticleSystem'
+import CssStarfield from './ui/CssStarfield'
 
 const capabilities = [
   {
@@ -47,21 +46,17 @@ const capabilities = [
 const CapabilitiesSection = () => {
   return (
     <section id="capabilities" className="relative py-24 px-4 overflow-hidden">
-      <div className="absolute inset-0 bg-nexus-950">
-        <SpaceScene variant="subtle" className="opacity-50" />
-        <div className="absolute inset-0 bg-nexus-950/85" />
-      </div>
+      <div className="absolute inset-0 bg-nexus-950" />
+      <CssStarfield />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,211,238,0.12),transparent)] pointer-events-none" />
       <HolographicGrid spacing={48} color="#22d3ee" opacity={0.04} />
-      <div className="absolute inset-0 pointer-events-none opacity-25">
-        <ParticleSystem count={20} speed={0.12} colors={['#22d3ee', '#2dd4bf']} interactive={false} />
-      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
           eyebrow="Production Systems"
           title="Production AI & Engineering Capabilities"
           description="Generative AI, RAG, cloud infrastructure, and enterprise compliance — shipped for 10+ clients in production."
+          typeTitle
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
