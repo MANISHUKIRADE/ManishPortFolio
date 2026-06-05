@@ -34,8 +34,8 @@ const contacts = [
 const ContactSection = () => {
   const handleResumeDownload = () => {
     const link = document.createElement('a')
-    link.href = '/Resume.pdf'
-    link.download = 'Manish_Ukirade_Resume.pdf'
+    link.href = '/Manish_Ukirde_Resume_v2.pdf'
+    link.download = 'Manish_Ukirde_Resume_v2.pdf'
     link.click()
   }
 
