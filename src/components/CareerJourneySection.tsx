@@ -1,13 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef, useEffect } from 'react'
 import { Building2, Calendar, TrendingUp, Award, Zap, ArrowRight, MapPin, X } from 'lucide-react'
-import ScanningLine from './animations/ScanningLine'
-import HolographicGlitch from './animations/HolographicGlitch'
 import EnergyConnection from './animations/EnergyConnection'
 import SectionHeader from './ui/SectionHeader'
-import CssStarfield from './ui/CssStarfield'
-import { useCanHover } from '../hooks/useCanHover'
-import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import SectionShell from './ui/SectionShell'
+import HudCard from './ui/HudCard'
 
 interface CareerNode {
   company: string
@@ -87,9 +84,6 @@ const CareerJourneySection = () => {
   const [selectedNode, setSelectedNode] = useState<number | null>(null)
   const expandedViewRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
-  const canHover = useCanHover()
-  const reducedMotion = usePrefersReducedMotion()
-
   // Auto-scroll to expanded view on mobile when opened
   useEffect(() => {
     if (selectedNode !== null && expandedViewRef.current && window.innerWidth < 768) {
@@ -105,23 +99,12 @@ const CareerJourneySection = () => {
   }, [selectedNode])
 
   return (
-    <section id="career" ref={sectionRef} className="relative py-12 px-4 overflow-hidden">
-      {/* Elegant Background */}
-      <div className="absolute inset-0 bg-nexus-950" />
-      <CssStarfield />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent" />
-
-      {canHover && !reducedMotion && (
-        <div className="absolute inset-0 pointer-events-none opacity-30">
-          <ScanningLine direction="horizontal" speed={4} />
-        </div>
-      )}
-
-      <div className="max-w-7xl mx-auto relative z-10">
+    <SectionShell id="career" ref={sectionRef} contentClassName="max-w-7xl mx-auto">
         <SectionHeader
           eyebrow="Professional Journey"
           title="Career Timeline"
           description="6.7+ years of innovation, leadership, and technical excellence"
+          sysId="SYS.CAREER"
           typeTitle
           className="mb-10"
         />
@@ -136,16 +119,8 @@ const CareerJourneySection = () => {
               animate={{ opacity: 1, y: 0, height: 'auto' }}
               exit={{ opacity: 0, y: -50, height: 0 }}
               transition={{ duration: 0.5 }}
-              className={`relative mb-8 p-6 rounded-2xl border-2 ${careerData[selectedNode].gradient} bg-slate-900/80 backdrop-blur-md shadow-2xl shadow-blue-500/20 overflow-hidden scroll-mt-20`}
+              className="relative mb-8 p-6 rounded-xl border border-cyan-400/40 bg-slate-900/80 backdrop-blur-md shadow-[0_0_30px_rgba(34,211,238,0.12)] overflow-hidden scroll-mt-20"
             >
-              {/* Scanning effect */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <ScanningLine direction="horizontal" speed={2} />
-              </div>
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <ScanningLine direction="vertical" speed={3} />
-              </div>
-              
               <button
                 onClick={() => setSelectedNode(null)}
                 className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-10"
@@ -155,11 +130,12 @@ const CareerJourneySection = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Left Column: Company Info */}
                 <div>
-                  <HolographicGlitch intensity={0.05} frequency={3}>
-                    <h3 className={`text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${careerData[selectedNode].gradient}`}>
-                      {careerData[selectedNode].company}
-                    </h3>
-                  </HolographicGlitch>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-1">
+                    // Active Role
+                  </p>
+                  <h3 className="text-3xl font-bold mb-2 text-cyan-300">
+                    {careerData[selectedNode].company}
+                  </h3>
                   <p className="text-lg text-slate-300 mb-3">{careerData[selectedNode].role}</p>
                   <div className="flex items-center gap-4 text-sm text-slate-400 mb-4">
                     <div className="flex items-center gap-2">
@@ -291,87 +267,17 @@ const CareerJourneySection = () => {
                   isSelected ? 'z-10' : ''
                 }`}
               >
-                {/* Card Container */}
-                <motion.div
-                  animate={{
-                    borderColor: isSelected ? node.color : undefined,
-                    boxShadow: isSelected 
-                      ? `0 0 40px ${node.color}40, 0 0 80px ${node.color}20`
-                      : undefined,
-                  }}
-                  transition={{ duration: 0.5 }}
-                  className={`relative h-full min-h-[320px] rounded-2xl overflow-hidden border-2 transition-all duration-500 ${
-                    isSelected 
-                      ? 'border-blue-400 shadow-2xl shadow-blue-500/20' 
-                      : 'border-slate-800 hover:border-slate-700'
-                  }`}
-                >
-                  {/* Holographic projection effect */}
-                  {isSelected && (
-                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                      <ScanningLine direction="horizontal" speed={2} />
-                    </div>
-                  )}
-                  
-                  {/* Gradient Background */}
-                  <motion.div
-                    animate={{
-                      opacity: isSelected ? 0.3 : 0.1,
-                      scale: isSelected ? 1.05 : 1,
-                    }}
-                    transition={{ duration: 0.5 }}
-                    className={`absolute inset-0 bg-gradient-to-br ${node.gradient} group-hover:opacity-20 transition-opacity duration-500`}
-                  />
-                  
-                  {/* Space Particles Effect */}
-                  {isSelected && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="absolute inset-0 overflow-hidden pointer-events-none"
-                    >
-                      {[...Array(20)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-1 h-1 bg-blue-400 rounded-full"
-                          initial={{
-                            x: Math.random() * 100 + '%',
-                            y: Math.random() * 100 + '%',
-                            opacity: 0,
-                          }}
-                          animate={{
-                            y: [null, Math.random() * 100 + '%'],
-                            opacity: [0, 1, 0],
-                            scale: [0, 1, 0],
-                          }}
-                          transition={{
-                            duration: 2 + Math.random() * 2,
-                            repeat: Infinity,
-                            delay: Math.random() * 2,
-                          }}
-                        />
-                      ))}
-                    </motion.div>
-                  )}
-                  
-                  {/* Content Overlay */}
-                  <div className="relative z-10 p-4 bg-slate-900/80 backdrop-blur-md h-full flex flex-col">
+                <HudCard selected={isSelected} className="h-full min-h-[320px] overflow-hidden">
+                  <div className="relative z-10 p-4 h-full flex flex-col">
                     {/* Header */}
                     <div className="mb-3">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
-                          {isSelected ? (
-                            <HolographicGlitch intensity={0.05} frequency={3}>
-                              <h3 className="text-xl font-bold mb-1 text-blue-400">
-                                {node.company}
-                              </h3>
-                            </HolographicGlitch>
-                          ) : (
-                            <h3 className="text-xl font-bold mb-1 transition-colors duration-300 text-white group-hover:text-blue-300">
-                              {node.company}
-                            </h3>
-                          )}
+                          <h3 className={`text-xl font-bold mb-1 transition-colors duration-300 ${
+                            isSelected ? 'text-cyan-300' : 'text-white group-hover:text-cyan-200'
+                          }`}>
+                            {node.company}
+                          </h3>
                           <p className="text-slate-400 text-sm mb-2">{node.role}</p>
                         </div>
                         <motion.div
@@ -386,7 +292,7 @@ const CareerJourneySection = () => {
                           }}
                         >
                           <Building2 className={`w-6 h-6 transition-colors duration-300 ${
-                            isSelected ? 'text-blue-400' : 'text-slate-600 group-hover:text-blue-400'
+                            isSelected ? 'text-cyan-400' : 'text-slate-600 group-hover:text-cyan-400'
                           }`} />
                         </motion.div>
                       </div>
@@ -408,10 +314,10 @@ const CareerJourneySection = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <Award className={`w-4 h-4 transition-colors duration-300 ${
-                          isSelected ? 'text-blue-400' : 'text-slate-600'
+                          isSelected ? 'text-cyan-400' : 'text-slate-600'
                         }`} />
-                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
-                          Key Achievements
+                        <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
+                          // Key Achievements
                         </span>
                       </div>
                       <ul className="space-y-1.5">
@@ -443,7 +349,7 @@ const CareerJourneySection = () => {
                               }}
                             >
                               <TrendingUp className={`w-3 h-3 mt-0.5 flex-shrink-0 transition-colors duration-300 ${
-                                isSelected ? 'text-blue-400' : 'text-slate-600'
+                                isSelected ? 'text-cyan-400' : 'text-slate-600'
                               }`} />
                             </motion.div>
                             <motion.span
@@ -460,53 +366,19 @@ const CareerJourneySection = () => {
                     
                     {/* Bottom Accent */}
                     <div className={`mt-3 pt-3 border-t transition-colors duration-300 ${
-                      isSelected ? 'border-blue-400/30' : 'border-slate-800 group-hover:border-slate-700'
+                      isSelected ? 'border-cyan-400/30' : 'border-slate-800 group-hover:border-slate-700'
                     }`}>
                       <div className="flex items-center justify-between">
-                        <motion.span
-                          animate={{
-                            color: isSelected ? '#60a5fa' : '#64748b',
-                          }}
-                          className="text-xs"
-                        >
-                          Click to explore
-                        </motion.span>
-                        <motion.div
-                          animate={{
-                            x: isSelected ? [0, 5, 0] : 0,
-                            rotate: isSelected ? [0, 15, 0] : 0,
-                          }}
-                          transition={{
-                            duration: 1,
-                            repeat: isSelected ? Infinity : 0,
-                            repeatDelay: 0.5,
-                          }}
-                        >
-                          <ArrowRight className={`w-4 h-4 transition-colors duration-300 ${
-                            isSelected ? 'text-blue-400' : 'text-slate-600 group-hover:text-blue-400'
-                          }`} />
-                        </motion.div>
+                        <span className={`text-xs font-mono ${isSelected ? 'text-cyan-400' : 'text-slate-500'}`}>
+                          Select to explore
+                        </span>
+                        <ArrowRight className={`w-4 h-4 transition-colors duration-300 ${
+                          isSelected ? 'text-cyan-400' : 'text-slate-600 group-hover:text-cyan-400'
+                        }`} />
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Glow Effect */}
-                  <motion.div
-                    animate={{
-                      opacity: isSelected ? 1 : 0,
-                      scale: isSelected ? [1, 1.1, 1] : 1,
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: isSelected ? Infinity : 0,
-                    }}
-                    className="absolute inset-0 rounded-2xl"
-                    style={{
-                      background: `radial-gradient(circle at center, ${node.color}40, transparent 70%)`,
-                      filter: 'blur(20px)',
-                    } as React.CSSProperties}
-                  />
-                </motion.div>
+                </HudCard>
               </motion.div>
             )
           })}
@@ -519,15 +391,14 @@ const CareerJourneySection = () => {
           viewport={{ once: true }}
           className="text-center mt-8"
         >
-          <div className="inline-flex items-center gap-2 bg-slate-900/50 backdrop-blur-sm rounded-full px-6 py-3 border border-slate-800">
-            <Zap className="w-4 h-4 text-blue-400" />
-            <p className="text-slate-400 text-sm">
-              Click cards to explore • Drag to rotate 3D view • Scroll to zoom
+          <div className="inline-flex items-center gap-2 bg-slate-900/60 backdrop-blur-sm rounded-md px-6 py-3 border border-cyan-500/20">
+            <Zap className="w-4 h-4 text-cyan-400" />
+            <p className="text-slate-400 text-sm font-mono">
+              Click cards to explore career milestones
             </p>
           </div>
         </motion.div>
-      </div>
-    </section>
+    </SectionShell>
   )
 }
 

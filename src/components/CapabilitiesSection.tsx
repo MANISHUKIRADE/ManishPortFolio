@@ -1,8 +1,7 @@
-import { motion } from 'framer-motion'
 import { Bot, Brain, Cloud, Code2, Link2, Shield } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
-import HolographicGrid from './animations/HolographicGrid'
-import CssStarfield from './ui/CssStarfield'
+import SectionShell from './ui/SectionShell'
+import HudCard from './ui/HudCard'
 
 const capabilities = [
   {
@@ -45,43 +44,30 @@ const capabilities = [
 
 const CapabilitiesSection = () => {
   return (
-    <section id="capabilities" className="relative py-24 px-4 overflow-hidden">
-      <div className="absolute inset-0 bg-nexus-950" />
-      <CssStarfield />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(34,211,238,0.12),transparent)] pointer-events-none" />
-      <HolographicGrid spacing={48} color="#22d3ee" opacity={0.04} />
+    <SectionShell id="capabilities" py="py-16 md:py-20" contentClassName="max-w-7xl mx-auto">
+      <SectionHeader
+        eyebrow="Production Systems"
+        title="Production AI & Engineering Capabilities"
+        description="Generative AI, RAG, cloud infrastructure, and enterprise compliance — shipped for 10+ clients in production."
+        sysId="SYS.CAPABILITIES"
+        typeTitle
+      />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <SectionHeader
-          eyebrow="Production Systems"
-          title="Production AI & Engineering Capabilities"
-          description="Generative AI, RAG, cloud infrastructure, and enterprise compliance — shipped for 10+ clients in production."
-          typeTitle
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {capabilities.map((item, index) => (
-            <motion.article
-              key={item.title}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
-              className="group relative rounded-2xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-md p-6 hover:border-cyan-500/40 transition-colors duration-300"
-            >
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-br from-cyan-500/5 to-transparent" />
-              <div className="relative z-10">
-                <div className="mb-4 inline-flex p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-                  <item.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{item.description}</p>
-              </div>
-            </motion.article>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {capabilities.map((item) => (
+          <HudCard key={item.title} className="p-5 h-full">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/60 mb-3">
+              // Module
+            </p>
+            <div className="mb-4 inline-flex p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+              <item.icon className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+            <p className="text-sm text-slate-400 leading-relaxed">{item.description}</p>
+          </HudCard>
+        ))}
       </div>
-    </section>
+    </SectionShell>
   )
 }
 

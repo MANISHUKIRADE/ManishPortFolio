@@ -1,271 +1,97 @@
-import { motion } from 'framer-motion'
-import { Mail, Linkedin, Github, Phone, Download } from 'lucide-react'
-import ScanningLine from './animations/ScanningLine'
-import DataStream from './animations/DataStream'
+import { Mail, Linkedin, Github, Phone, Download, MapPin } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
-import CssStarfield from './ui/CssStarfield'
-import { useState } from 'react'
+import SectionShell from './ui/SectionShell'
+import HudPanel from './ui/HudPanel'
 import { SITE_EMAIL } from '../config/site'
-import { useCanHover } from '../hooks/useCanHover'
-import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+
+const contacts = [
+  {
+    icon: Mail,
+    label: 'Email',
+    href: `mailto:${SITE_EMAIL}`,
+    text: SITE_EMAIL,
+  },
+  {
+    icon: Linkedin,
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/manish-ukirade-13b866124/',
+    text: 'LinkedIn Profile',
+  },
+  {
+    icon: Phone,
+    label: 'Phone',
+    href: 'tel:+918691983106',
+    text: '+91 869 198 3106',
+  },
+  {
+    icon: Github,
+    label: 'GitHub',
+    href: 'https://github.com/MANISHUKIRADE',
+    text: 'GitHub Profile',
+  },
+]
 
 const ContactSection = () => {
-  const [hoveredContact, setHoveredContact] = useState<string | null>(null)
-  const [isDownloading, setIsDownloading] = useState(false)
-  const canHover = useCanHover()
-  const reducedMotion = usePrefersReducedMotion()
-
   const handleResumeDownload = () => {
-    setIsDownloading(true)
-    // Create a download link for resume
     const link = document.createElement('a')
-    link.href = '/Resume.pdf' // Resume file in public folder
+    link.href = '/Resume.pdf'
     link.download = 'Manish_Ukirade_Resume.pdf'
     link.click()
-    setTimeout(() => setIsDownloading(false), 2000)
   }
 
   return (
-    <section id="contact" className="py-20 px-4 bg-nexus-950 relative overflow-hidden">
-      <CssStarfield />
-      {canHover && !reducedMotion && (
-        <div className="absolute inset-0 pointer-events-none opacity-40">
-          <ScanningLine direction="horizontal" speed={4} />
-        </div>
-      )}
+    <SectionShell id="contact" py="py-16 md:py-20" contentClassName="max-w-3xl mx-auto">
+      <SectionHeader
+        eyebrow="Contact"
+        title="Get In Touch"
+        description="Open to discussing new projects, creative ideas, or opportunities to be part of your vision."
+        sysId="SYS.COMMS"
+        typeTitle
+        className="mb-8"
+      />
 
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: reducedMotion ? 0 : 0.8 }}
-        >
-          <SectionHeader
-            eyebrow="Contact"
-            title="Get In Touch"
-            description="I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions."
-            typeTitle
-            className="mb-8"
-          />
-
-          <div className="flex justify-center gap-3 sm:gap-4 md:gap-6 flex-wrap px-4">
-            {[
-              { 
-                icon: Mail, 
-                label: 'Email', 
-                href: `mailto:${SITE_EMAIL}`,
-                text: SITE_EMAIL
-              },
-              { 
-                icon: Linkedin, 
-                label: 'LinkedIn', 
-                href: 'https://www.linkedin.com/in/manish-ukirade-13b866124/',
-                text: 'LinkedIn Profile'
-              },
-              { 
-                icon: Phone, 
-                label: 'Phone', 
-                href: 'tel:+918691983106',
-                text: '+91 869 198 3106'
-              },
-              { 
-                icon: Github, 
-                label: 'GitHub', 
-                href: 'https://github.com/MANISHUKIRADE',
-                text: 'GitHub Profile'
-              },
-            ].map((social, index) => (
-              <motion.a
+      <HudPanel
+        moduleLabel="// Comms Module"
+        sysId="SYS.CONTACT v1.0"
+        badge="Channel Open"
+        footer={
+          <div className="flex items-center justify-center gap-2 text-slate-500">
+            <MapPin className="w-3 h-3 text-cyan-400/60" />
+            <span className="font-mono text-[10px]">Thane, India 400605</span>
+          </div>
+        }
+      >
+        <div className="p-5 sm:p-6">
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            {contacts.map((social) => (
+              <a
                 key={social.label}
                 href={social.href}
                 target={social.label === 'Email' || social.label === 'Phone' ? undefined : '_blank'}
                 rel={social.label === 'Email' || social.label === 'Phone' ? undefined : 'noopener noreferrer'}
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.1, y: -5 }}
-                whileTap={{ scale: 0.9 }}
-                onHoverStart={() => setHoveredContact(social.label)}
-                onHoverEnd={() => setHoveredContact(null)}
-                className="relative p-3 sm:p-4 bg-slate-800 rounded-lg border border-slate-700 hover:border-blue-500 active:border-blue-500 transition-colors group flex flex-col items-center gap-1.5 sm:gap-2 min-w-[120px] sm:min-w-[140px] overflow-hidden touch-manipulation"
+                className="flex flex-col items-center gap-2 p-4 rounded-lg border border-cyan-500/20 bg-slate-800/50 hover:border-cyan-400/40 hover:bg-slate-800/80 transition-colors touch-manipulation"
               >
-                {/* Holographic projection effect */}
-                {canHover && hoveredContact === social.label && (
-                  <>
-                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                      <ScanningLine direction="horizontal" speed={2} />
-                    </div>
-                    <motion.div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        background: 'radial-gradient(circle at center, rgba(96, 165, 250, 0.2), transparent 70%)',
-                        filter: 'blur(20px)',
-                      }}
-                      animate={{
-                        opacity: [0.5, 1, 0.5],
-                        scale: [1, 1.1, 1],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                      }}
-                    />
-                  </>
-                )}
-                
-                {/* Energy waves */}
-                {canHover && hoveredContact === social.label && (
-                  <>
-                    {[...Array(3)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute inset-0 rounded-lg border-2 border-blue-400 pointer-events-none"
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.5, 0, 0.5],
-                        }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          delay: i * 0.3,
-                        }}
-                        style={{
-                          boxShadow: '0 0 20px rgba(96, 165, 250, 0.5)',
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-                
-                <social.icon className="w-6 h-6 sm:w-8 sm:h-8 text-slate-300 group-hover:text-blue-400 active:text-blue-400 transition-colors relative z-10" />
-                <span className="text-xs sm:text-sm text-slate-300 group-hover:text-white active:text-white transition-colors relative z-10 text-center">{social.text}</span>
+                <social.icon className="w-5 h-5 text-cyan-400" />
+                <span className="text-xs font-mono text-slate-300 text-center">{social.text}</span>
                 <span className="sr-only">{social.label}</span>
-              </motion.a>
+              </a>
             ))}
           </div>
 
-          {/* Resume Download Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-12"
+          <button
+            type="button"
+            onClick={handleResumeDownload}
+            className="w-full flex items-center justify-center gap-3 p-4 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/15 hover:border-cyan-400/50 transition-colors touch-manipulation"
           >
-            <motion.div
-              whileHover={{ scale: 1.05, y: -8 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleResumeDownload}
-              className="relative group cursor-pointer max-w-lg mx-auto p-6 sm:p-8 rounded-xl sm:rounded-2xl border-2 border-cyan-500/30 bg-gradient-to-br from-cyan-900/20 to-teal-900/20 backdrop-blur-md overflow-hidden mx-4 sm:mx-auto"
-            >
-              {/* Scanning Beam */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <ScanningLine direction="horizontal" speed={3} />
-              </div>
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(139, 92, 246, 0.2) 90deg, transparent 180deg)',
-                }}
-                animate={{ rotate: 360 }}
-                transition={{
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: 'linear',
-                }}
-              />
-              
-              {/* Data Transfer Animation */}
-              {isDownloading && (
-                <div className="absolute inset-0 pointer-events-none">
-                  <DataStream direction="down" speed={1} count={10} color="#8b5cf6" />
-                </div>
-              )}
-              
-              {/* Animated Background */}
-              <motion.div
-                animate={{
-                  background: [
-                    'linear-gradient(90deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1))',
-                    'linear-gradient(90deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1))',
-                    'linear-gradient(90deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1))',
-                  ],
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-              />
-              
-              <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6">
-                <motion.div
-                  animate={{
-                    scale: [1, 1.1, 1],
-                    rotate: [0, 5, -5, 0],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 1,
-                  }}
-                  className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 opacity-20 group-hover:opacity-30 active:opacity-30 transition-opacity"
-                >
-                  <Download className="w-10 h-10 sm:w-12 sm:h-12 text-purple-400" />
-                </motion.div>
-                
-                <div className="text-center px-2">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Download Resume</h3>
-                  <p className="text-xs sm:text-sm text-slate-400">Click to download my complete professional profile</p>
-                </div>
-                
-                <motion.div
-                  animate={{ 
-                    x: [0, 8, 0],
-                    opacity: [1, 0.7, 1],
-                  }}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-purple-600/20 rounded-lg border border-purple-500/30"
-                >
-                  <Download className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
-                  <span className="text-xs sm:text-sm font-medium text-purple-300">Download PDF</span>
-                </motion.div>
-              </div>
-              
-              {/* Glow Effect */}
-              <motion.div
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-                className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{
-                  background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.4), transparent 70%)',
-                  filter: 'blur(30px)',
-                } as React.CSSProperties}
-              />
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-8 text-slate-400"
-          >
-            <p>📍 Thane, India 400605</p>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
+            <Download className="w-5 h-5 text-cyan-400" />
+            <div className="text-left">
+              <p className="font-mono text-sm text-white">Download Resume</p>
+              <p className="font-mono text-[10px] text-slate-500">PDF · Full profile</p>
+            </div>
+          </button>
+        </div>
+      </HudPanel>
+    </SectionShell>
   )
 }
 

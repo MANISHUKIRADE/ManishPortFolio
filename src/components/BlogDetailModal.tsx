@@ -88,17 +88,15 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            onTouchMove={(e) => e.preventDefault()}
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overscroll-none"
-            style={{ touchAction: 'none' }}
           >
             <motion.div
               className="absolute inset-0"
               animate={{
                 background: [
-                  'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1), transparent 70%)',
-                  'radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.1), transparent 70%)',
-                  'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1), transparent 70%)',
+                  'radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.1), transparent 70%)',
+                  'radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.1), transparent 70%)',
+                  'radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.1), transparent 70%)',
                 ],
               }}
               transition={{
@@ -115,10 +113,10 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 sm:inset-4 md:inset-8 lg:inset-16 z-50 overflow-hidden pointer-events-none"
+            className="fixed inset-0 sm:inset-4 md:inset-8 lg:inset-16 z-50 overflow-hidden pointer-events-none min-h-0"
           >
             <div 
-              className="h-full w-full bg-slate-900 rounded-none sm:rounded-2xl border-0 sm:border border-purple-500/30 shadow-2xl flex flex-col relative pointer-events-auto"
+              className="h-full min-h-0 w-full bg-slate-900 rounded-none sm:rounded-2xl border-0 sm:border border-cyan-500/30 shadow-2xl flex flex-col relative pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Scanning Lines Effect */}
@@ -131,9 +129,9 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                 className="absolute inset-0 rounded-2xl pointer-events-none z-10"
                 animate={{
                   boxShadow: [
-                    '0 0 30px rgba(139, 92, 246, 0.3), inset 0 0 30px rgba(139, 92, 246, 0.1)',
-                    '0 0 50px rgba(139, 92, 246, 0.5), inset 0 0 50px rgba(139, 92, 246, 0.2)',
-                    '0 0 30px rgba(139, 92, 246, 0.3), inset 0 0 30px rgba(139, 92, 246, 0.1)',
+                    '0 0 30px rgba(34, 211, 238, 0.3), inset 0 0 30px rgba(34, 211, 238, 0.1)',
+                    '0 0 50px rgba(34, 211, 238, 0.5), inset 0 0 50px rgba(34, 211, 238, 0.2)',
+                    '0 0 30px rgba(34, 211, 238, 0.3), inset 0 0 30px rgba(34, 211, 238, 0.1)',
                   ],
                 }}
                 transition={{
@@ -164,9 +162,9 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                   className="absolute inset-0"
                   animate={{
                     background: [
-                      'linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.1) 100%)',
-                      'linear-gradient(180deg, transparent 0%, rgba(236, 72, 153, 0.1) 100%)',
-                      'linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.1) 100%)',
+                      'linear-gradient(180deg, transparent 0%, rgba(34, 211, 238, 0.1) 100%)',
+                      'linear-gradient(180deg, transparent 0%, rgba(45, 212, 191, 0.1) 100%)',
+                      'linear-gradient(180deg, transparent 0%, rgba(34, 211, 238, 0.1) 100%)',
                     ],
                   }}
                   transition={{
@@ -181,13 +179,13 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 bg-slate-900/90 backdrop-blur-sm rounded-full border border-purple-500/30 hover:bg-purple-600/20 active:bg-purple-600/20 transition-colors z-10 touch-manipulation"
+                  className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 bg-slate-900/90 backdrop-blur-sm rounded-full border border-cyan-500/30 hover:bg-cyan-600/20 active:bg-cyan-600/20 transition-colors z-10 touch-manipulation"
                 >
                   <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </motion.button>
 
                 {/* Category Badge */}
-                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-0.5 sm:py-1 bg-purple-600/80 backdrop-blur-sm rounded-full border border-purple-400/30">
+                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-0.5 sm:py-1 bg-cyan-600/80 backdrop-blur-sm rounded-full border border-cyan-400/30">
                   <span className="text-[10px] sm:text-xs font-semibold text-white">{blog.category}</span>
                 </div>
 
@@ -226,14 +224,13 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
 
               {/* Content */}
               <motion.div 
-                className="flex-1 overflow-y-auto overscroll-contain modal-content"
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain modal-content"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
                 style={{ 
                   WebkitOverflowScrolling: 'touch',
                   overscrollBehavior: 'contain',
-                  maxHeight: '100%'
                 }}
               >
                 <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 lg:p-12">
@@ -250,8 +247,8 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.7 + tagIndex * 0.1, type: 'spring' }}
-                        whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(139, 92, 246, 0.5)' }}
-                        className="px-2 sm:px-3 py-0.5 sm:py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs sm:text-sm border border-purple-500/30 cursor-default"
+                        whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(34, 211, 238, 0.5)' }}
+                        className="px-2 sm:px-3 py-0.5 sm:py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs sm:text-sm border border-cyan-500/30 cursor-default"
                       >
                         {tag}
                       </motion.span>
@@ -333,7 +330,7 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                     whileHover={{ x: -5, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={onClose}
-                    className="flex items-center gap-2 text-purple-400 hover:text-purple-300 active:text-purple-300 transition-colors px-4 py-2 rounded-lg hover:bg-purple-500/10 touch-manipulation text-sm sm:text-base"
+                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 active:text-cyan-300 transition-colors px-4 py-2 rounded-lg hover:bg-cyan-500/10 touch-manipulation text-sm sm:text-base"
                   >
                     <motion.div
                       animate={{ x: [0, -3, 0] }}

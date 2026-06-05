@@ -1,326 +1,197 @@
-import { motion } from 'framer-motion'
 import { useState } from 'react'
-import SkillsGlobeView from './3D/SkillsGlobeView'
-import { 
-  Code2, 
-  Cloud, 
-  Brain, 
-  Database, 
+import {
+  Code2,
+  Cloud,
+  Brain,
+  Database,
   Zap,
   TrendingUp,
-  CheckCircle2
 } from 'lucide-react'
-import DataStream from './animations/DataStream'
-import ScanningLine from './animations/ScanningLine'
 import SectionHeader from './ui/SectionHeader'
-import CssStarfield from './ui/CssStarfield'
-import { useCanHover } from '../hooks/useCanHover'
-import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
-
-interface Skill {
-  name: string
-  level: number
-  color: string
-  icon?: string
-}
+import SectionShell from './ui/SectionShell'
+import HudPanel from './ui/HudPanel'
 
 interface SkillCategory {
+  id: string
+  label: string
   title: string
   icon: React.ReactNode
-  skills: Skill[]
-  gradient: string
+  accent: string
+  skills: string[]
 }
 
 const skillCategories: SkillCategory[] = [
   {
-    title: 'Programming Languages',
-    icon: <Code2 className="w-6 h-6" />,
-    gradient: 'from-blue-600 to-cyan-500',
-    skills: [
-      { name: 'Node.js', level: 92, color: '#339933' },
-      { name: 'Python', level: 88, color: '#3776ab' },
-      { name: 'TypeScript', level: 90, color: '#3178c6' },
-      { name: 'JavaScript', level: 90, color: '#f7df1e' },
-    ],
-  },
-  {
-    title: 'Frontend & Frameworks',
-    icon: <Zap className="w-6 h-6" />,
-    gradient: 'from-violet-600 to-cyan-500',
-    skills: [
-      { name: 'React.js', level: 90, color: '#61dafb' },
-      { name: 'Next.js', level: 85, color: '#ffffff' },
-      { name: 'Vue.js', level: 85, color: '#4fc08d' },
-    ],
-  },
-  {
-    title: 'Cloud Platforms',
-    icon: <Cloud className="w-6 h-6" />,
-    gradient: 'from-orange-600 to-amber-500',
-    skills: [
-      { name: 'AWS', level: 85, color: '#ff9900' },
-      { name: 'Azure', level: 88, color: '#0078d4' },
-      { name: 'GCP', level: 85, color: '#4285f4' },
-    ],
-  },
-  {
+    id: 'ai-rag',
+    label: 'AI / RAG',
     title: 'Generative AI & RAG',
-    icon: <Brain className="w-6 h-6" />,
-    gradient: 'from-cyan-600 to-teal-500',
+    icon: <Brain className="w-4 h-4" />,
+    accent: '#22d3ee',
     skills: [
-      { name: 'Generative AI', level: 90, color: '#22d3ee' },
-      { name: 'LangChain', level: 88, color: '#1c3c3c' },
-      { name: 'RAG Systems', level: 90, color: '#2dd4bf' },
-      { name: 'Prompt Engineering', level: 88, color: '#67e8f9' },
-      { name: 'ChromaDB', level: 85, color: '#ff6b35' },
-      { name: 'Vector Databases', level: 85, color: '#8b5cf6' },
-      { name: 'Pinecone', level: 80, color: '#000000' },
-      { name: 'FastAPI', level: 88, color: '#009688' },
-      { name: 'MLflow', level: 82, color: '#0194e2' },
-      { name: 'Hugging Face', level: 85, color: '#ffd21e' },
-      { name: 'Agentic AI', level: 85, color: '#ec4899' },
-      { name: 'OpenAI API', level: 88, color: '#10a37f' },
-      { name: 'Groq', level: 80, color: '#f55036' },
+      'Generative AI',
+      'LangChain',
+      'RAG Systems',
+      'Prompt Engineering',
+      'ChromaDB',
+      'Vector Databases',
+      'Pinecone',
+      'FastAPI',
+      'MLflow',
+      'Hugging Face',
+      'Agentic AI',
+      'OpenAI API',
+      'Groq',
     ],
   },
   {
+    id: 'languages',
+    label: 'Languages',
+    title: 'Programming Languages',
+    icon: <Code2 className="w-4 h-4" />,
+    accent: '#38bdf8',
+    skills: ['Python', 'TypeScript', 'Node.js', 'JavaScript'],
+  },
+  {
+    id: 'frontend',
+    label: 'Frontend',
+    title: 'Frontend & Frameworks',
+    icon: <Zap className="w-4 h-4" />,
+    accent: '#a78bfa',
+    skills: ['React.js', 'Next.js', 'Vue.js'],
+  },
+  {
+    id: 'cloud',
+    label: 'Cloud',
+    title: 'Cloud Platforms',
+    icon: <Cloud className="w-4 h-4" />,
+    accent: '#f59e0b',
+    skills: ['Azure', 'AWS', 'GCP'],
+  },
+  {
+    id: 'ml',
+    label: 'AI / ML',
     title: 'AI/ML & NLP',
-    icon: <Brain className="w-6 h-6" />,
-    gradient: 'from-pink-600 to-rose-500',
-    skills: [
-      { name: 'AI/ML', level: 88, color: '#ff6b6b' },
-      { name: 'NLP/LLM', level: 88, color: '#9b59b6' },
-      { name: 'TensorFlow', level: 82, color: '#ff6f00' },
-      { name: 'CatBoost', level: 85, color: '#3b8eed' },
-    ],
+    icon: <Brain className="w-4 h-4" />,
+    accent: '#f472b6',
+    skills: ['AI/ML', 'NLP/LLM', 'TensorFlow', 'CatBoost'],
   },
   {
+    id: 'devops',
+    label: 'DevOps',
     title: 'DevOps & Containers',
-    icon: <TrendingUp className="w-6 h-6" />,
-    gradient: 'from-cyan-600 to-blue-500',
-    skills: [
-      { name: 'Docker', level: 90, color: '#2496ed' },
-      { name: 'Kubernetes', level: 80, color: '#326ce5' },
-      { name: 'CI/CD', level: 88, color: '#2088ff' },
-      { name: 'Jenkins', level: 85, color: '#d24939' },
-    ],
+    icon: <TrendingUp className="w-4 h-4" />,
+    accent: '#22d3ee',
+    skills: ['Docker', 'Kubernetes', 'CI/CD', 'Jenkins'],
   },
   {
+    id: 'databases',
+    label: 'Data',
     title: 'Databases',
-    icon: <Database className="w-6 h-6" />,
-    gradient: 'from-emerald-600 to-teal-500',
-    skills: [
-      { name: 'PostgreSQL', level: 88, color: '#336791' },
-      { name: 'MySQL', level: 85, color: '#4479a1' },
-      { name: 'Redis', level: 82, color: '#dc382d' },
-      { name: 'Firebase', level: 80, color: '#ffca28' },
-    ],
+    icon: <Database className="w-4 h-4" />,
+    accent: '#34d399',
+    skills: ['PostgreSQL', 'MySQL', 'Redis', 'Firebase'],
   },
 ]
 
 const SkillsSection = () => {
-  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
-  const canHover = useCanHover()
-  const reducedMotion = usePrefersReducedMotion()
+  const [activeTab, setActiveTab] = useState(0)
+  const active = skillCategories[activeTab]
 
   return (
-    <section id="skills" className="relative py-12 px-4 overflow-hidden">
-      <div className="absolute inset-0 bg-nexus-950" />
-      <CssStarfield />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent" />
+    <SectionShell id="skills" contentClassName="max-w-5xl mx-auto">
+      <SectionHeader
+        eyebrow="Technical Expertise"
+        title="Skills & Technologies"
+        description="Production stack across AI, cloud, and full-stack engineering — organized by mission module."
+        sysId="SYS.TECH_STACK"
+        typeTitle
+      />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <SectionHeader
-          eyebrow="Technical Expertise"
-          title="Skills & Technologies"
-          description="Fullstack web development and AI/ML—building end-to-end applications and intelligent systems for production."
-          className="mb-10"
-          typeTitle
-        />
-
-        {/* Skills Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {skillCategories.map((category, categoryIndex) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: categoryIndex * 0.1 }}
-              onClick={() => setSelectedCategory(selectedCategory === categoryIndex ? null : categoryIndex)}
-              className={`group relative cursor-pointer transition-all duration-500 ${
-                selectedCategory === categoryIndex ? 'scale-105 z-10' : 'hover:scale-[1.02]'
-              }`}
-            >
-              {/* Category Card */}
-              <div className={`relative h-full rounded-2xl overflow-hidden border-2 transition-all duration-500 ${
-                selectedCategory === categoryIndex
-                  ? 'border-cyan-400/60 shadow-2xl shadow-cyan-500/15'
-                  : 'border-slate-800 hover:border-slate-700'
-              }`}>
-                {/* Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500 ${
-                  selectedCategory === categoryIndex ? 'opacity-20' : ''
-                }`} />
-                
-                {/* Content */}
-                <div className="relative z-10 p-4 bg-slate-900/80 backdrop-blur-md h-full flex flex-col">
-                  {/* Header */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className={`p-2 rounded-xl bg-gradient-to-br ${category.gradient} opacity-20`}>
-                      <div className="text-cyan-400">
-                        {category.icon}
-                      </div>
-                    </div>
-                    <h3
-                      className={`text-base font-bold transition-colors duration-300 ${
-                        selectedCategory === categoryIndex
-                          ? 'text-cyan-300'
-                          : 'text-white group-hover:text-cyan-200'
-                      }`}
-                    >
-                      {category.title}
-                    </h3>
-                  </div>
-                  
-                  {/* Skills List */}
-                  <div className="space-y-2 flex-1">
-                    {category.skills.map((skill, skillIndex) => (
-                      <motion.div
-                        key={skill.name}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: (categoryIndex * 0.1) + (skillIndex * 0.05) }}
-                        onMouseEnter={() => setHoveredSkill(skill.name)}
-                        onMouseLeave={() => setHoveredSkill(null)}
-                        className="space-y-1.5"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className={`text-sm font-medium transition-colors duration-300 ${
-                            hoveredSkill === skill.name ? 'text-white' : 'text-slate-300'
-                          }`}>
-                            {skill.name}
-                          </span>
-                          <span className="text-xs text-slate-500">{skill.level}%</span>
-                        </div>
-                        <div className="h-2 bg-slate-800 rounded-full overflow-hidden relative">
-                          {/* Data Stream Background */}
-                          {canHover && hoveredSkill === skill.name && (
-                            <div className="absolute inset-0 pointer-events-none">
-                              <DataStream direction="right" speed={1.5} count={3} color={skill.color} />
-                            </div>
-                          )}
-                          
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${skill.level}%` }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1, delay: (categoryIndex * 0.1) + (skillIndex * 0.1) }}
-                            className="h-full rounded-full relative overflow-hidden"
-                            style={{
-                              background: `linear-gradient(90deg, ${skill.color}, ${skill.color}dd)`,
-                            }}
-                            animate={{
-                              boxShadow: hoveredSkill === skill.name
-                                ? `0 0 15px ${skill.color}80, 0 0 30px ${skill.color}40`
-                                : 'none',
-                            }}
-                          >
-                            {/* Holographic scan effect */}
-                            {canHover && hoveredSkill === skill.name && !reducedMotion && (
-                              <motion.div
-                                className="absolute inset-0"
-                                style={{
-                                  background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent)`,
-                                }}
-                                animate={{ x: ['-100%', '200%'] }}
-                                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                              />
-                            )}
-                          </motion.div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  
-                  {/* Footer */}
-                  <div className={`mt-3 pt-3 border-t transition-colors duration-300 ${
-                    selectedCategory === categoryIndex ? 'border-cyan-400/30' : 'border-slate-800 group-hover:border-slate-700'
-                  }`}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-slate-500">
-                        {category.skills.length} skills
-                      </span>
-                      <CheckCircle2 className={`w-4 h-4 transition-colors duration-300 ${
-                        selectedCategory === categoryIndex ? 'text-cyan-400' : 'text-slate-600 group-hover:text-cyan-400'
-                      }`} />
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Glow Effect */}
-                <div
-                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${
-                    selectedCategory === categoryIndex ? 'opacity-100' : ''
-                  }`}
-                  style={{
-                    background: `radial-gradient(circle at center, rgba(34, 211, 238, 0.15), transparent 70%)`,
-                    filter: 'blur(20px)',
-                  } as React.CSSProperties}
-                />
-              </div>
-            </motion.div>
-          ))}
+      <HudPanel
+        moduleLabel="// Skills Module"
+        sysId="SYS.TECH_STACK v2.0"
+        badge={`${String(activeTab + 1).padStart(2, '0')} / ${String(skillCategories.length).padStart(2, '0')}`}
+        footer={
+          <div className="flex items-center justify-between gap-3">
+            <span className="font-mono text-[10px] text-slate-600 uppercase tracking-widest">
+              Status: Online
+            </span>
+            <span className="font-mono text-[10px] text-cyan-400/50">
+              {skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0)} capabilities loaded
+            </span>
+          </div>
+        }
+      >
+        <div
+          className="flex gap-1.5 px-3 sm:px-4 py-3 border-b border-slate-800/80 overflow-x-auto"
+          role="tablist"
+          aria-label="Skill categories"
+        >
+          {skillCategories.map((category, index) => {
+            const isActive = activeTab === index
+            return (
+              <button
+                key={category.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`skills-panel-${category.id}`}
+                id={`skills-tab-${category.id}`}
+                onClick={() => setActiveTab(index)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-mono text-xs uppercase tracking-wider whitespace-nowrap border transition-colors ${
+                  isActive
+                    ? 'bg-cyan-500/15 border-cyan-400/50 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.2)]'
+                    : 'bg-slate-900/50 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:border-slate-600'
+                }`}
+              >
+                <span className={isActive ? 'text-cyan-400' : 'text-slate-500'}>{category.icon}</span>
+                {category.label}
+              </button>
+            )
+          })}
         </div>
 
-        {/* 3D Visualization */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative h-[350px] md:h-[400px] rounded-2xl border border-slate-800/50 bg-gradient-to-b from-slate-900/50 to-slate-950/50 backdrop-blur-sm overflow-hidden mb-8"
+        <div
+          id={`skills-panel-${active.id}`}
+          role="tabpanel"
+          aria-labelledby={`skills-tab-${active.id}`}
+          className="px-4 sm:px-5 py-5 sm:py-6"
         >
-          {canHover && !reducedMotion && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-50">
-              <ScanningLine direction="horizontal" speed={3} />
-            </div>
-          )}
-          <SkillsGlobeView />
-        </motion.div>
-
-        {/* Summary Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          {[
-            { label: 'Total Skills', value: skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0) },
-            { label: 'Categories', value: skillCategories.length },
-            { label: 'Years Experience', value: '6.7+' },
-            { label: 'Expertise Level', value: '85%+' },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="text-center p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-800/50"
+          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-800/60">
+            <div
+              className="p-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
+              style={{ boxShadow: `0 0 16px ${active.accent}22` }}
             >
-              <div className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 mb-1">
-                {stat.value}
-              </div>
-              <div className="text-xs text-slate-400">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+              {active.icon}
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-0.5">
+                Active Module
+              </p>
+              <h3 className="text-base sm:text-lg font-semibold text-white">{active.title}</h3>
+            </div>
+            <span className="ml-auto font-mono text-xs text-slate-500 hidden sm:block">
+              {active.skills.length} nodes
+            </span>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {active.skills.map((skill) => (
+              <span
+                key={skill}
+                className="px-3 py-1.5 rounded-md font-mono text-xs sm:text-sm text-slate-200 bg-slate-800/80 border border-slate-700/80"
+                style={{
+                  borderColor: `${active.accent}33`,
+                  boxShadow: `inset 0 0 12px ${active.accent}08`,
+                }}
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </HudPanel>
+    </SectionShell>
   )
 }
 

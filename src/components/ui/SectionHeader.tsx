@@ -8,6 +8,7 @@ interface SectionHeaderProps {
   description?: string
   className?: string
   typeTitle?: boolean
+  sysId?: string
 }
 
 const SectionHeader = ({
@@ -16,32 +17,47 @@ const SectionHeader = ({
   description,
   className = '',
   typeTitle = false,
+  sysId,
 }: SectionHeaderProps) => {
   const reducedMotion = usePrefersReducedMotion()
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: reducedMotion ? 0 : 0.7 }}
-      className={`text-center mb-14 md:mb-16 ${className}`}
+      transition={{ duration: reducedMotion ? 0 : 0.5 }}
+      className={`text-center mb-10 md:mb-12 ${className}`}
     >
-      <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/25 bg-cyan-500/5 text-cyan-400 text-xs font-semibold uppercase tracking-[0.2em] mb-5">
-        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-        {eyebrow}
-      </span>
-      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white tracking-tight min-h-[2.5rem] md:min-h-[3rem]">
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-cyan-500/25 bg-slate-900/50 backdrop-blur-sm mb-5">
+        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+        <span className="font-mono text-[10px] sm:text-xs text-cyan-400/90 uppercase tracking-[0.2em]">
+          // {eyebrow}
+        </span>
+        {sysId && (
+          <span className="hidden sm:inline font-mono text-[10px] text-slate-600">· {sysId}</span>
+        )}
+      </div>
+
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white tracking-tight min-h-[2.5rem] md:min-h-[3rem]">
         {typeTitle && !reducedMotion ? (
           <TypewriterText text={title} speed={35} showCursor={false} as="span" />
         ) : (
           title
         )}
       </h2>
+
       {description && (
-        <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">{description}</p>
+        <p className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
+          {description}
+        </p>
       )}
-      <div className="mt-8 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-cyan-500/60 to-transparent" />
+
+      <div className="mt-6 mx-auto flex items-center justify-center gap-3">
+        <span className="h-px w-12 bg-gradient-to-r from-transparent to-cyan-500/50" />
+        <span className="font-mono text-[10px] text-cyan-500/40 uppercase tracking-widest">sector</span>
+        <span className="h-px w-12 bg-gradient-to-l from-transparent to-cyan-500/50" />
+      </div>
     </motion.div>
   )
 }

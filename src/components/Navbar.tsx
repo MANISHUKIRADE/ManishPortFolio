@@ -51,7 +51,7 @@ const Navbar = () => {
       animate={{ y: 0 }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-nexus-950/90 backdrop-blur-xl border-b border-slate-800/80 shadow-lg shadow-black/20'
+          ? 'bg-nexus-950/90 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_4px_24px_rgba(34,211,238,0.06)]'
           : 'bg-transparent border-b border-transparent'
       }`}
     >
@@ -83,7 +83,7 @@ const Navbar = () => {
                     scrollTo(item.href)
                   }}
                   whileHover={{ color: '#f8fafc' }}
-                  className={`relative px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`relative px-3 py-2 text-sm font-mono transition-colors ${
                     isActive ? 'text-cyan-300' : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
@@ -124,7 +124,7 @@ const Navbar = () => {
             }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="hidden sm:inline-flex px-4 py-2 text-sm font-semibold rounded-lg bg-cyan-600/90 hover:bg-cyan-500 text-white border border-cyan-400/30 transition-colors"
+            className="hidden sm:inline-flex px-4 py-2 font-mono text-xs rounded-md bg-cyan-600/90 hover:bg-cyan-500 text-white border border-cyan-400/30 transition-colors uppercase tracking-wider"
           >
             Contact
           </motion.a>

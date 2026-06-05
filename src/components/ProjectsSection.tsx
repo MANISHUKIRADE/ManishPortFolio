@@ -1,9 +1,6 @@
-import { motion } from 'framer-motion'
 import ProjectCard from './ProjectCard'
-import HolographicGrid from './animations/HolographicGrid'
 import SectionHeader from './ui/SectionHeader'
-import CssStarfield from './ui/CssStarfield'
-import { useState } from 'react'
+import SectionShell from './ui/SectionShell'
 
 const projects = [
   {
@@ -59,47 +56,22 @@ const projects = [
 ]
 
 const ProjectsSection = () => {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
-
   return (
-    <section id="projects" className="py-24 px-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-nexus-900/90" />
-      <CssStarfield />
-      <HolographicGrid spacing={60} color="#22d3ee" opacity={0.04} />
+    <SectionShell id="projects" py="py-16 md:py-20" contentClassName="max-w-7xl mx-auto">
+      <SectionHeader
+        eyebrow="Selected Work"
+        title="Featured Projects"
+        description="Production Generative AI, enterprise SaaS, ML systems, cloud migrations, and compliance engineering."
+        sysId="SYS.PROJECTS"
+        typeTitle
+      />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <SectionHeader
-          eyebrow="Selected Work"
-          title="Featured Projects"
-          description="Production Generative AI, enterprise SaaS, ML systems, cloud migrations, and compliance engineering."
-          typeTitle
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
-          {projects.map((project, index) => (
-            <div
-              key={project.id}
-              className="relative"
-              onMouseEnter={() => setHoveredCard(index)}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <ProjectCard project={project} index={index} />
-              {hoveredCard !== null && hoveredCard !== index && (
-                <motion.div
-                  className="absolute inset-0 pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.3 }}
-                  style={{
-                    background: `radial-gradient(circle at center, rgba(34, 211, 238, 0.15), transparent 70%)`,
-                    filter: 'blur(20px)',
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project, index) => (
+          <ProjectCard key={project.id} project={project} index={index} />
+        ))}
       </div>
-    </section>
+    </SectionShell>
   )
 }
 

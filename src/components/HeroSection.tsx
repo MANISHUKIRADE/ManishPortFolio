@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import SpaceScene from './3D/SpaceScene'
 import HolographicGrid from './animations/HolographicGrid'
+import HudCard from './ui/HudCard'
 import TypewriterText from './ui/TypewriterText'
 import { useInViewPause } from '../hooks/useInViewPause'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
@@ -68,7 +69,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md text-cyan-300 text-sm font-medium mb-8 min-h-[2.5rem]"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-cyan-500/30 bg-slate-900/60 backdrop-blur-md text-cyan-300 text-sm font-medium mb-8 min-h-[2.5rem]"
           >
             <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
             <TypewriterText
@@ -151,16 +152,19 @@ const HeroSection = () => {
                 initial={{ opacity: 0, y: 16 }}
                 animate={headlineDone ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: i * 0.08 }}
-                className="rounded-xl border border-cyan-500/20 bg-slate-900/60 backdrop-blur-md px-4 py-5 shadow-[inset_0_0_20px_rgba(34,211,238,0.05)]"
               >
-                <div className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300">
-                  {headlineDone ? (
-                    <TypewriterText text={stat.value} speed={60} delay={i * 120} showCursor={false} />
-                  ) : (
-                    <span className="opacity-0">{stat.value}</span>
-                  )}
-                </div>
-                <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">{stat.label}</div>
+                <HudCard className="px-4 py-5 text-center">
+                  <div className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 font-mono">
+                    {headlineDone ? (
+                      <TypewriterText text={stat.value} speed={60} delay={i * 120} showCursor={false} />
+                    ) : (
+                      <span className="opacity-0">{stat.value}</span>
+                    )}
+                  </div>
+                  <div className="text-[10px] text-slate-500 mt-1 uppercase tracking-widest font-mono">
+                    {stat.label}
+                  </div>
+                </HudCard>
               </motion.div>
             ))}
           </motion.div>
