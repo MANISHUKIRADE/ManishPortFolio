@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles, Download } from 'lucide-react'
 import { useState } from 'react'
 import SpaceScene from './3D/SpaceScene'
 import HolographicGrid from './animations/HolographicGrid'
@@ -119,22 +119,32 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+            className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center items-center mb-16 px-2"
           >
             <motion.a
               href="#projects"
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg bg-gradient-to-r from-cyan-600 to-teal-600 text-white font-semibold text-sm sm:text-base shadow-lg shadow-cyan-900/50 border border-cyan-400/40 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg bg-gradient-to-r from-cyan-600 to-teal-600 text-white font-semibold text-sm sm:text-base shadow-lg shadow-cyan-900/50 border border-cyan-400/40 backdrop-blur-sm w-full sm:w-auto justify-center"
             >
               View Work
               <ArrowRight className="w-4 h-4" />
             </motion.a>
             <motion.a
+              href="/Manish_Ukirde_Resume_v2.pdf"
+              download="Manish_Ukirde_Resume_v2.pdf"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg bg-slate-900/80 backdrop-blur-md border border-cyan-500/40 text-cyan-100 font-semibold text-sm sm:text-base hover:border-cyan-400/60 hover:bg-slate-900 transition-colors w-full sm:w-auto justify-center"
+            >
+              <Download className="w-4 h-4" />
+              Download Resume
+            </motion.a>
+            <motion.a
               href="#contact"
               whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg bg-slate-900/70 backdrop-blur-md border border-slate-600/80 text-slate-200 font-semibold text-sm sm:text-base hover:border-cyan-500/50 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg bg-transparent backdrop-blur-md border border-slate-600/60 text-slate-300 font-semibold text-sm sm:text-base hover:border-slate-500 hover:text-white transition-colors w-full sm:w-auto justify-center"
             >
               Get in Touch
             </motion.a>

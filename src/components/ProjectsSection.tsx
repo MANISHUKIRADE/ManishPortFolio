@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { ExternalLink, Github, Rocket } from 'lucide-react'
+import { ExternalLink, Github, Rocket, BookOpen, Shield } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudPanel from './ui/HudPanel'
+import HudCard from './ui/HudCard'
 
 interface Project {
   id: string
@@ -12,9 +13,14 @@ interface Project {
   description: string
   tech: string[]
   image: string
-  github: string
-  live: string
+  github?: string
+  live?: string
+  blogSlug?: string
 }
+
+const PLACEHOLDER_URLS = new Set(['https://github.com', 'https://example.com'])
+
+const isPublicUrl = (url?: string) => Boolean(url && !PLACEHOLDER_URLS.has(url))
 
 const projects: Project[] = [
   {
@@ -26,8 +32,7 @@ const projects: Project[] = [
       'Built an end-to-end Generative AI platform for HR intelligence. Features: RAG-based HR Policy Q&A using LangChain and ChromaDB, Conversational Employee Intelligence with sliding window memory, and Adaptive Survey Intelligence with LLM-driven dynamic branching. Deployed across 10+ enterprise clients on Azure.',
     tech: ['Python', 'LangChain', 'ChromaDB', 'LLMs', 'RAG', 'FastAPI', 'NLP', 'Prompt Engineering', 'Azure'],
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800',
-    github: 'https://github.com',
-    live: 'https://example.com',
+    blogSlug: 'production-rag-pipeline-kyara-lessons',
   },
   {
     id: 'saas',
@@ -38,8 +43,6 @@ const projects: Project[] = [
       'Architected and shipped a multi-tenant enterprise engagement platform from scratch. Served enterprise clients across India and Middle East. Drove 2× YoY revenue growth over 2.5 years. SOC 2 Type II, CyberCube, and VPAT certified on this infrastructure.',
     tech: ['Node.js', 'React', 'MySQL', 'Redis', 'Docker Swarm', 'Azure'],
     image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800',
-    github: 'https://github.com',
-    live: 'https://example.com',
   },
   {
     id: 'ml',
@@ -50,8 +53,7 @@ const projects: Project[] = [
       'Built a CatBoost model predicting employee attrition with 83.48% accuracy. Engineered 122 features from survey data. Achieved 82% recall identifying employees at risk of leaving. Deployed as early warning system for proactive HR retention strategy.',
     tech: ['Python', 'CatBoost', 'Feature Engineering', 'MLOps', 'HR Analytics'],
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
-    github: 'https://github.com',
-    live: 'https://example.com',
+    blogSlug: 'employee-attrition-prediction-ml-models',
   },
   {
     id: 'migration',
@@ -62,8 +64,7 @@ const projects: Project[] = [
       'Orchestrated complete production migration from AWS to Azure in 15 days with zero downtime. Maintained 99.9% uptime throughout. Achieved 30% infrastructure cost reduction post-migration. Full containerisation with Docker and Kubernetes.',
     tech: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD', 'Nginx'],
     image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800',
-    github: 'https://github.com',
-    live: 'https://example.com',
+    blogSlug: 'zero-downtime-cloud-migration-aws-azure',
   },
   {
     id: 'compliance',
@@ -74,14 +75,76 @@ const projects: Project[] = [
       'Led three enterprise compliance certifications independently — SOC 2 Type II, CyberCube cyber risk, and VPAT accessibility. Policy drafting, VAPT execution, vendor assessments, audit coordination. Single low-severity Nginx finding on full scan.',
     tech: ['Azure', 'Nginx', 'VAPT', 'Security Hardening', 'Documentation'],
     image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800',
-    github: 'https://github.com',
-    live: 'https://example.com',
   },
 ]
 
-const ProjectDetail = ({ project, index }: { project: Project; index: number }) => (
+const ProjectLinks = ({ project }: { project: Project }) => {
+  const hasCode = isPublicUrl(project.github)
+  const hasLive = isPublicUrl(project.live)
+  const hasBlog = Boolean(project.blogSlug)
+  const hasAnyLink = hasCode || hasLive || hasBlog
+
+  if (!hasAnyLink) {
+    return (
+      <div className="flex items-center gap-2 pt-3 border-t border-slate-800/80 text-slate-500 text-sm font-mono">
+        <Shield size={16} className="text-cyan-400/60 shrink-0" />
+        <span>Enterprise deployment · NDA protected</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-wrap gap-4 pt-3 border-t border-slate-800/80">
+      {hasBlog && (
+        <a
+          href={`#blog-${project.blogSlug}`}
+          className="flex items-center gap-2 text-slate-400 hover:text-cyan-300 transition-colors text-sm font-mono"
+        >
+          <BookOpen size={16} />
+          <span>Case Study</span>
+        </a>
+      )}
+      {hasCode && (
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-slate-400 hover:text-cyan-300 transition-colors text-sm font-mono"
+        >
+          <Github size={16} />
+          <span>Code</span>
+        </a>
+      )}
+      {hasLive && (
+        <a
+          href={project.live}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-slate-400 hover:text-cyan-300 transition-colors text-sm font-mono"
+        >
+          <ExternalLink size={16} />
+          <span>Live</span>
+        </a>
+      )}
+    </div>
+  )
+}
+
+const ProjectDetail = ({
+  project,
+  index,
+  compact = false,
+}: {
+  project: Project
+  index: number
+  compact?: boolean
+}) => (
   <div>
-    <div className="relative h-44 sm:h-52 lg:h-56 overflow-hidden border-b border-slate-800/80">
+    <div
+      className={`relative overflow-hidden border-b border-slate-800/80 ${
+        compact ? 'h-36 sm:h-40' : 'h-44 sm:h-52 lg:h-56'
+      }`}
+    >
       <img src={project.image} alt={project.title} loading="lazy" className="w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
       <span className="absolute top-3 left-3 font-mono text-[10px] text-cyan-400 bg-slate-900/80 px-2 py-0.5 rounded border border-cyan-500/25">
@@ -92,16 +155,22 @@ const ProjectDetail = ({ project, index }: { project: Project; index: number }) 
       </span>
     </div>
 
-    <div className="p-4 sm:p-5 lg:p-6">
+    <div className={compact ? 'p-4' : 'p-4 sm:p-5 lg:p-6'}>
       <div className="flex items-start gap-3 mb-4 pb-4 border-b border-slate-800/60">
         <div className="p-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 shrink-0">
           <Rocket className="w-5 h-5" />
         </div>
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-1">
-            // Active Deployment
+            // {compact ? project.label : 'Active Deployment'}
           </p>
-          <h3 className="text-lg sm:text-xl font-bold text-cyan-300 leading-snug">{project.title}</h3>
+          <h3
+            className={`font-bold text-cyan-300 leading-snug ${
+              compact ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'
+            }`}
+          >
+            {project.title}
+          </h3>
         </div>
       </div>
 
@@ -121,26 +190,7 @@ const ProjectDetail = ({ project, index }: { project: Project; index: number }) 
         ))}
       </div>
 
-      <div className="flex gap-4 pt-3 border-t border-slate-800/80">
-        <a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-slate-400 hover:text-cyan-300 transition-colors text-sm font-mono"
-        >
-          <Github size={16} />
-          <span>Code</span>
-        </a>
-        <a
-          href={project.live}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-slate-400 hover:text-cyan-300 transition-colors text-sm font-mono"
-        >
-          <ExternalLink size={16} />
-          <span>Live</span>
-        </a>
-      </div>
+      <ProjectLinks project={project} />
     </div>
   </div>
 )
@@ -163,7 +213,7 @@ const ProjectsSection = () => {
       <HudPanel
         moduleLabel="// Projects Module"
         sysId="SYS.DEPLOYMENTS v1.0"
-        badge={`${String(activeIndex + 1).padStart(2, '0')} / ${String(projects.length).padStart(2, '0')}`}
+        badge={`${projects.length} deployments`}
         footer={
           <div className="flex items-center justify-between gap-3">
             <span className="font-mono text-[10px] text-slate-600 uppercase tracking-widest">
@@ -175,33 +225,13 @@ const ProjectsSection = () => {
           </div>
         }
       >
-        {/* Mobile: HUD tabs */}
-        <div
-          className="lg:hidden flex gap-1.5 px-3 sm:px-4 py-3 border-b border-slate-800/80 overflow-x-auto"
-          role="tablist"
-          aria-label="Featured projects"
-        >
-          {projects.map((project, index) => {
-            const isActive = activeIndex === index
-            return (
-              <button
-                key={project.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={`project-panel-${project.id}`}
-                id={`project-tab-${project.id}`}
-                onClick={() => setActiveIndex(index)}
-                className={`px-3 py-1.5 rounded-md font-mono text-xs uppercase tracking-wider whitespace-nowrap border transition-colors ${
-                  isActive
-                    ? 'bg-cyan-500/15 border-cyan-400/50 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.2)]'
-                    : 'bg-slate-900/50 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:border-slate-600'
-                }`}
-              >
-                {project.label}
-              </button>
-            )
-          })}
+        {/* Mobile: stacked cards */}
+        <div className="lg:hidden px-4 sm:px-5 py-5 space-y-5">
+          {projects.map((project, index) => (
+            <HudCard key={project.id} className="overflow-hidden">
+              <ProjectDetail project={project} index={index} compact />
+            </HudCard>
+          ))}
         </div>
 
         {/* Desktop: split panel */}
@@ -237,24 +267,9 @@ const ProjectsSection = () => {
             </ul>
           </nav>
 
-          <div
-            role="tabpanel"
-            id={`project-panel-${active.id}`}
-            aria-labelledby={`project-tab-${active.id}`}
-            className="bg-slate-950/20"
-          >
+          <div className="bg-slate-950/20">
             <ProjectDetail project={active} index={activeIndex} />
           </div>
-        </div>
-
-        {/* Mobile: detail */}
-        <div
-          className="lg:hidden"
-          role="tabpanel"
-          id={`project-panel-${active.id}`}
-          aria-labelledby={`project-tab-${active.id}`}
-        >
-          <ProjectDetail project={active} index={activeIndex} />
         </div>
       </HudPanel>
     </SectionShell>

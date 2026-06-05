@@ -1,10 +1,16 @@
-import { useState } from 'react'
-import { Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Calendar, Clock, ArrowRight, BookOpen, Star } from 'lucide-react'
 import { blogs, BlogPost } from '../data/blogs'
 import BlogDetailModal from './BlogDetailModal'
 import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudPanel from './ui/HudPanel'
+import HudCard from './ui/HudCard'
+
+const FEATURED_SLUGS = new Set([
+  'production-rag-pipeline-kyara-lessons',
+  'troubleshooting-in-production',
+])
 
 const blogLabels: Record<string, string> = {
   'production-rag-pipeline-kyara-lessons': 'RAG',
@@ -36,9 +42,17 @@ const BlogPreview = ({ blog, index, onReadMore }: BlogPreviewProps) => (
       <span className="absolute top-3 left-3 font-mono text-[10px] text-cyan-400 bg-slate-900/80 px-2 py-0.5 rounded border border-cyan-500/25">
         {blog.category}
       </span>
-      <span className="absolute top-3 right-3 font-mono text-[10px] text-slate-500">
-        LOG_{String(index + 1).padStart(2, '0')}
-      </span>
+      {FEATURED_SLUGS.has(blog.slug) && (
+        <span className="absolute top-3 right-3 inline-flex items-center gap-1 font-mono text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+          <Star className="w-3 h-3" />
+          Featured
+        </span>
+      )}
+      {!FEATURED_SLUGS.has(blog.slug) && (
+        <span className="absolute top-3 right-3 font-mono text-[10px] text-slate-500">
+          LOG_{String(index + 1).padStart(2, '0')}
+        </span>
+      )}
     </div>
 
     <div className="p-4 sm:p-5 lg:p-6">
@@ -95,6 +109,57 @@ const BlogPreview = ({ blog, index, onReadMore }: BlogPreviewProps) => (
   </div>
 )
 
+interface BlogCompactCardProps {
+  blog: BlogPost
+  index: number
+  onRead: () => void
+}
+
+const BlogCompactCard = ({ blog, index, onRead }: BlogCompactCardProps) => (
+  <HudCard className="p-4 sm:p-5">
+    <div className="flex items-start justify-between gap-3 mb-2">
+      <div className="flex items-center gap-2 min-w-0">
+        <span className="font-mono text-[10px] text-cyan-400/80 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 shrink-0">
+          {getBlogLabel(blog)}
+        </span>
+        {FEATURED_SLUGS.has(blog.slug) && (
+          <span className="inline-flex items-center gap-1 font-mono text-[10px] text-amber-300 shrink-0">
+            <Star className="w-3 h-3" />
+            Featured
+          </span>
+        )}
+      </div>
+      <span className="font-mono text-[10px] text-slate-600 shrink-0">
+        {String(index + 1).padStart(2, '0')}
+      </span>
+    </div>
+
+    <h3 className="text-base font-semibold text-white leading-snug mb-2 line-clamp-2">{blog.title}</h3>
+
+    <div className="flex items-center gap-3 text-xs text-slate-500 font-mono mb-3">
+      <span className="inline-flex items-center gap-1">
+        <Calendar className="w-3 h-3" />
+        {formatDate(blog.date)}
+      </span>
+      <span className="inline-flex items-center gap-1">
+        <Clock className="w-3 h-3" />
+        {blog.readTime}
+      </span>
+    </div>
+
+    <p className="text-sm text-slate-400 leading-relaxed line-clamp-2 mb-4">{blog.excerpt}</p>
+
+    <button
+      type="button"
+      onClick={onRead}
+      className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors text-xs font-mono uppercase tracking-wider touch-manipulation"
+    >
+      <span>Read Article</span>
+      <ArrowRight className="w-3.5 h-3.5" />
+    </button>
+  </HudCard>
+)
+
 const BlogSection = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [modalSlug, setModalSlug] = useState<string | null>(null)
@@ -111,6 +176,28 @@ const BlogSection = () => {
     setIsModalOpen(false)
     setTimeout(() => setModalSlug(null), 300)
   }
+
+  useEffect(() => {
+    const openFromHash = () => {
+      const hash = window.location.hash
+      if (!hash.startsWith('#blog-')) return
+      const slug = hash.slice('#blog-'.length)
+      const blog = blogs.find((b) => b.slug === slug)
+      if (!blog) return
+
+      const blogSection = document.getElementById('blog')
+      if (blogSection) {
+        blogSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+
+      setModalSlug(slug)
+      setIsModalOpen(true)
+    }
+
+    openFromHash()
+    window.addEventListener('hashchange', openFromHash)
+    return () => window.removeEventListener('hashchange', openFromHash)
+  }, [])
 
   const currentBlog = modalSlug ? blogs.find((b) => b.slug === modalSlug) ?? null : null
 
@@ -135,7 +222,7 @@ const BlogSection = () => {
         <HudPanel
           moduleLabel="// Blog Module"
           sysId="SYS.ARTICLE_LOG v1.0"
-          badge={`${String(activeIndex + 1).padStart(2, '0')} / ${String(blogs.length).padStart(2, '0')}`}
+          badge={`${blogs.length} articles`}
           footer={
             <div className="flex items-center justify-between gap-3">
               <span className="font-mono text-[10px] text-slate-600 uppercase tracking-widest">
@@ -147,33 +234,16 @@ const BlogSection = () => {
             </div>
           }
         >
-          {/* Mobile: scrollable HUD tabs */}
-          <div
-            className="lg:hidden flex gap-1.5 px-3 sm:px-4 py-3 border-b border-slate-800/80 overflow-x-auto"
-            role="tablist"
-            aria-label="Blog articles"
-          >
-            {blogs.map((blog, index) => {
-              const isActive = activeIndex === index
-              return (
-                <button
-                  key={blog.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls={`blog-panel-${blog.slug}`}
-                  id={`blog-tab-${blog.slug}`}
-                  onClick={() => setActiveIndex(index)}
-                  className={`px-3 py-1.5 rounded-md font-mono text-xs uppercase tracking-wider whitespace-nowrap border transition-colors ${
-                    isActive
-                      ? 'bg-cyan-500/15 border-cyan-400/50 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.2)]'
-                      : 'bg-slate-900/50 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:border-slate-600'
-                  }`}
-                >
-                  {getBlogLabel(blog)}
-                </button>
-              )
-            })}
+          {/* Mobile: all articles as compact cards */}
+          <div className="lg:hidden px-4 sm:px-5 py-5 space-y-4">
+            {blogs.map((blog, index) => (
+              <BlogCompactCard
+                key={blog.id}
+                blog={blog}
+                index={index}
+                onRead={() => openArticle(blog.slug)}
+              />
+            ))}
           </div>
 
           {/* Desktop: split panel */}
@@ -185,6 +255,7 @@ const BlogSection = () => {
               <ul className="space-y-2">
                 {blogs.map((blog, index) => {
                   const isActive = activeIndex === index
+                  const isFeatured = FEATURED_SLUGS.has(blog.slug)
                   return (
                     <li key={blog.id}>
                       <button
@@ -197,8 +268,9 @@ const BlogSection = () => {
                             : 'border-transparent text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
                         }`}
                       >
-                        <span className="block font-mono text-[10px] text-slate-500 mb-0.5">
+                        <span className="flex items-center gap-2 font-mono text-[10px] text-slate-500 mb-0.5">
                           {formatDate(blog.date)} · {blog.readTime}
+                          {isFeatured && <Star className="w-3 h-3 text-amber-400/80" aria-label="Featured" />}
                         </span>
                         <span className="block font-semibold text-sm leading-snug">{getBlogLabel(blog)}</span>
                         <span className="block text-xs text-slate-500 mt-1 line-clamp-2">{blog.title}</span>
@@ -209,32 +281,13 @@ const BlogSection = () => {
               </ul>
             </nav>
 
-            <div
-              role="tabpanel"
-              id={`blog-panel-${active.slug}`}
-              aria-labelledby={`blog-tab-${active.slug}`}
-              className="bg-slate-950/20"
-            >
+            <div className="bg-slate-950/20">
               <BlogPreview
                 blog={active}
                 index={activeIndex}
                 onReadMore={() => openArticle(active.slug)}
               />
             </div>
-          </div>
-
-          {/* Mobile: preview */}
-          <div
-            className="lg:hidden"
-            role="tabpanel"
-            id={`blog-panel-${active.slug}`}
-            aria-labelledby={`blog-tab-${active.slug}`}
-          >
-            <BlogPreview
-              blog={active}
-              index={activeIndex}
-              onReadMore={() => openArticle(active.slug)}
-            />
           </div>
         </HudPanel>
       </SectionShell>

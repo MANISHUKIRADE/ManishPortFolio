@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import {
   Code2,
   Cloud,
@@ -9,6 +10,8 @@ import {
 import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudPanel from './ui/HudPanel'
+import HudCard from './ui/HudCard'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 interface SkillCategory {
   id: string
@@ -94,7 +97,26 @@ const skillCategories: SkillCategory[] = [
 
 const totalSkills = skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0)
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.08 },
+  },
+}
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 28, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
 const SkillsSection = () => {
+  const reducedMotion = usePrefersReducedMotion()
+
   return (
     <SectionShell id="skills" contentClassName="max-w-5xl mx-auto">
       <SectionHeader
@@ -120,44 +142,99 @@ const SkillsSection = () => {
           </div>
         }
       >
-        <div className="px-4 sm:px-5 py-5 sm:py-6 space-y-6 sm:space-y-7">
-          {skillCategories.map((category) => (
-            <div key={category.id}>
-              <div className="flex items-center gap-3 mb-3 pb-2 border-b border-slate-800/60">
-                <div
-                  className="p-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-                  style={{ boxShadow: `0 0 16px ${category.accent}22` }}
-                >
-                  {category.icon}
-                </div>
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-0.5">
-                    {category.label}
-                  </p>
-                  <h3 className="text-sm sm:text-base font-semibold text-white">{category.title}</h3>
-                </div>
-                <span className="ml-auto font-mono text-xs text-slate-500 hidden sm:block">
-                  {category.skills.length} nodes
-                </span>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1.5 rounded-md font-mono text-xs sm:text-sm text-slate-200 bg-slate-800/80 border border-slate-700/80"
+        <motion.div
+          className="px-4 sm:px-5 py-5 sm:py-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+        >
+          {skillCategories.map((category, index) => (
+            <motion.div key={category.id} variants={cardVariants}>
+              <motion.div
+                animate={
+                  reducedMotion
+                    ? undefined
+                    : {
+                        y: [0, -5, 0],
+                      }
+                }
+                transition={
+                  reducedMotion
+                    ? undefined
+                    : {
+                        y: {
+                          duration: 4.5 + index * 0.35,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          delay: index * 0.25,
+                        },
+                      }
+                }
+              >
+                <HudCard className="p-4 sm:p-5 h-full overflow-hidden group">
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{
-                      borderColor: `${category.accent}33`,
-                      boxShadow: `inset 0 0 12px ${category.accent}08`,
+                      background: `radial-gradient(circle at 30% 20%, ${category.accent}18, transparent 55%)`,
                     }}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
+                  />
+
+                  <div className="relative flex items-center gap-3 mb-3 pb-2 border-b border-slate-800/60">
+                    <motion.div
+                      className="p-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
+                      style={{ boxShadow: `0 0 16px ${category.accent}22` }}
+                      whileHover={reducedMotion ? undefined : { scale: 1.08, rotate: 3 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+                    >
+                      {category.icon}
+                    </motion.div>
+                    <div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-0.5">
+                        {category.label}
+                      </p>
+                      <h3 className="text-sm sm:text-base font-semibold text-white">{category.title}</h3>
+                    </div>
+                    <span className="ml-auto font-mono text-xs text-slate-500 hidden sm:block">
+                      {category.skills.length} nodes
+                    </span>
+                  </div>
+
+                  <div className="relative flex flex-wrap gap-2">
+                    {category.skills.map((skill, skillIndex) => (
+                      <motion.span
+                        key={skill}
+                        initial={{ opacity: 0, scale: 0.85 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          delay: index * 0.08 + skillIndex * 0.04,
+                          duration: 0.35,
+                        }}
+                        whileHover={
+                          reducedMotion
+                            ? undefined
+                            : {
+                                y: -3,
+                                scale: 1.04,
+                                boxShadow: `0 0 18px ${category.accent}44`,
+                              }
+                        }
+                        className="px-3 py-1.5 rounded-md font-mono text-xs sm:text-sm text-slate-200 bg-slate-800/80 border border-slate-700/80 cursor-default"
+                        style={{
+                          borderColor: `${category.accent}33`,
+                          boxShadow: `inset 0 0 12px ${category.accent}08`,
+                        }}
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </div>
+                </HudCard>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </HudPanel>
     </SectionShell>
   )
