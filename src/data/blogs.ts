@@ -8,260 +8,185 @@ export const blogs: BlogPost[] = [
     id: '1',
     title: 'Troubleshooting in Production: Understanding the Real Problem, Why It Happens, and How to Solve It',
     slug: 'troubleshooting-in-production',
-    excerpt: 'Real-world systems fail quietly, indirectly, and at scale. The hardest problems don\'t throw errors — they degrade behavior. Learn the systematic approach to production troubleshooting that separates engineers from tech leads.',
-    content: `# Troubleshooting in Production: Understanding the Real Problem, Why It Happens, and How to Solve It
+    excerpt:
+      'Three real production incidents — MySQL connection exhaustion after an Azure migration, a Kyara RAG pipeline answering from the wrong policy for 11 days, and health checks passing while users timed out. A systematic framework for finding what actually broke.',
+    content: `## Introduction: Troubleshooting is not a skill — it's a mindset
 
-## Introduction: Troubleshooting Is Not a Skill — It's a Mindset
-
-In theory, troubleshooting looks simple.
-Check logs. Look at metrics. Fix the bug.
+In theory, troubleshooting looks simple. Check logs. Look at metrics. Fix the bug.
 
 In production, it rarely works that way.
 
-Real-world systems fail quietly, indirectly, and at scale.
-The hardest problems don't throw errors — they degrade behavior.
+Real-world systems fail quietly, indirectly, and at scale. The hardest problems don't throw errors — they degrade behavior.
 
-Over the years, while owning systems end to end — backend, databases, infrastructure, AI pipelines, and cloud migrations — troubleshooting became my most valuable engineering skill. Not because I planned it, but because production demanded it.
+I'll illustrate this with three real incidents from production systems I've owned: a silent MySQL connection exhaustion that had nothing to do with MySQL, an Azure migration that nearly took down a client's HR platform on a Monday morning, and a Kyara RAG pipeline that was producing "correct" answers that were semantically wrong for 11 days before anyone caught it.
 
-This blog breaks down:
+None of them threw obvious errors. All of them required a systematic approach to find.
 
-- What the real troubleshooting problem is
-- Why traditional debugging fails in production
-- How to approach and solve issues systematically
+---
 
-## 1. What Is the Real Problem in Production Troubleshooting?
+## Incident 1: The database that was "fine"
 
-The biggest misconception is believing that production failures are bugs.
+**The symptom:** About three weeks after migrating our infrastructure from AWS to Azure, one of our Node.js services started throwing intermittent 503 errors. Not constant — maybe 3–5% of requests during peak hours. The Azure dashboard showed green across the board: CPU 22%, memory 41%, no error spikes in the app logs.
 
-They usually aren't.
+**What I did wrong first:** I looked at the application code. I added more logging. I redeployed twice. The errors continued. Two days wasted.
 
-Most production incidents show up as:
+**What actually broke:** MySQL connection pool exhaustion — but not from high traffic.
 
-- Latency spikes without CPU or memory increase
-- Requests timing out intermittently
-- Database connections dropping only behind load balancers
-- Queries slowing down even though slow logs are empty
-- Containers marked healthy while users experience failures
-- AI systems returning "valid" results that are semantically wrong
+When we migrated to Azure, we moved from AWS RDS to Azure Database for MySQL Flexible Server. The new host had a slightly different TCP keepalive configuration. The Azure load balancer was silently dropping idle connections after 4 minutes. Our connection pool was holding onto those dead connections, handing them to request handlers, and the handlers were timing out.
 
-Nothing is technically "broken".
-Everything is just… off.
+The connection pool showed "available connections: 8/10." Technically healthy. Actually handing out corpses.
 
-The real problem is this:
+**How I found it:** I stopped looking at the application and started looking at the boundary — between the app and the database. I ran a direct TCP connection test from inside the container to the database host, held it idle for 5 minutes, then tried to execute a query. It failed silently. That was the invariant violation: "idle connections remain valid." It wasn't true in this environment.
 
-**Production issues are emergent behaviors of complex systems.**
+**The fix:** Set \`wait_timeout\` and \`interactive_timeout\` on the MySQL side to 3 minutes (shorter than the load balancer's 4-minute cutoff), and configure the connection pool to run a validation query (\`SELECT 1\`) before handing a connection to a handler. Errors dropped to zero within 10 minutes of the fix.
 
-They arise from interactions between:
+**Lesson:** The failure was at the boundary between the app and the database, not inside either. Logs inside the app couldn't see it. The invariant that failed was "the connection pool gives me a working connection" — not an application bug.
 
-- Traffic patterns
-- Network behavior
-- Data shape
-- Timeouts
-- Resource limits
-- Hidden assumptions
+---
 
-Not from a single bad line of code.
+## Incident 2: The Kyara RAG pipeline that lied correctly
 
-## 2. Why These Problems Are So Hard to Debug
+**The symptom:** A client's HR manager reported that Kyara was answering leave policy questions with information that "felt off." No errors in logs. Retrieval scores were normal (0.78–0.84). The LLM was generating fluent, confident answers.
 
-### 2.1 Logs Lie by Omission
+After investigation: the answers were technically accurate for the client's old policy — the one from before their policy refresh six weeks earlier.
 
-Logs only tell you what the code decided to log.
+**The timeline:** The client had uploaded a new policy PDF. The ingestion job ran successfully. The new chunks were indexed. But due to a naming inconsistency in our collection alias logic, the active collection pointer for that client had not been swapped. The query pipeline was still hitting the old versioned collection.
 
-They don't show:
+For 11 days, Kyara was answering leave policy questions from a superseded document. The answers were not hallucinations — they were accurate retrievals from the wrong source.
 
-- What didn't happen
-- What was delayed
-- What timed out silently
-- What another service assumed
+**How I found it:** The client's HR manager gave us a specific question: "What is the maternity leave entitlement under the new policy?" The answer Kyara gave was 12 weeks. The new policy said 16 weeks.
 
-Logs are snapshots, not timelines.
+I traced the chunk IDs in the response back to the collection. The collection version timestamp was 6 weeks old. The alias had not been updated. The bug was not in retrieval quality — it was in the ingestion pipeline's alias-swap logic.
 
-### 2.2 Metrics Explain "What", Not "Why"
+**The fix:** Immediate alias correction for that client. Then a production check: audited all client collection aliases against the most recent ingestion timestamp. Two other clients had the same issue — their collections had been re-indexed but the alias wasn't swapped.
 
-Metrics are excellent at answering:
+We then added a post-ingestion verification step: after any policy upload, a synthetic test query is run and the source collection version in the response metadata is checked against the expected version. If they don't match, an alert fires before the new collection goes live.
 
-- CPU usage
-- Memory consumption
-- Request count
-- Error rates
+**Lesson:** "Retrieval is working" and "retrieval is returning the right data" are different invariants. Monitoring retrieval scores tells you nothing about whether you're querying the right collection.
 
-They are terrible at explaining:
+---
 
-- Why latency increased
-- Why retries cascaded
-- Why connection pools saturated without spikes
-- Why only some users are affected
+## Incident 3: The container that was healthy while users were broken
 
-A dashboard can be green while users are broken.
+**The symptom:** During a load test before a major enterprise client onboarding, Kyara's API showed healthy in Azure Container Apps health checks, but end-to-end response latency climbed from a normal 2.1 seconds to 14+ seconds under load. No errors. Health checks passing. Users would have experienced timeouts.
 
-### 2.3 Distributed Systems Fail at Boundaries
+**The root cause:** Three compounding issues:
 
-Most failures happen between components, not inside them:
+1. The FastAPI server's thread pool was saturating under concurrent LLM calls — each call was blocking a thread for 3–5 seconds waiting for the Azure OpenAI response.
+2. The health check endpoint (\`GET /health\`) didn't touch the LLM or the vector store — it just returned \`{"status": "ok"}\`. So under saturation, health checks passed while real request handlers were queued.
+3. Azure Container Apps was not auto-scaling because CPU usage stayed low — the bottleneck was I/O waiting on the LLM, not compute.
 
-- App ↔ Load balancer
-- App ↔ Database
-- Service ↔ Service
-- Producer ↔ Consumer
+**How I found it:** The breakthrough was looking at the thread pool utilization metric I'd added to structured logs (thread pool active / thread pool max). At normal load: 3/20. Under load test: 20/20. Every thread was occupied. New requests were queuing.
 
-These boundaries involve:
+**The fix:**
+- Switched from synchronous LLM calls to async (\`asyncio\` + \`httpx\` for Azure OpenAI calls) — this freed threads to handle more concurrent requests
+- Added a meaningful health check that includes a lightweight vector store ping and checks thread pool utilization — if utilization > 80%, the health check returns 503, triggering Azure Container Apps to scale out
+- Set explicit concurrency limits to queue requests gracefully rather than silently degrading
 
-- Network latency
-- Timeouts
-- Connection reuse
-- Backpressure
-- Clock drift
+**Lesson:** A green health check is only as good as what it actually tests. If your health check doesn't exercise the critical path, it's measuring the wrong invariant.
 
-And boundaries are where assumptions go to die.
+---
 
-### 2.4 Scale Breaks Assumptions
+## The correct mental model for production troubleshooting
 
-Something that works perfectly at low scale often collapses under real load.
+All three incidents above share a structure. They weren't bugs in the traditional sense — a wrong variable, a missing null check. They were **invariant violations** at system boundaries.
 
-Examples:
+Bad question to ask: "What broke?"
+Better question: "Which assumption stopped being true?"
 
-- Connection pools sized for average traffic, not bursts
-- Queries optimized for small datasets
-- Caches designed for uniform access patterns
-- AI pipelines tested on clean data, not production noise
+Each incident had a violated invariant:
+- Incident 1: "A connection from the pool is a working connection."
+- Incident 2: "The active collection contains the most recent policy data."
+- Incident 3: "A passing health check means the service can handle requests."
 
-Scale doesn't just increase load — it changes behavior.
+Once you identify the violated invariant, the fix is usually obvious. The hard part is getting to the right question.
 
-## 3. The Correct Mental Model for Troubleshooting
+---
 
-Before touching tools, the mindset must change.
+## A practical framework that works in production
 
-**Bad mindset:**
-"What broke?"
+The following five steps are how I approach any production issue. Not a checklist — a sequence that progressively narrows the problem space.
 
-**Correct mindset:**
-"Which assumption stopped being true?"
+**Step 1: Define the failure domain**
 
-Troubleshooting is not about fixing symptoms.
-It's about identifying which invariant the system violated.
+Before touching tools, constrain the problem:
+- Is this compute (CPU/memory)?
+- Network (latency, packet loss, connection reuse)?
+- Storage or database?
+- Data shape or quality?
+- Orchestration (health checks, scaling policy, routing)?
 
-## 4. A Practical Troubleshooting Framework That Works in Production
+Never debug everything at once. In Incident 1, two days were wasted because I started inside the application when the boundary was the problem.
 
-### Step 1: Define the Failure Domain
+**Step 2: Reduce the system**
 
-First, constrain the problem space.
-
-Ask:
-
-- Is this compute-related?
-- Network-related?
-- Storage or database-related?
-- Data-related?
-- Or orchestration-related?
-
-Never debug everything at once.
-
-A narrowed problem is already half-solved.
-
-### Step 2: Reduce the System
-
-Complex systems hide failures.
-So simplify.
-
-- Disable non-critical features
+Complex systems hide failures. Simplify:
+- Bypass the load balancer and hit the service directly
+- Bypass the cache
 - Pause background jobs
-- Bypass caches
-- Bypass load balancers
-- Hit services directly
+- Reduce to a single replica
 
 If the issue disappears when a layer is removed, the problem exists between layers, not inside them.
 
-### Step 3: Correlate Time, Not Intuition
+**Step 3: Correlate time, not intuition**
 
-Human intuition is unreliable under pressure.
-
-Instead, align timestamps across:
-
+Human intuition under pressure is unreliable. Instead, align timestamps:
 - Application logs
 - Database logs
 - Infrastructure metrics
 - Deployment events
-- Traffic changes
+- Policy/data ingestion events (critical for AI systems)
 
-Most root causes reveal themselves when you ask:
+In Incident 2, the answer was in the ingestion timestamp. The 11-day gap between the policy upload and the report was visible in the logs — we just hadn't correlated it.
 
-"What changed just before the behavior changed?"
+**Step 4: Validate invariants**
 
-### Step 4: Validate Invariants
+Write down the assumptions your system makes at every boundary. Then check each one:
+- Connection pool → gives working connections
+- Active collection alias → points to current data
+- Health check → reflects true service capacity
+- Retry logic → doesn't amplify load under saturation
 
-Invariants are conditions that must always hold true.
+When systems degrade, an invariant is almost always being violated silently somewhere.
 
-Examples:
+**Step 5: Reproduce under controlled stress**
 
-- Connection pool limits are respected
-- Timeouts are aligned across services
-- Requests are idempotent
-- Schema contracts are honored
-- Clocks are synchronized
-- Retries don't amplify load
+Many production bugs can't be reproduced locally. They appear only under:
+- Concurrency (10 parallel LLM calls, not 1)
+- Memory pressure
+- Introduced network latency (use \`tc netem\` or \`toxiproxy\`)
+- Overlapping timeouts
 
-When systems degrade, an invariant is almost always being violated silently.
+If you can reproduce it once, you can fix it permanently. And once you've fixed it, add a test that would have caught it.
 
-### Step 5: Reproduce Under Controlled Stress
+---
 
-Many bugs cannot be reproduced locally.
-
-They appear only when:
-
-- Concurrency increases
-- Memory pressure rises
-- Network latency is introduced
-- Timeouts overlap
-- Retries stack
-
-Use controlled stress, not chaos.
-
-If you can reproduce it once, you can fix it permanently.
-
-## 5. How This Approach Solves Real Production Problems
-
-Using this mindset and framework has helped me:
-
-- Stabilize systems under real-world traffic
-- Debug MySQL performance issues without slow logs
-- Fix connection pool exhaustion that never triggered alerts
-- Diagnose AI pipelines producing misleading but valid outputs
-- Migrate production infrastructure with zero downtime
-- Design systems where failures surface early, not silently
-
-The fix is rarely heroic.
-It's usually structural.
-
-## 6. The Biggest Lesson
+## The biggest lesson
 
 If an issue was hard to debug, the system was poorly observable.
 
 If an issue surprised you, an assumption went undocumented.
 
-Troubleshooting is not reactive work.
-It is feedback from the system to the architect.
+Every production incident is telling you how the system actually behaves — not how you imagined it would.
 
-Every incident is telling you how the system actually behaves — not how you imagined it would.
+The fix is rarely heroic. It's usually structural: better observability, explicit invariant checks, health endpoints that actually measure capacity. The incident tells you exactly which structural investment you skipped.
 
-## Conclusion: Why This Matters Beyond Engineering
+---
 
-At scale, troubleshooting is no longer just an engineering concern.
+## Why this matters beyond engineering
 
-It affects:
+At scale, troubleshooting affects:
+- Customer trust (Incident 2 — an HR manager giving employees wrong leave information)
+- Revenue (Incident 3 — a 14-second p95 would have failed a major enterprise onboarding)
+- Team confidence (Incident 1 — two days of thrashing on the wrong problem before finding the TCP boundary issue)
 
-- Customer trust
-- Revenue
-- Team confidence
-- Leadership credibility
+The ability to troubleshoot calmly, systematically, and structurally is what separates developers from engineers, engineers from tech leads, and tech leads from people who can own production systems.
 
-The ability to troubleshoot calmly, systematically, and structurally is what separates:
+This is not a skill you learn from documentation. It's a mindset you earn by owning systems — and by writing down what you learn from each incident so the next one takes hours, not days.
 
-- Developers from engineers
-- Engineers from tech leads
-- Tech leads from founder-leaders
+---
 
-This is not a skill you learn from documentation.
-It's a mindset you earn by owning systems in production.`,
+*Written by Manish Ukirade — Senior ML & AI Engineer. 6.7 years owning production systems end-to-end at WE-Matter, Bizpilot, and Nexsales.*`,
     image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=630&fit=crop',
     author: 'Manish Ukirade',
     date: '2024-12-20',
@@ -269,8 +194,10 @@ It's a mindset you earn by owning systems in production.`,
     tags: ['Production', 'Troubleshooting', 'System Design', 'Tech Lead', 'DevOps', 'Distributed Systems'],
     category: 'Engineering Leadership',
     seo: {
-      metaDescription: 'Learn systematic production troubleshooting from a Tech Lead perspective. Understand why traditional debugging fails and how to solve complex production issues with a structured framework.',
-      keywords: 'production troubleshooting, tech lead, system debugging, distributed systems, production incidents, engineering leadership, system observability, production debugging, tech lead skills, engineering mindset'
+      metaDescription:
+        'Three real production incidents — MySQL pool exhaustion, Kyara RAG wrong collection alias, and misleading health checks. A Tech Lead framework for invariant-based troubleshooting.',
+      keywords:
+        'production troubleshooting, tech lead, system debugging, distributed systems, production incidents, engineering leadership, system observability, Azure migration, RAG pipeline, invariant debugging, tech lead skills',
     }
   },
   {

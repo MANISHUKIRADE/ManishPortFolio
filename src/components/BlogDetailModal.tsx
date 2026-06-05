@@ -7,6 +7,7 @@ import SEO from './SEO'
 import { SITE_URL } from '../config/site'
 import ScanningLine from './animations/ScanningLine'
 import HolographicGlitch from './animations/HolographicGlitch'
+import BlogMarkdown from './ui/BlogMarkdown'
 
 interface BlogDetailModalProps {
   blog: BlogPost | null
@@ -262,58 +263,7 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 }}
                   >
-                    <div className="text-slate-300 leading-relaxed text-sm sm:text-base">
-                      {blog.content.split('\n').map((line, idx) => {
-                        const trimmedLine = line.trim()
-                        
-                        // Handle images - format: ![alt text](image-url)
-                        if (trimmedLine.startsWith('![') && trimmedLine.includes('](') && trimmedLine.endsWith(')')) {
-                          const match = trimmedLine.match(/!\[([^\]]+)\]\(([^)]+)\)/)
-                          if (match) {
-                            const [, alt, src] = match
-                            return (
-                              <div key={idx} className="my-6 sm:my-8">
-                                <img 
-                                  src={src} 
-                                  alt={alt} 
-                                  className="w-full rounded-lg border border-slate-700/50 shadow-xl"
-                                />
-                                {alt && alt !== 'image' && (
-                                  <p className="text-xs sm:text-sm text-slate-400 mt-2 text-center italic">{alt}</p>
-                                )}
-                              </div>
-                            )
-                          }
-                        }
-                        
-                        if (trimmedLine.startsWith('# ')) {
-                          return <h1 key={idx} className="text-2xl sm:text-3xl font-bold text-white mt-6 sm:mt-8 mb-3 sm:mb-4">{trimmedLine.replace(/^#+\s/, '')}</h1>
-                        } else if (trimmedLine.startsWith('## ')) {
-                          return <h2 key={idx} className="text-xl sm:text-2xl font-bold text-white mt-4 sm:mt-6 mb-2 sm:mb-3">{trimmedLine.replace(/^#+\s/, '')}</h2>
-                        } else if (trimmedLine.startsWith('### ')) {
-                          return <h3 key={idx} className="text-lg sm:text-xl font-bold text-white mt-3 sm:mt-4 mb-1 sm:mb-2">{trimmedLine.replace(/^#+\s/, '')}</h3>
-                        } else if (trimmedLine.startsWith('- ')) {
-                          return <li key={idx} className="ml-4 sm:ml-6 mb-1 sm:mb-2 list-disc text-sm sm:text-base">{trimmedLine.replace(/^-\s/, '')}</li>
-                        } else if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
-                          return <p key={idx} className="font-bold text-white my-3 sm:my-4 text-base sm:text-lg">{trimmedLine.replace(/\*\*/g, '')}</p>
-                        } else if (trimmedLine === '') {
-                          return <div key={idx} className="h-2 sm:h-4" />
-                        } else {
-                          // Handle bold text within paragraphs
-                          const parts = trimmedLine.split(/(\*\*.*?\*\*)/g)
-                          return (
-                            <p key={idx} className="mb-3 sm:mb-4 text-sm sm:text-base">
-                              {parts.map((part, partIdx) => {
-                                if (part.startsWith('**') && part.endsWith('**')) {
-                                  return <strong key={partIdx} className="text-white font-semibold">{part.replace(/\*\*/g, '')}</strong>
-                                }
-                                return <span key={partIdx}>{part}</span>
-                              })}
-                            </p>
-                          )
-                        }
-                      })}
-                    </div>
+                    <BlogMarkdown content={blog.content} />
                   </motion.div>
                 </div>
               </motion.div>
