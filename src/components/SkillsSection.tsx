@@ -6,20 +6,22 @@ import {
   Database,
   Zap,
   TrendingUp,
+  Cpu,
 } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudPanel from './ui/HudPanel'
 import HudCard from './ui/HudCard'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { fadeInItem, hoverLift, staggerContainer } from '../lib/motionPresets'
 
 interface SkillCategory {
   id: string
   label: string
   title: string
   icon: React.ReactNode
-  accent: string
   skills: string[]
+  wide?: boolean
 }
 
 const skillCategories: SkillCategory[] = [
@@ -28,7 +30,7 @@ const skillCategories: SkillCategory[] = [
     label: 'AI / RAG',
     title: 'Generative AI & RAG',
     icon: <Brain className="w-4 h-4" />,
-    accent: '#22d3ee',
+    wide: true,
     skills: [
       'Generative AI',
       'LangChain',
@@ -50,7 +52,6 @@ const skillCategories: SkillCategory[] = [
     label: 'Languages',
     title: 'Programming Languages',
     icon: <Code2 className="w-4 h-4" />,
-    accent: '#38bdf8',
     skills: ['Python', 'TypeScript', 'Node.js', 'JavaScript'],
   },
   {
@@ -58,7 +59,6 @@ const skillCategories: SkillCategory[] = [
     label: 'Frontend',
     title: 'Frontend & Frameworks',
     icon: <Zap className="w-4 h-4" />,
-    accent: '#a78bfa',
     skills: ['React.js', 'Next.js', 'Vue.js'],
   },
   {
@@ -66,15 +66,13 @@ const skillCategories: SkillCategory[] = [
     label: 'Cloud',
     title: 'Cloud Platforms',
     icon: <Cloud className="w-4 h-4" />,
-    accent: '#f59e0b',
     skills: ['Azure', 'AWS', 'GCP'],
   },
   {
     id: 'ml',
     label: 'AI / ML',
     title: 'AI/ML & NLP',
-    icon: <Brain className="w-4 h-4" />,
-    accent: '#f472b6',
+    icon: <Cpu className="w-4 h-4" />,
     skills: ['AI/ML', 'NLP/LLM', 'TensorFlow', 'CatBoost'],
   },
   {
@@ -82,7 +80,6 @@ const skillCategories: SkillCategory[] = [
     label: 'DevOps',
     title: 'DevOps & Containers',
     icon: <TrendingUp className="w-4 h-4" />,
-    accent: '#22d3ee',
     skills: ['Docker', 'Kubernetes', 'CI/CD', 'Jenkins'],
   },
   {
@@ -90,29 +87,41 @@ const skillCategories: SkillCategory[] = [
     label: 'Data',
     title: 'Databases',
     icon: <Database className="w-4 h-4" />,
-    accent: '#34d399',
     skills: ['PostgreSQL', 'MySQL', 'Redis', 'Firebase'],
   },
 ]
 
 const totalSkills = skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0)
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.08 },
-  },
-}
+const SkillCard = ({ category }: { category: SkillCategory }) => (
+  <HudCard className="p-4 sm:p-5 h-full flex flex-col group">
+    <div className="flex items-start gap-3 mb-4 pb-3 border-b border-slate-800/60 min-h-[4.5rem]">
+      <div className="p-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 shrink-0">
+        {category.icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-0.5">
+          // {category.label}
+        </p>
+        <h3 className="text-sm sm:text-base font-semibold text-white leading-snug">{category.title}</h3>
+      </div>
+      <span className="font-mono text-[10px] text-slate-500 shrink-0 pt-1">
+        {String(category.skills.length).padStart(2, '0')} nodes
+      </span>
+    </div>
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 28, scale: 0.97 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  },
-}
+    <div className="flex flex-wrap gap-1.5 mt-auto">
+      {category.skills.map((skill) => (
+        <span
+          key={skill}
+          className="px-2.5 py-1 bg-cyan-500/10 text-cyan-300 rounded-md text-xs border border-cyan-500/20 font-mono"
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
+  </HudCard>
+)
 
 const SkillsSection = () => {
   const reducedMotion = usePrefersReducedMotion()
@@ -143,94 +152,23 @@ const SkillsSection = () => {
         }
       >
         <motion.div
-          className="px-4 sm:px-5 py-5 sm:py-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5"
-          variants={containerVariants}
+          className="px-4 sm:px-5 py-5 sm:py-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 items-stretch"
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
         >
-          {skillCategories.map((category, index) => (
-            <motion.div key={category.id} variants={cardVariants}>
+          {skillCategories.map((category) => (
+            <motion.div
+              key={category.id}
+              variants={fadeInItem}
+              className={`h-full ${category.wide ? 'sm:col-span-2' : ''}`}
+            >
               <motion.div
-                animate={
-                  reducedMotion
-                    ? undefined
-                    : {
-                        y: [0, -5, 0],
-                      }
-                }
-                transition={
-                  reducedMotion
-                    ? undefined
-                    : {
-                        y: {
-                          duration: 4.5 + index * 0.35,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                          delay: index * 0.25,
-                        },
-                      }
-                }
+                className="h-full"
+                whileHover={reducedMotion ? undefined : hoverLift}
               >
-                <HudCard className="p-4 sm:p-5 h-full overflow-hidden group">
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{
-                      background: `radial-gradient(circle at 30% 20%, ${category.accent}18, transparent 55%)`,
-                    }}
-                  />
-
-                  <div className="relative flex items-center gap-3 mb-3 pb-2 border-b border-slate-800/60">
-                    <motion.div
-                      className="p-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-cyan-400"
-                      style={{ boxShadow: `0 0 16px ${category.accent}22` }}
-                      whileHover={reducedMotion ? undefined : { scale: 1.08, rotate: 3 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 18 }}
-                    >
-                      {category.icon}
-                    </motion.div>
-                    <div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-0.5">
-                        {category.label}
-                      </p>
-                      <h3 className="text-sm sm:text-base font-semibold text-white">{category.title}</h3>
-                    </div>
-                    <span className="ml-auto font-mono text-xs text-slate-500 hidden sm:block">
-                      {category.skills.length} nodes
-                    </span>
-                  </div>
-
-                  <div className="relative flex flex-wrap gap-2">
-                    {category.skills.map((skill, skillIndex) => (
-                      <motion.span
-                        key={skill}
-                        initial={{ opacity: 0, scale: 0.85 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{
-                          delay: index * 0.08 + skillIndex * 0.04,
-                          duration: 0.35,
-                        }}
-                        whileHover={
-                          reducedMotion
-                            ? undefined
-                            : {
-                                y: -3,
-                                scale: 1.04,
-                                boxShadow: `0 0 18px ${category.accent}44`,
-                              }
-                        }
-                        className="px-3 py-1.5 rounded-md font-mono text-xs sm:text-sm text-slate-200 bg-slate-800/80 border border-slate-700/80 cursor-default"
-                        style={{
-                          borderColor: `${category.accent}33`,
-                          boxShadow: `inset 0 0 12px ${category.accent}08`,
-                        }}
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </div>
-                </HudCard>
+                <SkillCard category={category} />
               </motion.div>
             </motion.div>
           ))}

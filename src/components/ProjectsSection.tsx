@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ExternalLink, Github, Rocket, BookOpen, Shield } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudPanel from './ui/HudPanel'
 import HudCard from './ui/HudCard'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { fadeInItem, panelEnter, staggerContainer } from '../lib/motionPresets'
 
 interface Project {
   id: string
@@ -198,6 +201,7 @@ const ProjectDetail = ({
 const ProjectsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const active = projects[activeIndex]
+  const reducedMotion = usePrefersReducedMotion()
 
   return (
     <SectionShell id="projects" py="py-16 md:py-20" contentClassName="max-w-6xl mx-auto">
@@ -226,13 +230,23 @@ const ProjectsSection = () => {
         }
       >
         {/* Mobile: stacked cards */}
-        <div className="lg:hidden px-4 sm:px-5 py-5 space-y-5">
+        <motion.div
+          className="lg:hidden px-4 sm:px-5 py-5 space-y-5"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-40px' }}
+        >
           {projects.map((project, index) => (
-            <HudCard key={project.id} className="overflow-hidden">
-              <ProjectDetail project={project} index={index} compact />
-            </HudCard>
+            <motion.div key={project.id} variants={fadeInItem}>
+              <motion.div whileHover={reducedMotion ? undefined : { y: -3 }}>
+                <HudCard className="overflow-hidden">
+                  <ProjectDetail project={project} index={index} compact />
+                </HudCard>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Desktop: split panel */}
         <div className="hidden lg:grid lg:grid-cols-[minmax(240px,34%)_1fr] min-h-[480px]">
@@ -267,8 +281,18 @@ const ProjectsSection = () => {
             </ul>
           </nav>
 
-          <div className="bg-slate-950/20">
-            <ProjectDetail project={active} index={activeIndex} />
+          <div className="bg-slate-950/20 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.id}
+                initial={reducedMotion ? false : panelEnter.initial}
+                animate={panelEnter.animate}
+                exit={reducedMotion ? undefined : panelEnter.exit}
+                transition={panelEnter.transition}
+              >
+                <ProjectDetail project={active} index={activeIndex} />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </HudPanel>

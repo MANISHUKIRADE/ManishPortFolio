@@ -30,7 +30,19 @@ const SectionHeader = ({
       className={`text-center mb-10 md:mb-12 ${className}`}
     >
       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-md border border-cyan-500/25 bg-slate-900/50 backdrop-blur-sm mb-5">
-        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+        <motion.span
+          className="w-1.5 h-1.5 rounded-full bg-cyan-400"
+          animate={
+            reducedMotion
+              ? undefined
+              : { opacity: [1, 0.4, 1], scale: [1, 1.2, 1] }
+          }
+          transition={
+            reducedMotion
+              ? undefined
+              : { duration: 2.5, repeat: Infinity, ease: 'easeInOut' }
+          }
+        />
         <span className="font-mono text-[10px] sm:text-xs text-cyan-400/90 uppercase tracking-[0.2em]">
           // {eyebrow}
         </span>

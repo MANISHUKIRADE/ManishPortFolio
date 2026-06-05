@@ -1,8 +1,12 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Building2, Calendar, MapPin, Award, TrendingUp } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudPanel from './ui/HudPanel'
+import HudCard from './ui/HudCard'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { fadeUpItem, panelEnter, staggerContainer } from '../lib/motionPresets'
 
 interface CareerRole {
   id: string
@@ -115,20 +119,37 @@ const CareerRoleDetail = ({ role }: { role: CareerRole }) => (
         // Key Achievements
       </span>
     </div>
-    <ul className="space-y-2.5">
+    <motion.ul
+      className="space-y-2.5"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.06 } },
+      }}
+    >
       {role.achievements.map((achievement) => (
-        <li key={achievement} className="flex items-start gap-2.5 text-sm text-slate-300 leading-relaxed">
+        <motion.li
+          key={achievement}
+          variants={{
+            hidden: { opacity: 0, x: -10 },
+            visible: { opacity: 1, x: 0 },
+          }}
+          className="flex items-start gap-2.5 text-sm text-slate-300 leading-relaxed"
+        >
           <TrendingUp className="w-4 h-4 mt-0.5 shrink-0 text-cyan-400/80" />
           <span>{achievement}</span>
-        </li>
+        </motion.li>
       ))}
-    </ul>
+    </motion.ul>
   </div>
 )
 
 const CareerJourneySection = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const active = careerData[activeIndex]
+  const reducedMotion = usePrefersReducedMotion()
 
   return (
     <SectionShell id="career" contentClassName="max-w-6xl mx-auto">
@@ -144,7 +165,7 @@ const CareerJourneySection = () => {
       <HudPanel
         moduleLabel="// Career Module"
         sysId="SYS.CAREER_LOG v1.0"
-        badge={`${String(activeIndex + 1).padStart(2, '0')} / ${String(careerData.length).padStart(2, '0')}`}
+        badge={`${careerData.length} roles`}
         footer={
           <div className="flex items-center justify-between gap-3">
             <span className="font-mono text-[10px] text-slate-600 uppercase tracking-widest">
@@ -156,34 +177,27 @@ const CareerJourneySection = () => {
           </div>
         }
       >
-        {/* Mobile: HUD tabs */}
-        <div
-          className="lg:hidden flex gap-1.5 px-3 sm:px-4 py-3 border-b border-slate-800/80 overflow-x-auto"
-          role="tablist"
-          aria-label="Career timeline"
+        {/* Mobile: stacked timeline cards */}
+        <motion.div
+          className="lg:hidden px-4 sm:px-5 py-5 space-y-4"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-40px' }}
         >
-          {careerData.map((role, index) => {
-            const isActive = activeIndex === index
-            return (
-              <button
-                key={role.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={`career-panel-${role.id}`}
-                id={`career-tab-${role.id}`}
-                onClick={() => setActiveIndex(index)}
-                className={`px-3 py-1.5 rounded-md font-mono text-xs uppercase tracking-wider whitespace-nowrap border transition-colors ${
-                  isActive
-                    ? 'bg-cyan-500/15 border-cyan-400/50 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.2)]'
-                    : 'bg-slate-900/50 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:border-slate-600'
-                }`}
-              >
-                {role.label}
-              </button>
-            )
-          })}
-        </div>
+          {careerData.map((role) => (
+            <motion.div key={role.id} variants={fadeUpItem}>
+              <HudCard className="overflow-hidden">
+                <div className="px-4 pt-3 pb-1 border-b border-slate-800/60">
+                  <span className="font-mono text-[10px] text-cyan-400/70 uppercase tracking-widest">
+                    {role.period}
+                  </span>
+                </div>
+                <CareerRoleDetail role={role} />
+              </HudCard>
+            </motion.div>
+          ))}
+        </motion.div>
 
         {/* Desktop: split panel */}
         <div className="hidden lg:grid lg:grid-cols-[minmax(240px,34%)_1fr] min-h-[420px]">
@@ -237,24 +251,19 @@ const CareerJourneySection = () => {
           </nav>
 
           {/* Detail panel */}
-          <div
-            role="tabpanel"
-            id={`career-panel-${active.id}`}
-            aria-labelledby={`career-tab-${active.id}`}
-            className="bg-slate-950/20"
-          >
-            <CareerRoleDetail role={active} />
+          <div className="bg-slate-950/20 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.id}
+                initial={reducedMotion ? false : panelEnter.initial}
+                animate={panelEnter.animate}
+                exit={reducedMotion ? undefined : panelEnter.exit}
+                transition={panelEnter.transition}
+              >
+                <CareerRoleDetail role={active} />
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </div>
-
-        {/* Mobile: detail below tabs */}
-        <div
-          className="lg:hidden"
-          role="tabpanel"
-          id={`career-panel-${active.id}`}
-          aria-labelledby={`career-tab-${active.id}`}
-        >
-          <CareerRoleDetail role={active} />
         </div>
       </HudPanel>
     </SectionShell>

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
@@ -139,16 +139,30 @@ const Navbar = () => {
         </div>
       </div>
 
+      <AnimatePresence>
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="lg:hidden bg-nexus-950/98 backdrop-blur-xl border-t border-slate-800"
+          exit={{ opacity: 0, height: 0 }}
+          className="lg:hidden bg-nexus-950/98 backdrop-blur-xl border-t border-slate-800 overflow-hidden"
         >
-          <div className="px-4 py-4 space-y-1">
+          <motion.div
+            className="px-4 py-4 space-y-1"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.05 } },
+            }}
+          >
             {navItems.map((item) => (
-              <a
+              <motion.a
                 key={item.name}
+                variants={{
+                  hidden: { opacity: 0, x: -12 },
+                  visible: { opacity: 1, x: 0 },
+                }}
                 href={item.href}
                 onClick={(e) => {
                   e.preventDefault()
@@ -162,11 +176,12 @@ const Navbar = () => {
                 }`}
               >
                 {item.name}
-              </a>
+              </motion.a>
             ))}
-          </div>
+          </motion.div>
         </motion.div>
       )}
+      </AnimatePresence>
     </motion.nav>
   )
 }

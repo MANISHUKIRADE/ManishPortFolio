@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Clock, ArrowRight, BookOpen, Star } from 'lucide-react'
 import { blogs, BlogPost } from '../data/blogs'
 import BlogDetailModal from './BlogDetailModal'
@@ -6,6 +7,8 @@ import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudPanel from './ui/HudPanel'
 import HudCard from './ui/HudCard'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { fadeUpItem, panelEnter, staggerContainer } from '../lib/motionPresets'
 
 const FEATURED_SLUGS = new Set([
   'production-rag-pipeline-kyara-lessons',
@@ -115,8 +118,12 @@ interface BlogCompactCardProps {
   onRead: () => void
 }
 
-const BlogCompactCard = ({ blog, index, onRead }: BlogCompactCardProps) => (
-  <HudCard className="p-4 sm:p-5">
+const BlogCompactCard = ({ blog, index, onRead }: BlogCompactCardProps) => {
+  const reducedMotion = usePrefersReducedMotion()
+
+  return (
+    <motion.div whileHover={reducedMotion ? undefined : { y: -3 }}>
+      <HudCard className="p-4 sm:p-5">
     <div className="flex items-start justify-between gap-3 mb-2">
       <div className="flex items-center gap-2 min-w-0">
         <span className="font-mono text-[10px] text-cyan-400/80 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 shrink-0">
@@ -157,13 +164,16 @@ const BlogCompactCard = ({ blog, index, onRead }: BlogCompactCardProps) => (
       <span>Read Article</span>
       <ArrowRight className="w-3.5 h-3.5" />
     </button>
-  </HudCard>
-)
+      </HudCard>
+    </motion.div>
+  )
+}
 
 const BlogSection = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [modalSlug, setModalSlug] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const reducedMotion = usePrefersReducedMotion()
 
   const active = blogs[activeIndex]
 
@@ -235,16 +245,23 @@ const BlogSection = () => {
           }
         >
           {/* Mobile: all articles as compact cards */}
-          <div className="lg:hidden px-4 sm:px-5 py-5 space-y-4">
+          <motion.div
+            className="lg:hidden px-4 sm:px-5 py-5 space-y-4"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+          >
             {blogs.map((blog, index) => (
-              <BlogCompactCard
-                key={blog.id}
-                blog={blog}
-                index={index}
-                onRead={() => openArticle(blog.slug)}
-              />
+              <motion.div key={blog.id} variants={fadeUpItem}>
+                <BlogCompactCard
+                  blog={blog}
+                  index={index}
+                  onRead={() => openArticle(blog.slug)}
+                />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* Desktop: split panel */}
           <div className="hidden lg:grid lg:grid-cols-[minmax(260px,36%)_1fr] min-h-[500px]">
@@ -281,12 +298,22 @@ const BlogSection = () => {
               </ul>
             </nav>
 
-            <div className="bg-slate-950/20">
-              <BlogPreview
-                blog={active}
-                index={activeIndex}
-                onReadMore={() => openArticle(active.slug)}
-              />
+            <div className="bg-slate-950/20 overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={active.slug}
+                  initial={reducedMotion ? false : panelEnter.initial}
+                  animate={panelEnter.animate}
+                  exit={reducedMotion ? undefined : panelEnter.exit}
+                  transition={panelEnter.transition}
+                >
+                  <BlogPreview
+                    blog={active}
+                    index={activeIndex}
+                    onReadMore={() => openArticle(active.slug)}
+                  />
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </HudPanel>

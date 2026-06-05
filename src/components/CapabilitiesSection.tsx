@@ -1,7 +1,10 @@
+import { motion } from 'framer-motion'
 import { Bot, Brain, Cloud, Code2, Link2, Shield } from 'lucide-react'
 import SectionHeader from './ui/SectionHeader'
 import SectionShell from './ui/SectionShell'
 import HudCard from './ui/HudCard'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { fadeInItem, hoverLift, staggerContainer } from '../lib/motionPresets'
 
 const capabilities = [
   {
@@ -43,6 +46,8 @@ const capabilities = [
 ]
 
 const CapabilitiesSection = () => {
+  const reducedMotion = usePrefersReducedMotion()
+
   return (
     <SectionShell id="capabilities" py="py-16 md:py-20" contentClassName="max-w-7xl mx-auto">
       <SectionHeader
@@ -53,20 +58,36 @@ const CapabilitiesSection = () => {
         typeTitle
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+      >
         {capabilities.map((item) => (
-          <HudCard key={item.title} className="p-5 h-full">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/60 mb-3">
-              // Module
-            </p>
-            <div className="mb-4 inline-flex p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-              <item.icon className="w-5 h-5" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">{item.description}</p>
-          </HudCard>
+          <motion.div key={item.title} variants={fadeInItem}>
+            <motion.div whileHover={reducedMotion ? undefined : hoverLift}>
+              <HudCard className="p-5 h-full group">
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/60 mb-3">
+                  // Module
+                </p>
+                <motion.div
+                  className="mb-4 inline-flex p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"
+                  whileHover={reducedMotion ? undefined : { scale: 1.08, rotate: 4 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+                >
+                  <item.icon className="w-5 h-5" />
+                </motion.div>
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-cyan-100 transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{item.description}</p>
+              </HudCard>
+            </motion.div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </SectionShell>
   )
 }
