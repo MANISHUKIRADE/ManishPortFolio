@@ -1,8 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import ThemeToggle from './ui/ThemeToggle'
 
-const Navbar = () => {
+type NavbarProps = {
+  onOpenCommandPalette?: () => void
+}
+
+const Navbar = ({ onOpenCommandPalette }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('')
@@ -45,142 +50,123 @@ const Navbar = () => {
     }
   }
 
+  const isMac =
+    typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform)
+
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      transition={{ duration: 0.15, ease: 'easeOut' }}
+      className={`fixed top-0 w-full z-50 transition-colors duration-150 ${
         scrolled
-          ? 'bg-nexus-950/90 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_4px_24px_rgba(34,211,238,0.06)]'
+          ? 'bg-bg/90 backdrop-blur-xl border-b border-border'
           : 'bg-transparent border-b border-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <motion.a
+          <a
             href="#home"
             onClick={(e) => {
               e.preventDefault()
               scrollTo('#home')
             }}
-            whileHover={{ scale: 1.02 }}
             className="flex items-center gap-2"
           >
-            <span className="font-mono text-sm text-cyan-400/90">{'<'}</span>
-            <span className="text-lg font-bold text-white tracking-tight">Manish</span>
-            <span className="font-mono text-sm text-cyan-400/90">{'/>'}</span>
-          </motion.a>
+            <span className="font-mono text-sm text-accent">{'<'}</span>
+            <span className="text-lg font-bold text-text tracking-tight">Manish</span>
+            <span className="font-mono text-sm text-accent">{'/>'}</span>
+          </a>
 
           <div className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = activeSection === item.id
               return (
-                <motion.a
+                <a
                   key={item.name}
                   href={item.href}
                   onClick={(e) => {
                     e.preventDefault()
                     scrollTo(item.href)
                   }}
-                  whileHover={{ color: '#f8fafc' }}
-                  className={`relative px-3 py-2 text-sm font-mono transition-colors ${
-                    isActive ? 'text-cyan-300' : 'text-slate-400 hover:text-slate-200'
+                  className={`relative px-3 py-2 text-sm font-mono transition-colors duration-150 ${
+                    isActive ? 'text-accent' : 'text-muted hover:text-accent'
                   }`}
                 >
                   {item.name}
                   {isActive && (
-                    <motion.span
-                      layoutId="nav-indicator"
-                      className="absolute bottom-0 left-3 right-3 h-0.5 bg-cyan-400 rounded-full"
-                      style={{ boxShadow: '0 0 8px rgba(34, 211, 238, 0.6)' }}
-                    />
+                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-accent rounded-full" />
                   )}
-                </motion.a>
+                </a>
               )
             })}
           </div>
 
-          <div className="hidden md:flex lg:hidden items-center gap-4">
-            {navItems.slice(0, 4).map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollTo(item.href)
-                }}
-                className="text-sm text-slate-400 hover:text-cyan-300 transition-colors"
+          <div className="flex items-center gap-2">
+            {onOpenCommandPalette && (
+              <button
+                type="button"
+                onClick={onOpenCommandPalette}
+                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border font-mono text-[10px] text-muted hover:text-accent hover:border-accent transition-colors duration-150"
+                aria-label="Open command palette"
               >
-                {item.name}
-              </a>
-            ))}
+                <kbd>{isMac ? '⌘' : 'Ctrl'}K</kbd>
+              </button>
+            )}
+            <ThemeToggle />
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollTo('#contact')
+              }}
+              className="hidden sm:inline-flex px-4 py-2 font-mono text-xs rounded-md bg-accent hover:bg-accent-hover text-bg transition-colors duration-150 uppercase tracking-wider"
+            >
+              Contact
+            </a>
+            <button
+              className="lg:hidden text-muted p-2 hover:text-accent"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
           </div>
-
-          <motion.a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault()
-              scrollTo('#contact')
-            }}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="hidden sm:inline-flex px-4 py-2 font-mono text-xs rounded-md bg-cyan-600/90 hover:bg-cyan-500 text-white border border-cyan-400/30 transition-colors uppercase tracking-wider"
-          >
-            Contact
-          </motion.a>
-
-          <button
-            className="lg:hidden text-slate-300 p-2"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
         </div>
       </div>
 
       <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="lg:hidden bg-nexus-950/98 backdrop-blur-xl border-t border-slate-800 overflow-hidden"
-        >
+        {isOpen && (
           <motion.div
-            className="px-4 py-4 space-y-1"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.05 } },
-            }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            className="lg:hidden bg-bg/98 backdrop-blur-xl border-t border-border overflow-hidden"
           >
-            {navItems.map((item) => (
-              <motion.a
-                key={item.name}
-                variants={{
-                  hidden: { opacity: 0, x: -12 },
-                  visible: { opacity: 1, x: 0 },
-                }}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollTo(item.href)
-                }}
-                className={`block px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                  activeSection === item.id
-                    ? 'text-cyan-300 bg-cyan-500/10'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-              >
-                {item.name}
-              </motion.a>
-            ))}
+            <div className="px-4 py-4 space-y-1">
+              {navItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setIsOpen(false)
+                    scrollTo(item.href)
+                  }}
+                  className={`block px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                    activeSection === item.id
+                      ? 'text-accent bg-accent-muted/30'
+                      : 'text-muted hover:text-text hover:bg-surface-2'
+                  }`}
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
       </AnimatePresence>
     </motion.nav>
   )

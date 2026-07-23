@@ -5,9 +5,8 @@ import { useEffect } from 'react'
 import { useScrollLock } from '../hooks/useScrollLock'
 import SEO from './SEO'
 import { SITE_URL } from '../config/site'
-import ScanningLine from './animations/ScanningLine'
-import HolographicGlitch from './animations/HolographicGlitch'
 import BlogMarkdown from './ui/BlogMarkdown'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 interface BlogDetailModalProps {
   blog: BlogPost | null
@@ -17,18 +16,14 @@ interface BlogDetailModalProps {
 
 const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
   useScrollLock(isOpen)
+  const reducedMotion = usePrefersReducedMotion()
 
-  // Inject blog structured data
   useEffect(() => {
     if (!blog || !isOpen) return
 
-    // Remove existing blog structured data
     const existingScript = document.getElementById('blog-structured-data')
-    if (existingScript) {
-      existingScript.remove()
-    }
+    if (existingScript) existingScript.remove()
 
-    // Create blog structured data
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -40,20 +35,20 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
       author: {
         '@type': 'Person',
         name: blog.author,
-        url: SITE_URL
+        url: SITE_URL,
       },
       publisher: {
         '@type': 'Person',
         name: blog.author,
-        url: SITE_URL
+        url: SITE_URL,
       },
       mainEntityOfPage: {
         '@type': 'WebPage',
-        '@id': `${SITE_URL}/blog/${blog.slug}`
+        '@id': `${SITE_URL}/blog/${blog.slug}`,
       },
       keywords: blog.seo.keywords,
       articleSection: blog.category,
-      wordCount: blog.content.split(/\s+/).length
+      wordCount: blog.content.split(/\s+/).length,
     }
 
     const script = document.createElement('script')
@@ -63,10 +58,7 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
     document.head.appendChild(script)
 
     return () => {
-      const scriptToRemove = document.getElementById('blog-structured-data')
-      if (scriptToRemove) {
-        scriptToRemove.remove()
-      }
+      document.getElementById('blog-structured-data')?.remove()
     }
   }, [blog, isOpen])
 
@@ -83,223 +75,111 @@ const BlogDetailModal = ({ blog, isOpen, onClose }: BlogDetailModalProps) => {
             image={blog.image}
             url={`${SITE_URL}/blog/${blog.slug}`}
           />
-          {/* Backdrop */}
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overscroll-none"
-          >
-            <motion.div
-              className="absolute inset-0"
-              animate={{
-                background: [
-                  'radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.1), transparent 70%)',
-                  'radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.1), transparent 70%)',
-                  'radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.1), transparent 70%)',
-                ],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          </motion.div>
-          
-          {/* Modal */}
+          />
+
           <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reducedMotion ? undefined : { opacity: 0, y: 8 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
             className="fixed inset-0 sm:inset-4 md:inset-8 lg:inset-16 z-50 overflow-hidden pointer-events-none min-h-0"
           >
-            <div 
-              className="h-full min-h-0 w-full bg-slate-900 rounded-none sm:rounded-2xl border-0 sm:border border-cyan-500/30 shadow-2xl flex flex-col relative pointer-events-auto"
+            <div
+              className="h-full min-h-0 w-full bg-surface rounded-none sm:rounded-2xl border-0 sm:border border-border shadow-2xl flex flex-col relative pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Scanning Lines Effect */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
-                <ScanningLine direction="horizontal" speed={3} />
-              </div>
-              
-              {/* Holographic Border Glow */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl pointer-events-none z-10"
-                animate={{
-                  boxShadow: [
-                    '0 0 30px rgba(34, 211, 238, 0.3), inset 0 0 30px rgba(34, 211, 238, 0.1)',
-                    '0 0 50px rgba(34, 211, 238, 0.5), inset 0 0 50px rgba(34, 211, 238, 0.2)',
-                    '0 0 30px rgba(34, 211, 238, 0.3), inset 0 0 30px rgba(34, 211, 238, 0.1)',
-                  ],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
-              {/* Header */}
-              <motion.div 
-                className="relative h-48 sm:h-64 md:h-80 overflow-hidden"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <motion.img
+              <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden shrink-0">
+                <img
                   src={blog.image}
                   alt={blog.title}
                   className="w-full h-full object-cover"
-                  initial={{ scale: 1.2 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.8 }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40" />
-                
-                {/* Animated gradient overlay */}
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{
-                    background: [
-                      'linear-gradient(180deg, transparent 0%, rgba(34, 211, 238, 0.1) 100%)',
-                      'linear-gradient(180deg, transparent 0%, rgba(45, 212, 191, 0.1) 100%)',
-                      'linear-gradient(180deg, transparent 0%, rgba(34, 211, 238, 0.1) 100%)',
-                    ],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                />
-                
-                {/* Close Button */}
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={onClose}
-                  className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 bg-slate-900/90 backdrop-blur-sm rounded-full border border-cyan-500/30 hover:bg-cyan-600/20 active:bg-cyan-600/20 transition-colors z-10 touch-manipulation"
-                >
-                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                </motion.button>
+                <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/80 to-bg/40" />
 
-                {/* Category Badge */}
-                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-0.5 sm:py-1 bg-cyan-600/80 backdrop-blur-sm rounded-full border border-cyan-400/30">
-                  <span className="text-[10px] sm:text-xs font-semibold text-white">{blog.category}</span>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 bg-surface/90 backdrop-blur-sm rounded-md border border-border hover:border-accent hover:text-accent transition-colors z-10 touch-manipulation"
+                  aria-label="Close article"
+                >
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+
+                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 px-2 sm:px-3 py-0.5 sm:py-1 bg-accent text-bg rounded-md font-mono text-[10px] sm:text-xs font-semibold">
+                  {blog.category}
                 </div>
 
-                {/* Title and Meta */}
-                <motion.div 
-                  className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <HolographicGlitch intensity={0.03} frequency={3}>
-                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-2 sm:mb-3 md:mb-4 leading-tight">
-                      {blog.title}
-                    </h1>
-                  </HolographicGlitch>
-                  <motion.div 
-                    className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm text-slate-300"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6 }}
-                  >
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-text mb-2 sm:mb-3 leading-tight">
+                    {blog.title}
+                  </h1>
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm text-muted font-mono">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(blog.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                      <span>
+                        {new Date(blog.date).toLocaleDateString('en-US', {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       <span>{blog.readTime}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span>By {blog.author}</span>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
+                    <span>By {blog.author}</span>
+                  </div>
+                </div>
+              </div>
 
-              {/* Content */}
-              <motion.div 
+              <div
                 className="flex-1 min-h-0 overflow-y-auto overscroll-contain modal-content"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                style={{ 
+                style={{
                   WebkitOverflowScrolling: 'touch',
                   overscrollBehavior: 'contain',
                 }}
               >
                 <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 lg:p-12">
-                  {/* Tags */}
-                  <motion.div 
-                    className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6 md:mb-8"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    {blog.tags.map((tag, tagIndex) => (
-                      <motion.span
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6 md:mb-8">
+                    {blog.tags.map((tag) => (
+                      <span
                         key={tag}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.7 + tagIndex * 0.1, type: 'spring' }}
-                        whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(34, 211, 238, 0.5)' }}
-                        className="px-2 sm:px-3 py-0.5 sm:py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs sm:text-sm border border-cyan-500/30 cursor-default"
+                        className="px-2 sm:px-3 py-0.5 sm:py-1 bg-accent/10 text-accent rounded-md text-xs sm:text-sm border border-accent/20 font-mono"
                       >
                         {tag}
-                      </motion.span>
+                      </span>
                     ))}
-                  </motion.div>
+                  </div>
 
-                  {/* Markdown Content */}
-                  <motion.div 
-                    className="prose prose-invert prose-sm sm:prose-base md:prose-lg max-w-none"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 }}
-                  >
+                  <div className="prose prose-invert prose-sm sm:prose-base md:prose-lg max-w-none">
                     <BlogMarkdown content={blog.content} />
-                  </motion.div>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Footer */}
-              <motion.div 
-                className="border-t border-slate-700 p-4 sm:p-6 relative z-10"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-              >
+              <div className="border-t border-border p-4 sm:p-6 relative z-10 shrink-0">
                 <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
-                  <motion.button
-                    whileHover={{ x: -5, scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <button
+                    type="button"
                     onClick={onClose}
-                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 active:text-cyan-300 transition-colors px-4 py-2 rounded-lg hover:bg-cyan-500/10 touch-manipulation text-sm sm:text-base"
+                    className="flex items-center gap-2 text-accent hover:text-accent-hover transition-colors px-4 py-2 rounded-md hover:bg-accent/10 touch-manipulation text-sm sm:text-base font-mono"
                   >
-                    <motion.div
-                      animate={{ x: [0, -3, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <ArrowLeft className="w-4 h-4" />
-                    </motion.div>
+                    <ArrowLeft className="w-4 h-4" />
                     <span>Back to Blogs</span>
-                  </motion.button>
-                  <motion.div 
-                    className="text-xs sm:text-sm text-slate-400 text-center sm:text-right"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                  >
+                  </button>
+                  <div className="text-xs sm:text-sm text-muted text-center sm:text-right font-mono">
                     Published by {blog.author}
-                  </motion.div>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         </>

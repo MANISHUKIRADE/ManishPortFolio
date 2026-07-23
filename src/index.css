@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('/fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root,
+[data-theme='dark'] {
+  --bg: #030712;
+  --surface: #0a0f1a;
+  --surface-2: #111827;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --border: #1e293b;
+  --accent: #f59e0b;
+  --accent-hover: #fbbf24;
+  --accent-muted: #78350f;
+}
+
+[data-theme='light'] {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --accent: #d97706;
+  --accent-hover: #f59e0b;
+  --accent-muted: #fef3c7;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -21,10 +54,9 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-    'Ubuntu', 'Cantarell', sans-serif;
-  background-color: #030712;
-  color: #e2e8f0;
+  font-family: 'Geist Sans', system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
@@ -57,9 +89,15 @@ a,
   touch-action: manipulation;
 }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .typewriter-cursor {
   display: inline-block;
   margin-left: 2px;
+  color: var(--accent);
   animation: cursor-blink 1s step-end infinite;
 }
 
@@ -73,40 +111,54 @@ a,
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #030712;
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #164e63;
+  background: var(--accent-muted);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0891b2;
+  background: var(--accent);
 }
 
 ::selection {
-  background: rgba(34, 211, 238, 0.25);
-  color: #f8fafc;
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--text);
 }
 
-/* Hide scrollbar for modal content on mobile */
 @media (max-width: 640px) {
   .modal-content::-webkit-scrollbar {
     width: 6px;
   }
 }
 
-/* Prevent body scroll when modal or chat is open */
 body.modal-open {
   overflow: hidden !important;
   position: fixed;
   width: 100%;
   height: 100%;
+}
+
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: 0.75rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+}
+
+.skip-to-main:focus {
+  left: 1rem;
+  top: 1rem;
 }

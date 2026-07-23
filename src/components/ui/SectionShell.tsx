@@ -1,6 +1,5 @@
-import { forwardRef, ReactNode } from 'react'
+import { forwardRef, type ReactNode } from 'react'
 import CssStarfield from './CssStarfield'
-import HolographicGrid from '../animations/HolographicGrid'
 
 interface SectionShellProps {
   id: string
@@ -8,8 +7,6 @@ interface SectionShellProps {
   className?: string
   contentClassName?: string
   py?: string
-  gridSpacing?: number
-  gridOpacity?: number
 }
 
 const SectionShell = forwardRef<HTMLElement, SectionShellProps>(
@@ -20,16 +17,13 @@ const SectionShell = forwardRef<HTMLElement, SectionShellProps>(
       className = '',
       contentClassName = '',
       py = 'py-12 md:py-16',
-      gridSpacing = 48,
-      gridOpacity = 0.04,
     },
     ref
   ) => (
     <section id={id} ref={ref} className={`relative ${py} px-4 overflow-x-clip ${className}`}>
-      <div className="absolute inset-0 bg-nexus-950" />
-      <CssStarfield />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent pointer-events-none" />
-      <HolographicGrid spacing={gridSpacing} color="#22d3ee" opacity={gridOpacity} />
+      <div className="absolute inset-0 bg-bg" />
+      <CssStarfield className="opacity-20" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--accent)_6%,transparent),transparent_55%)] pointer-events-none" />
       <div className={`relative z-10 ${contentClassName}`}>{children}</div>
     </section>
   )

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import HudCorner from './HudCorner'
 
 interface HudCardProps {
@@ -23,10 +23,10 @@ const HudCard = ({ children, className = '', onClick, selected = false }: HudCar
           }
         : undefined
     }
-    className={`relative rounded-xl border bg-slate-900/60 backdrop-blur-md transition-colors ${
+    className={`relative rounded-xl border bg-surface/80 backdrop-blur-md transition-colors duration-150 ${
       selected
-        ? 'border-cyan-400/50 shadow-[0_0_20px_rgba(34,211,238,0.15)]'
-        : 'border-cyan-500/20 hover:border-cyan-400/35'
+        ? 'border-accent/60'
+        : 'border-border hover:border-accent/40'
     } ${onClick ? 'cursor-pointer' : ''} ${className}`}
   >
     <HudCorner className="top-0 left-0 border-t border-l" />

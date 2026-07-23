@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 
 interface TypewriterTextProps {
@@ -7,6 +7,8 @@ interface TypewriterTextProps {
   speed?: number
   delay?: number
   pauseBetween?: number
+  /** When true with strings[], loops forever (respects reduced-motion) */
+  loop?: boolean
   showCursor?: boolean
   className?: string
   onComplete?: () => void
@@ -19,6 +21,7 @@ const TypewriterText = ({
   speed = 45,
   delay = 0,
   pauseBetween = 2000,
+  loop = false,
   showCursor = true,
   className = '',
   onComplete,
@@ -32,12 +35,16 @@ const TypewriterText = ({
   const [displayed, setDisplayed] = useState('')
   const [stringIndex, setStringIndex] = useState(0)
   const [done, setDone] = useState(false)
+  const completedOnce = useRef(false)
 
   useEffect(() => {
     if (reducedMotion || sequence.length === 0) {
       setDisplayed(sequence[0] ?? '')
       setDone(true)
-      onComplete?.()
+      if (!completedOnce.current) {
+        completedOnce.current = true
+        onComplete?.()
+      }
       return
     }
 
@@ -46,9 +53,17 @@ const TypewriterText = ({
     let charIndex = 0
     const current = sequence[stringIndex] ?? ''
 
+    const notifyComplete = () => {
+      if (!completedOnce.current) {
+        completedOnce.current = true
+        onComplete?.()
+      }
+    }
+
     const startTyping = () => {
       charIndex = 0
       setDisplayed('')
+      setDone(false)
 
       intervalId = setInterval(() => {
         charIndex += 1
@@ -57,11 +72,15 @@ const TypewriterText = ({
         if (charIndex >= current.length) {
           clearInterval(intervalId)
 
-          if (stringIndex < sequence.length - 1) {
+          const isLast = stringIndex >= sequence.length - 1
+          if (!isLast) {
             timeoutId = setTimeout(() => setStringIndex((i) => i + 1), pauseBetween)
+          } else if (loop && sequence.length > 1) {
+            notifyComplete()
+            timeoutId = setTimeout(() => setStringIndex(0), pauseBetween)
           } else {
             setDone(true)
-            onComplete?.()
+            notifyComplete()
           }
         }
       }, speed)
@@ -73,13 +92,15 @@ const TypewriterText = ({
       clearTimeout(timeoutId)
       clearInterval(intervalId)
     }
-  }, [stringIndex, sequence, speed, delay, pauseBetween, reducedMotion, onComplete])
+  }, [stringIndex, sequence, speed, delay, pauseBetween, reducedMotion, onComplete, loop])
+
+  const showCaret = showCursor && (loop || !done)
 
   return (
     <Tag className={className}>
       {displayed}
-      {showCursor && !done && (
-        <span className="typewriter-cursor text-cyan-400" aria-hidden="true">
+      {showCaret && (
+        <span className="typewriter-cursor" aria-hidden="true">
           |
         </span>
       )}

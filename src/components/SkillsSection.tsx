@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 import {
   Code2,
   Cloud,
@@ -7,106 +7,111 @@ import {
   Zap,
   TrendingUp,
   Cpu,
-} from 'lucide-react'
-import SectionHeader from './ui/SectionHeader'
-import SectionShell from './ui/SectionShell'
-import HudPanel from './ui/HudPanel'
-import HudCard from './ui/HudCard'
-import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
-import { fadeInItem, hoverLift, staggerContainer } from '../lib/motionPresets'
+} from "lucide-react";
+import SectionHeader from "./ui/SectionHeader";
+import SectionShell from "./ui/SectionShell";
+import HudPanel from "./ui/HudPanel";
+import HudCard from "./ui/HudCard";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { fadeInItem, hoverLift, staggerContainer } from "../lib/motionPresets";
 
 interface SkillCategory {
-  id: string
-  label: string
-  title: string
-  icon: React.ReactNode
-  skills: string[]
-  wide?: boolean
+  id: string;
+  label: string;
+  title: string;
+  icon: React.ReactNode;
+  skills: string[];
+  wide?: boolean;
 }
 
 const skillCategories: SkillCategory[] = [
   {
-    id: 'ai-rag',
-    label: 'AI / RAG',
-    title: 'Generative AI & RAG',
+    id: "ai-rag",
+    label: "AI / RAG",
+    title: "Generative AI & RAG",
     icon: <Brain className="w-4 h-4" />,
     wide: true,
     skills: [
-      'Generative AI',
-      'LangChain',
-      'RAG Systems',
-      'Prompt Engineering',
-      'ChromaDB',
-      'Vector Databases',
-      'Pinecone',
-      'FastAPI',
-      'MLflow',
-      'Hugging Face',
-      'Agentic AI',
-      'OpenAI API',
-      'Groq',
+      "Generative AI",
+      "LangChain",
+      "RAG Systems",
+      "Prompt Engineering",
+      "ChromaDB",
+      "Vector Databases",
+      "Pinecone",
+      "FastAPI",
+      "MLflow",
+      "Hugging Face",
+      "Agentic AI",
+      "OpenAI API",
+      "Groq",
     ],
   },
   {
-    id: 'languages',
-    label: 'Languages',
-    title: 'Programming Languages',
+    id: "languages",
+    label: "Languages",
+    title: "Programming Languages",
     icon: <Code2 className="w-4 h-4" />,
-    skills: ['Python', 'TypeScript', 'Node.js', 'JavaScript'],
+    skills: ["Python", "TypeScript", "Node.js", "JavaScript"],
   },
   {
-    id: 'frontend',
-    label: 'Frontend',
-    title: 'Frontend & Frameworks',
+    id: "frontend",
+    label: "Frontend",
+    title: "Frontend & Frameworks",
     icon: <Zap className="w-4 h-4" />,
-    skills: ['React.js', 'Next.js', 'Vue.js'],
+    skills: ["React.js", "Next.js", "Vue.js"],
   },
   {
-    id: 'cloud',
-    label: 'Cloud',
-    title: 'Cloud Platforms',
+    id: "cloud",
+    label: "Cloud",
+    title: "Cloud Platforms",
     icon: <Cloud className="w-4 h-4" />,
-    skills: ['Azure', 'AWS', 'GCP'],
+    skills: ["Azure", "AWS", "GCP"],
   },
   {
-    id: 'ml',
-    label: 'AI / ML',
-    title: 'AI/ML & NLP',
+    id: "ml",
+    label: "AI / ML",
+    title: "AI/ML & NLP",
     icon: <Cpu className="w-4 h-4" />,
-    skills: ['AI/ML', 'NLP/LLM', 'TensorFlow', 'CatBoost'],
+    skills: ["AI/ML", "NLP/LLM", "TensorFlow", "CatBoost"],
   },
   {
-    id: 'devops',
-    label: 'DevOps',
-    title: 'DevOps & Containers',
+    id: "devops",
+    label: "DevOps",
+    title: "DevOps & Containers",
     icon: <TrendingUp className="w-4 h-4" />,
-    skills: ['Docker', 'Kubernetes', 'CI/CD', 'Jenkins'],
+    skills: ["Docker", "Kubernetes", "CI/CD", "Jenkins"],
   },
   {
-    id: 'databases',
-    label: 'Data',
-    title: 'Databases',
+    id: "databases",
+    label: "Data",
+    title: "Databases",
     icon: <Database className="w-4 h-4" />,
-    skills: ['PostgreSQL', 'MySQL', 'Redis', 'Firebase'],
+    skills: ["PostgreSQL", "MySQL", "Redis", "Firebase"],
   },
-]
+];
 
-const totalSkills = skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0)
+const totalSkills = skillCategories.reduce(
+  (sum, cat) => sum + cat.skills.length,
+  0,
+);
 
 const SkillCard = ({ category }: { category: SkillCategory }) => (
   <HudCard className="p-4 sm:p-5 h-full flex flex-col group">
-    <div className="flex items-start gap-3 mb-4 pb-3 border-b border-slate-800/60 min-h-[4.5rem]">
-      <div className="p-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 shrink-0">
+    <div className="flex items-start gap-3 mb-4 pb-3 border-b border-border min-h-[4.5rem]">
+      <div className="p-2 rounded-lg border border-accent/20 bg-accent/5 text-accent shrink-0">
         {category.icon}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70 mb-0.5">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent/70 mb-0.5">
           // {category.label}
         </p>
-        <h3 className="text-sm sm:text-base font-semibold text-white leading-snug">{category.title}</h3>
+        <h3 className="text-sm sm:text-base font-semibold text-white leading-snug">
+          {category.title}
+        </h3>
       </div>
-      <span className="font-mono text-[10px] text-slate-500 shrink-0 pt-1">
-        {String(category.skills.length).padStart(2, '0')} nodes
+      <span className="font-mono text-[10px] text-muted shrink-0 pt-1">
+        {String(category.skills.length).padStart(2, "0")} nodes
       </span>
     </div>
 
@@ -114,17 +119,17 @@ const SkillCard = ({ category }: { category: SkillCategory }) => (
       {category.skills.map((skill) => (
         <span
           key={skill}
-          className="px-2.5 py-1 bg-cyan-500/10 text-cyan-300 rounded-md text-xs border border-cyan-500/20 font-mono"
+          className="px-2.5 py-1 bg-accent/10 text-accent rounded-md text-xs border border-accent/20 font-mono"
         >
           {skill}
         </span>
       ))}
     </div>
   </HudCard>
-)
+);
 
 const SkillsSection = () => {
-  const reducedMotion = usePrefersReducedMotion()
+  const reducedMotion = usePrefersReducedMotion();
 
   return (
     <SectionShell id="skills" contentClassName="max-w-5xl mx-auto">
@@ -142,10 +147,10 @@ const SkillsSection = () => {
         badge={`${skillCategories.length} modules`}
         footer={
           <div className="flex items-center justify-between gap-3">
-            <span className="font-mono text-[10px] text-slate-600 uppercase tracking-widest">
+            <span className="font-mono text-[10px] text-muted uppercase tracking-widest">
               Status: Online
             </span>
-            <span className="font-mono text-[10px] text-cyan-400/50">
+            <span className="font-mono text-[10px] text-muted">
               {totalSkills} capabilities loaded
             </span>
           </div>
@@ -156,13 +161,13 @@ const SkillsSection = () => {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
+          viewport={{ once: true, margin: "-60px" }}
         >
           {skillCategories.map((category) => (
             <motion.div
               key={category.id}
               variants={fadeInItem}
-              className={`h-full ${category.wide ? 'sm:col-span-2' : ''}`}
+              className={`h-full ${category.wide ? "sm:col-span-2" : ""}`}
             >
               <motion.div
                 className="h-full"
@@ -175,7 +180,7 @@ const SkillsSection = () => {
         </motion.div>
       </HudPanel>
     </SectionShell>
-  )
-}
+  );
+};
 
-export default SkillsSection
+export default SkillsSection;

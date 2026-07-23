@@ -1,5 +1,7 @@
 export const SITE_URL = 'https://manishukirade.com'
 export const SITE_EMAIL = 'ukirademanish9797@gmail.com'
+export const RESUME_PATH = '/Manish_Ukirde_Resume_v2.pdf'
+export const RESUME_FILENAME = 'Manish_Ukirde_Resume_v2.pdf'
 
 export const SEO_DEFAULT = {
   title: 'Manish Ukirade — Senior ML & AI Engineer | RAG | LangChain | Azure | SOC 2',
