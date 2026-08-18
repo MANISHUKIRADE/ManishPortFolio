@@ -1,14 +1,14 @@
 export const SITE_URL = 'https://manishukirade.com'
 export const SITE_EMAIL = 'ukirademanish9797@gmail.com'
-export const RESUME_PATH = '/Manish_Ukirde_Resume_v2.pdf'
-export const RESUME_FILENAME = 'Manish_Ukirde_Resume_v2.pdf'
+export const RESUME_PATH = '/Manish_Ukirade_Resume_2026.pdf'
+export const RESUME_FILENAME = 'Manish_Ukirade_Resume_2026.pdf'
 
 export const SEO_DEFAULT = {
-  title: 'Manish Ukirade — Senior ML & AI Engineer | RAG | LangChain | Azure | SOC 2',
+  title: 'Manish Ukirade - Senior AI & Full-Stack Engineer | Production RAG & ML',
   description:
-    'Senior ML & AI Engineer with 6.7 years building production RAG systems, Generative AI platforms, and enterprise cloud infrastructure across Azure, GCP and AWS. SOC 2 certified.',
+    'Senior AI and full-stack engineer with 7+ years building production RAG, Generative AI, ML, enterprise SaaS, and cloud platforms across Azure, GCP, and AWS.',
   keywords:
-    'Manish Ukirade, Senior ML Engineer, AI Engineer, Generative AI, RAG, LangChain, ChromaDB, Prompt Engineering, Agentic AI, Azure, GCP, AWS, SOC 2, FastAPI, Python, Node.js, React, TypeScript, Vector Databases, Pinecone, MLflow, Hugging Face',
-  image: `${SITE_URL}/og-image.jpg`,
+    'Manish Ukirade, Senior AI Engineer, Full-Stack Engineer, Generative AI, Production RAG, LangChain, ChromaDB, Machine Learning, FastAPI, Python, Node.js, React, Azure, GCP, AWS, SOC 2',
+  image: `${SITE_URL}/og.png`,
   url: SITE_URL,
 }

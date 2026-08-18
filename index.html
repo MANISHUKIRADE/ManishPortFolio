@@ -1,208 +1,76 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
-    <meta name="theme-color" content="#030712" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>Manish Ukirade — Senior ML &amp; AI Engineer | RAG | LangChain | Azure | SOC 2</title>
-    <meta name="title" content="Manish Ukirade — Senior ML &amp; AI Engineer | RAG | LangChain | Azure | SOC 2" />
-    <meta name="description" content="Senior ML &amp; AI Engineer with 6.7 years building production RAG systems, Generative AI platforms, and enterprise cloud infrastructure across Azure, GCP and AWS. SOC 2 certified." />
-    <meta name="keywords" content="Manish Ukirade, Senior ML Engineer, AI Engineer, Generative AI, RAG, LangChain, ChromaDB, Prompt Engineering, Agentic AI, Azure, GCP, AWS, SOC 2, FastAPI, Python, Node.js, React, TypeScript, Vector Databases, Pinecone, MLflow, Hugging Face" />
+    <meta name="theme-color" content="#07111f" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="canonical" href="https://manishukirade.com/" />
+
+    <title>Manish Ukirade - Senior AI &amp; Full-Stack Engineer | Production RAG &amp; ML</title>
+    <meta name="title" content="Manish Ukirade - Senior AI &amp; Full-Stack Engineer | Production RAG &amp; ML" />
+    <meta name="description" content="Senior AI and full-stack engineer with 7+ years building production RAG, Generative AI, ML, enterprise SaaS, and cloud platforms across Azure, GCP, and AWS." />
+    <meta name="keywords" content="Manish Ukirade, Senior AI Engineer, Full-Stack Engineer, Generative AI, Production RAG, LangChain, ChromaDB, Machine Learning, FastAPI, Python, Node.js, React, Azure, GCP, AWS, SOC 2" />
     <meta name="author" content="Manish Ukirade" />
     <meta name="robots" content="index, follow" />
-    <meta name="language" content="English" />
-    <meta name="revisit-after" content="7 days" />
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://manishukirade.com/" />
-    
-    <!-- Open Graph / Facebook -->
+
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://manishukirade.com/" />
-    <meta property="og:title" content="Manish Ukirade — Senior ML &amp; AI Engineer | RAG | LangChain | Azure | SOC 2" />
-    <meta property="og:description" content="Senior ML &amp; AI Engineer with 6.7 years building production RAG systems, Generative AI platforms, and enterprise cloud infrastructure across Azure, GCP and AWS. SOC 2 certified." />
-    <meta property="og:image" content="https://manishukirade.com/og-image.jpg" />
+    <meta property="og:title" content="Manish Ukirade - Production AI. Built to hold up." />
+    <meta property="og:description" content="Senior AI and full-stack engineer building production RAG, ML platforms, enterprise SaaS, and cloud systems." />
+    <meta property="og:image" content="https://manishukirade.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="Manish Ukirade Portfolio" />
-    <meta property="og:locale" content="en_US" />
-    
-    <!-- Twitter -->
+    <meta property="og:locale" content="en_IN" />
+
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://manishukirade.com/" />
-    <meta name="twitter:title" content="Manish Ukirade — Senior ML &amp; AI Engineer | RAG | LangChain | Azure | SOC 2" />
-    <meta name="twitter:description" content="Senior ML &amp; AI Engineer with 6.7 years building production RAG systems, Generative AI platforms, and enterprise cloud infrastructure across Azure, GCP and AWS. SOC 2 certified." />
-    <meta name="twitter:image" content="https://manishukirade.com/og-image.jpg" />
-    
-    <!-- Additional SEO -->
-    <meta name="theme-color" content="#030712" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    
-    <!-- Structured Data (JSON-LD) -->
+    <meta name="twitter:title" content="Manish Ukirade - Production AI. Built to hold up." />
+    <meta name="twitter:description" content="Senior AI and full-stack engineer building production RAG, ML platforms, enterprise SaaS, and cloud systems." />
+    <meta name="twitter:image" content="https://manishukirade.com/og.png" />
+
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Manish Ukirade",
-      "jobTitle": "Senior ML & AI Engineer | RAG | LangChain | Azure",
-      "description": "Senior ML & AI Engineer with 6.7 years building production RAG systems, Generative AI platforms, and enterprise cloud infrastructure",
-      "url": "https://manishukirade.com",
-      "image": "https://manishukirade.com/og-image.jpg",
-      "sameAs": [
-        "https://www.linkedin.com/in/manish-ukirade-13b866124/",
-        "https://github.com/manishukirade"
-      ],
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Thane",
-        "addressRegion": "Maharashtra",
-        "addressCountry": "IN",
-        "postalCode": "400605"
-      },
-      "email": "ukirademanish9797@gmail.com",
-      "telephone": "+91-869-198-3106",
-      "alumniOf": {
-        "@type": "EducationalOrganization",
-        "name": "Bharati Vidyapeeth College of Engineering",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Navi Mumbai"
-        }
-      },
-      "knowsAbout": [
-        "Generative AI",
-        "RAG Systems",
-        "LangChain",
-        "ChromaDB",
-        "Prompt Engineering",
-        "Agentic AI",
-        "Machine Learning",
-        "Natural Language Processing",
-        "Cloud Computing",
-        "SOC 2 Compliance",
-        "Azure",
-        "AWS",
-        "Google Cloud Platform",
-        "Python",
-        "FastAPI",
-        "Node.js",
-        "React.js",
-        "TypeScript",
-        "Docker",
-        "Kubernetes"
-      ],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "W.E. Matter",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Mumbai"
-        }
-      }
-    }
-    </script>
-    
-    <!-- Portfolio Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Manish Ukirade Portfolio",
-      "url": "https://manishukirade.com",
-      "description": "Portfolio website showcasing fullstack web development projects, AI/ML solutions, and technical expertise in modern web technologies and artificial intelligence",
-      "author": {
-        "@type": "Person",
-        "name": "Manish Ukirade"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://manishukirade.com/?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-    
-    <!-- Professional Service Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Manish Ukirade - Fullstack Web Development & AI/ML Services",
-      "description": "Fullstack web development and AI/ML engineering services. Expert in building scalable web applications, AI-powered solutions, and enterprise platforms.",
-      "provider": {
+      {
+        "@context": "https://schema.org",
         "@type": "Person",
         "name": "Manish Ukirade",
-        "jobTitle": "Fullstack Web Developer | AI/ML Engineer",
-        "email": "ukirademanish9797@gmail.com",
-        "url": "https://manishukirade.com"
-      },
-      "areaServed": "Worldwide",
-      "serviceType": [
-        "Fullstack Web Development",
-        "AI/ML Development",
-        "Web Application Development",
-        "Machine Learning Solutions",
-        "Natural Language Processing",
-        "Cloud Architecture"
-      ]
-    }
-    </script>
-    
-    <!-- Blog Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Blog",
-      "name": "Manish Ukirade - Tech Lead Blog",
-      "description": "Engineering insights, production troubleshooting methodologies, and tech lead perspectives on system design and engineering leadership",
-      "url": "https://manishukirade.com/#blog",
-      "author": {
-        "@type": "Person",
-        "name": "Manish Ukirade",
-        "url": "https://manishukirade.com"
-      },
-      "publisher": {
-        "@type": "Person",
-        "name": "Manish Ukirade"
-      },
-      "blogPost": [
-        {
-          "@type": "BlogPosting",
-          "headline": "Troubleshooting in Production: Understanding the Real Problem, Why It Happens, and How to Solve It",
-          "description": "Learn systematic production troubleshooting from a Tech Lead perspective. Understand why traditional debugging fails and how to solve complex production issues with a structured framework.",
-          "url": "https://manishukirade.com/blog/troubleshooting-in-production",
-          "datePublished": "2024-12-20",
-          "dateModified": "2024-12-20",
-          "author": {
-            "@type": "Person",
-            "name": "Manish Ukirade"
-          },
-          "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=630&fit=crop",
-          "keywords": "production troubleshooting, tech lead, system debugging, distributed systems, production incidents, engineering leadership, system observability, production debugging, tech lead skills, engineering mindset"
+        "jobTitle": "Senior AI & Full-Stack Engineer",
+        "description": "Senior AI and full-stack engineer with 7+ years building production RAG, Generative AI, machine-learning, enterprise SaaS, and cloud platforms.",
+        "url": "https://manishukirade.com",
+        "image": "https://manishukirade.com/og.png",
+        "email": "mailto:ukirademanish9797@gmail.com",
+        "telephone": "+91-869-198-3106",
+        "sameAs": [
+          "https://www.linkedin.com/in/manish-ukirade-13b866124/",
+          "https://github.com/manishukirade"
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Thane",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
         },
-        {
-          "@type": "BlogPosting",
-          "headline": "Employee Attrition Prediction: Building Production ML Models That Drive Business Impact",
-          "description": "Learn how to build production-ready ML models for employee attrition prediction. Discover feature engineering techniques, model comparison strategies, and deployment approaches that achieve 83.48% accuracy.",
-          "url": "https://manishukirade.com/blog/employee-attrition-prediction-ml-models",
-          "datePublished": "2025-05-15",
-          "dateModified": "2025-05-15",
-          "author": {
-            "@type": "Person",
-            "name": "Manish Ukirade"
-          },
-          "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop",
-          "keywords": "employee attrition prediction, machine learning, HR analytics, predictive analytics, CatBoost, feature engineering, production ML, data science, HR tech, retention analytics"
-        }
-      ]
-    }
+        "worksFor": {
+          "@type": "Organization",
+          "name": "W.E. Matter"
+        },
+        "alumniOf": {
+          "@type": "EducationalOrganization",
+          "name": "Bharati Vidyapeeth College of Engineering"
+        },
+        "knowsAbout": [
+          "Generative AI",
+          "Retrieval-Augmented Generation",
+          "Machine Learning",
+          "Full-Stack Engineering",
+          "Cloud Architecture",
+          "Enterprise SaaS",
+          "SOC 2 Compliance"
+        ]
+      }
     </script>
   </head>
   <body>
@@ -210,4 +78,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
