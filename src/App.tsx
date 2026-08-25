@@ -268,20 +268,28 @@ function SectionIntro({ index, eyebrow, title, copy }: { index: string; eyebrow:
   )
 }
 
-function ContributionBrief() {
+function TechnologyCore() {
   return (
-    <aside className="contribution-brief" aria-label="Current engineering focus at W.E. Matter">
-      <div className="contribution-brief__header"><span>Current chapter</span><span>2023—now</span></div>
-      <div className="contribution-brief__title">
-        <span className="contribution-monogram">WE</span>
-        <div><strong>W.E. Matter</strong><small>Senior AI & Full-Stack Engineer / Tech Lead</small></div>
+    <aside className="technology-core" aria-label="Technology evolution from signal to production system">
+      <div className="technology-core__topline">
+        <span><i /> System online</span>
+        <span>Evolution engine / 2026</span>
       </div>
-      <div className="contribution-brief__list">
-        <div><span>01</span><p><strong>Voice-first AI</strong>Speech, commands, feedback, and resilient conversational UX.</p></div>
-        <div><span>02</span><p><strong>Decision intelligence</strong>Routing, ranking, reports, and qualitative insight.</p></div>
-        <div><span>03</span><p><strong>Enterprise readiness</strong>Identity, tenancy, administration, and controlled rollout.</p></div>
+      <div className="core-scene" aria-hidden="true">
+        <div className="core-grid" />
+        <div className="core-halo core-halo--outer"><i /><i /><i /></div>
+        <div className="core-halo core-halo--middle"><i /><i /></div>
+        <div className="core-halo core-halo--inner" />
+        <div className="core-sphere"><span>MU</span></div>
+        <div className="core-node core-node--signal"><span>01</span>Signal</div>
+        <div className="core-node core-node--intelligence"><span>02</span>Intelligence</div>
+        <div className="core-node core-node--scale"><span>03</span>Scale</div>
       </div>
-      <a className="contribution-brief__footer" href="#impact"><span>Latest verified work · Aug 2026</span><ArrowUpRight size={18} aria-hidden /></a>
+      <div className="technology-core__footer">
+        <div><span>Current</span><strong>W.E. Matter</strong></div>
+        <div><span>Focus</span><strong>Production AI</strong></div>
+        <div><span>Mode</span><strong>Build → Scale</strong></div>
+      </div>
     </aside>
   )
 }
@@ -294,22 +302,22 @@ function App() {
       <Header />
 
       <main id="main">
-        <section className="hero" id="top">
+        <section className="hero hero--future" id="top">
           <div className="hero-orbit" aria-hidden="true" />
           <div className="page-shell hero-grid">
             <div className="hero-copy">
-              <p className="hero-kicker"><span>Manish Ukirade</span><span>Thane, India</span></p>
-              <h1>I turn ambitious AI ideas into <em>production systems.</em></h1>
+              <p className="hero-kicker"><span>Manish Ukirade</span><span>AI / Full-stack / Cloud</span></p>
+              <h1>Engineering the next evolution of <em>intelligent systems.</em></h1>
               <p className="hero-lede">
-                Senior AI and full-stack engineer building useful, reliable products across conversational AI, decision intelligence, enterprise SaaS, and cloud platforms.
+                From raw signal to decision intelligence to enterprise scale—I build AI products that move beyond prototypes and operate in the real world.
               </p>
               <div className="hero-actions">
                 <a className="button button--solid" href="#work">Explore selected systems <ArrowRight size={17} aria-hidden /></a>
                 <a className="button button--outline" href={RESUME_PATH} download={RESUME_FILENAME}><Download size={17} aria-hidden /> Download resume</a>
               </div>
-              <p className="hero-proof"><strong>7 years</strong> building across the AI layer, product surface, and platform underneath.</p>
+              <p className="hero-proof"><strong>7 years</strong> evolving ideas across the intelligence layer, product surface, and platform underneath.</p>
             </div>
-            <ContributionBrief />
+            <TechnologyCore />
           </div>
         </section>
 
@@ -318,10 +326,20 @@ function App() {
             <div className="section-heading-layout">
               <SectionIntro
                 index="01"
-                eyebrow="Recent contribution audit"
-                title="Work measured by what changed—not how many commits landed."
-                copy="A focused view of W.E. Matter delivery verified across the active engineering repositories. Dates below refer to August 2026 shipping activity."
+                eyebrow="Evolution log"
+                title="From interaction to intelligence to enterprise scale."
+                copy="A focused view of how the W.E. Matter platform evolved across voice UX, decision systems, administration, reporting, automation, and ML integrity."
               />
+            </div>
+
+            <div className="evolution-rail" aria-label="Technology evolution path">
+              <div><span>01</span><strong>Signal</strong><small>Voice + data</small></div>
+              <i aria-hidden="true" />
+              <div><span>02</span><strong>Intelligence</strong><small>Routing + models</small></div>
+              <i aria-hidden="true" />
+              <div><span>03</span><strong>Experience</strong><small>Useful interfaces</small></div>
+              <i aria-hidden="true" />
+              <div><span>04</span><strong>Scale</strong><small>Enterprise systems</small></div>
             </div>
 
             <div className="recent-work-grid">
@@ -371,8 +389,8 @@ function App() {
             <div className="experience-intro">
               <SectionIntro
                 index="03"
-                eyebrow="Career"
-                title="A builder's path into engineering leadership."
+                eyebrow="Career evolution"
+                title="Technology evolves. So does the engineer."
                 copy="Seven years of increasing scope across product engineering, ML, cloud migration, DevOps, enterprise delivery, and AI leadership."
               />
               <div className="scope-note"><Briefcase size={21} aria-hidden /><p><strong>Current scope</strong>Architecture, product delivery, infrastructure, security, compliance, and client integrations.</p></div>
@@ -398,8 +416,8 @@ function App() {
           <div className="page-shell">
             <SectionIntro
               index="04"
-              eyebrow="Working stack"
-              title="Deep enough to build it. Broad enough to ship it."
+              eyebrow="System layers"
+              title="A stack built across layers—not silos."
               copy="I work across the intelligence layer, product experience, platform, and enterprise controls—because production problems rarely stay inside one box."
             />
             <div className="skills-grid">
@@ -417,8 +435,8 @@ function App() {
         <section className="contact-section" id="contact">
           <div className="page-shell contact-grid">
             <div>
-              <p className="contact-kicker">05 / Let’s build something useful</p>
-              <h2>Need someone who can connect AI ambition to production reality?</h2>
+              <p className="contact-kicker">05 / Initiate the next system</p>
+              <h2>Ready to move an intelligent product into production?</h2>
               <p>Let’s talk about AI platforms, full-stack product delivery, cloud modernisation, or enterprise engineering leadership.</p>
             </div>
             <div className="contact-actions">
