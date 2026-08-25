@@ -322,7 +322,6 @@ function App() {
                 title="Work measured by what changed—not how many commits landed."
                 copy="A focused view of W.E. Matter delivery verified across the active engineering repositories. Dates below refer to August 2026 shipping activity."
               />
-              <p className="audit-note"><span aria-hidden="true" />Verified from engineering history<br />through 25 Aug 2026</p>
             </div>
 
             <div className="recent-work-grid">
