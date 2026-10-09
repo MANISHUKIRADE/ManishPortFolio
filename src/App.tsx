@@ -36,6 +36,15 @@ const recentWork: {
   icon: Icon
 }[] = [
   {
+    date: 'Sep 29—Oct 9',
+    category: 'Governed agentic AI',
+    title: 'Built Kyara\'s manager intelligence system.',
+    description:
+      'Designed a role-aware multi-agent experience that connects survey intelligence, goals, tasks, policy knowledge, and coaching guidance while keeping sensitive reads scoped and every write explicitly confirmed.',
+    detail: 'LangGraph · MCP · grounded reasoning · governed writes',
+    icon: BrainCircuit,
+  },
+  {
     date: 'Aug 17—18',
     category: 'Voice-first AI',
     title: 'Made Kyara easier to talk to.',
@@ -94,6 +103,20 @@ const recentWork: {
 const selectedSystems = [
   {
     number: '01',
+    category: 'Agentic decision intelligence',
+    title: 'Kyara Agentic Manager',
+    description:
+      'A governed manager copilot that plans across specialist agents, explains team signals from grounded evidence, and turns approved coaching decisions into reliable goal and task workflows.',
+    outcomes: [
+      'Role-aware orchestration for managers, leaders, and team members',
+      'Grounded survey-and-work reasoning with privacy and scope controls',
+      'Confirmed, idempotent writes with checkpoints, outbox recovery, and evaluation gates',
+    ],
+    stack: ['Python', 'LangGraph', 'MCP', 'FastAPI', 'Redis', 'Promptfoo'],
+    featured: true,
+  },
+  {
+    number: '02',
     category: 'Conversational intelligence',
     title: 'Kyara AI Platform',
     description:
@@ -104,10 +127,9 @@ const selectedSystems = [
       'Production retries, observability, and evaluation coverage',
     ],
     stack: ['Python', 'FastAPI', 'LangChain', 'ChromaDB', 'React', 'Azure'],
-    featured: true,
   },
   {
-    number: '02',
+    number: '03',
     category: 'Enterprise data product',
     title: 'Survey Intelligence',
     description:
@@ -116,7 +138,7 @@ const selectedSystems = [
     stack: ['Node.js', 'Fastify', 'Python', 'React', 'MySQL'],
   },
   {
-    number: '03',
+    number: '04',
     category: 'Platform engineering',
     title: 'Enterprise Access & Operations',
     description:
@@ -125,7 +147,7 @@ const selectedSystems = [
     stack: ['Azure', 'Docker', 'SAML', 'Teams', 'CI/CD', 'Nginx'],
   },
   {
-    number: '04',
+    number: '05',
     category: 'Production machine learning',
     title: 'Attrition Prediction',
     description:
@@ -171,7 +193,7 @@ const skillGroups: { icon: Icon; title: string; description: string; items: stri
     icon: Sparkles,
     title: 'AI systems',
     description: 'Retrieval, orchestration, evaluation, and applied machine learning.',
-    items: ['RAG', 'LangChain', 'ChromaDB', 'OpenAI', 'NLP', 'CatBoost', 'TensorFlow', 'MLflow'],
+    items: ['RAG', 'LangGraph', 'MCP', 'LangChain', 'Promptfoo', 'ChromaDB', 'NLP', 'MLflow'],
   },
   {
     icon: Code2,
@@ -309,7 +331,7 @@ function App() {
               <p className="hero-kicker"><span>Manish Ukirade</span><span>AI / Full-stack / Cloud</span></p>
               <h1>Engineering the next evolution of <em>intelligent systems.</em></h1>
               <p className="hero-lede">
-                From raw signal to decision intelligence to enterprise scale—I build AI products that move beyond prototypes and operate in the real world.
+                From raw signal to governed agentic decisions to enterprise scale—I build AI products that move beyond prototypes and operate in the real world.
               </p>
               <div className="hero-actions">
                 <a className="button button--solid" href="#work">Explore selected systems <ArrowRight size={17} aria-hidden /></a>

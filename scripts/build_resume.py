@@ -12,7 +12,7 @@ from docx.shared import Inches, Pt, RGBColor
 
 DOCS_SKILL = Path(
     "/home/sirus/.codex/plugins/cache/openai-primary-runtime/documents/"
-    "26.813.12317/skills/documents"
+    "26.1007.11041/skills/documents"
 )
 sys.path.insert(0, str(DOCS_SKILL / "scripts"))
 from table_geometry import apply_table_geometry  # noqa: E402
@@ -287,7 +287,7 @@ def add_header(doc):
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(3.5)
     set_run(
-        p.add_run("Senior AI & Full-Stack Engineer  |  Generative AI, RAG, ML Platforms & Cloud"),
+        p.add_run("AI/ML Engineer  |  Generative AI, RAG, Agentic Systems & MLOps"),
         size=11.0,
         bold=True,
         color=TOKENS["cyan"],
@@ -363,19 +363,17 @@ def build_resume():
     p.paragraph_format.space_after = Pt(4.0)
     set_run(
         p.add_run(
-            "Senior AI and full-stack engineer with 7+ years of experience shipping production "
-            "Generative AI, RAG, machine-learning, enterprise SaaS, and cloud platforms. Leads "
-            "systems from architecture and implementation through DevOps, security, compliance, "
-            "and client delivery. Deep Azure experience with hands-on delivery across GCP and AWS."
+            "Hands-on AI/ML engineer with 7+ years of production engineering experience across "
+            "Generative AI, RAG, governed agentic workflows, machine learning, enterprise SaaS, and cloud "
+            "platforms. Owns end-to-end delivery from architecture and implementation through "
+            "evaluation, deployment, observability, and reliability across Azure, GCP, and AWS."
         ),
         size=9.35,
         color=TOKENS["ink"],
     )
 
-    add_impact_strip(doc)
-
     add_section_heading(doc, "Technical Skills")
-    add_skill_line(doc, "Generative AI", "RAG, LangChain, ChromaDB, embeddings, semantic search, prompt engineering, OpenAI API, Groq, Hugging Face, multi-agent and tool-calling workflows")
+    add_skill_line(doc, "Generative AI", "RAG, LangGraph, LangChain, MCP, ChromaDB, embeddings, semantic search, prompt engineering, OpenAI API, multi-agent orchestration, human-in-the-loop workflows, Promptfoo evaluations")
     add_skill_line(doc, "ML & Data", "TensorFlow, CatBoost, NLP, text classification, sentiment analysis, feature engineering, MLflow, model evaluation, pandas, MySQL, PostgreSQL, Redis")
     add_skill_line(doc, "Backend", "Python, FastAPI, Node.js, TypeScript, Fastify, Hapi.js, REST APIs, WebSockets, microservices, JWT, system design")
     add_skill_line(doc, "Frontend", "React.js, Vue.js, JavaScript, TypeScript, responsive interfaces, data visualization, accessible UX")
@@ -383,12 +381,15 @@ def build_resume():
     add_skill_line(doc, "Enterprise", "Azure AD, ADFS, SSO, SAML, OAuth 2.0, Microsoft Teams, HRMS integrations, SOC 2 Type II, VAPT, VPAT")
 
     add_section_heading(doc, "Professional Experience")
-    add_role(doc, "Senior AI & Full-Stack Engineer / Tech Lead", "Apr 2023 - Present", "W.E. Matter - TheOther 2 Thirds Consulting LLP", "Mumbai, India")
-    add_bullet(doc, "Delivered 492 substantive commits across 20 active codebases during the May-Aug 2026 evidence window, spanning frontend, backend, traditional ML, and Generative AI systems.")
-    add_bullet(doc, "Expanded KYARA with intent recognition, scoped conversational query routing, chart and heatmap insights, retry-aware chat UX, and multi-turn FAQ orchestration with test coverage.")
+    add_role(doc, "AI/ML Engineer", "Mar 2026 - Present", "W.E. Matter - TheOther 2 Thirds Consulting LLP", "Mumbai, India")
+    add_bullet(doc, "Built KYARA Agentic Manager, a role-aware multi-agent system that combines survey intelligence, APS goals and tasks, policy RAG, coaching knowledge, and grounded reasoning for managers, leaders, and team members.")
+    add_bullet(doc, "Implemented LangGraph orchestration and MCP tool access with tenant and role scoping, Redis-backed checkpoints, privacy controls, explicit confirmation, idempotent goal and task writes, outbox recovery, and versioned evaluation gates.")
+    add_bullet(doc, "Expanded KYARA with intent recognition, scoped conversational routing, chart and heatmap insights, retry-aware chat UX, and multi-turn FAQ orchestration with automated regression coverage.")
     add_bullet(doc, "Built qualitative-insights pipelines for comment summarization and comparative sentiment analysis, including concurrency controls, LLM-call management, dashboard visualizations, and exports.")
-    add_bullet(doc, "Shipped enterprise platform improvements across survey scorecards and reporting, HRMS attendance connectors, Microsoft Teams Adaptive Cards and bot security, and WhatsApp queue reliability.")
     add_bullet(doc, "Built KYARA's production RAG policy Q&A and conversational employee-intelligence platform using Python, FastAPI, LangChain, ChromaDB, and LLM prompting for 10+ enterprise clients.")
+
+    add_role(doc, "Tech Lead", "Apr 2023 - Feb 2026", "W.E. Matter - TheOther 2 Thirds Consulting LLP", "Mumbai, India")
+    add_bullet(doc, "Shipped enterprise platform improvements across survey scorecards and reporting, HRMS attendance connectors, Microsoft Teams Adaptive Cards and bot security, and WhatsApp queue reliability.")
     add_bullet(doc, "Architected a multi-tenant employee-engagement SaaS platform for clients across India and the Middle East, contributing to 2x year-over-year revenue growth over 2.5 years.")
     add_bullet(doc, "Led SOC 2 Type II, CyberCube, and VPAT programs end to end; owned policy drafting, VAPT, vendor reviews, evidence, and audit coordination with one low-severity Nginx finding.")
     add_bullet(doc, "Owned infrastructure for 8+ production applications and completed the AWS-to-Azure migration in 15 days with zero downtime and a reported 30% cost-efficiency improvement; delivered SSO/SAML integrations for 5+ clients.")
@@ -411,10 +412,10 @@ def build_resume():
     add_bullet(doc, "Owned GCP infrastructure, server provisioning, database architecture, CI/CD, and pub/sub systems; modernized Node.js 0.10 services to Node.js 14, removing three critical vulnerabilities and improving response time by 60%.")
 
     add_section_heading(doc, "Selected Systems & Recent Work")
+    add_bullet(doc, "KYARA Agentic Manager: Multi-agent planning, evidence-grounded explanations, manager-of-managers and team-member modes, governed APS writes, durable workflow state, privacy guardrails, and safety evaluations.")
     add_bullet(doc, "KYARA Intelligence Platform: RAG policy search, conversational analytics, intent routing, multi-turn FAQ orchestration, scorecards, and qualitative insights.")
     add_bullet(doc, "Production ML: Employee-attrition modeling with CatBoost, 122 engineered features, 83.48% accuracy, and 82% recall for at-risk employees.")
     add_bullet(doc, "Survey Intelligence: Theme score matrices, comparison dashboards, action-plan APIs, response-integrity controls, user-specific filter ordering, and production export tooling.")
-    add_bullet(doc, "Automation: Voice generation and translation with SRT captions and video muxing, plus a supervised SEO agent with backup, restore, and search-optimization workflows.")
 
     add_section_heading(doc, "Leadership & Product Ownership")
     add_bullet(doc, "Designed and delivered a Performance Management System for NBFC clients and owned the product roadmap as Technical Product Manager across the engineering team.")
@@ -435,10 +436,10 @@ def build_resume():
 
     # Keep document metadata professional and deterministic.
     props = doc.core_properties
-    props.title = "Manish Ukirade - Senior AI & Full-Stack Engineer Resume"
-    props.subject = "Resume updated with W.E. Matter engineering impact through August 2026"
+    props.title = "Manish Ukirade - AI/ML Engineer Resume"
+    props.subject = "Resume updated with W.E. Matter agentic AI engineering through October 2026"
     props.author = "Manish Ukirade"
-    props.keywords = "Generative AI, RAG, Machine Learning, Full-Stack, Azure, Tech Lead"
+    props.keywords = "Generative AI, RAG, Agentic AI, LangGraph, MCP, Machine Learning, MLOps, FastAPI, Azure"
 
     doc.save(OUTPUT)
     print(OUTPUT)
