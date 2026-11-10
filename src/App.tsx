@@ -322,10 +322,10 @@ function SectionIntro({ index, eyebrow, title, copy }: { index: string; eyebrow:
 
 function SwatiObservatory() {
   return (
-    <aside className="swati-observatory" aria-label="Swati guiding-star observatory">
+    <aside className="swati-observatory" aria-label="Personal guiding-star observatory">
       <div className="swati-observatory__topline">
         <span><i /> Signal locked</span>
-        <span>Swati observatory / 2026</span>
+        <span>Guiding-star observatory / 2026</span>
       </div>
       <div className="swati-map" aria-hidden="true">
         <div className="swati-map__aurora" />
@@ -372,7 +372,7 @@ function SwatiObservatory() {
         <div className="swati-signal swati-signal--three"><span>03</span>Care</div>
         <div className="swati-map__caption">
           <span>Guiding signal</span>
-          <strong>SWATI</strong>
+          <strong>NORTH STAR</strong>
           <small>Always in orbit</small>
         </div>
       </div>
@@ -399,7 +399,7 @@ function App() {
           <div className="page-shell hero-grid">
             <div className="hero-copy">
               <p className="hero-kicker"><span>Manish Ukirade</span><span>AI / Full-stack / Cloud</span></p>
-              <div className="swati-beacon"><Star size={13} fill="currentColor" aria-hidden /> Swati / guiding star</div>
+              <div className="swati-beacon"><Star size={13} fill="currentColor" aria-hidden /> Guiding star / personal signal</div>
               <h1>Engineering intelligent systems for the <em>next horizon.</em></h1>
               <p className="hero-lede">
                 From raw signal to governed agentic decisions to enterprise scale—I build AI products that move beyond prototypes and operate in the real world.
@@ -409,7 +409,7 @@ function App() {
                 <a className="button button--outline" href={RESUME_PATH} download={RESUME_FILENAME}><Download size={17} aria-hidden /> Download resume</a>
               </div>
               <p className="hero-proof"><strong>7 years</strong> evolving ideas across the intelligence layer, product surface, and platform underneath.</p>
-              <p className="swati-dedication"><Star size={16} fill="currentColor" aria-hidden /><span><strong>Guided by Swati</strong>A quiet tribute to my daughter—my brightest reason to keep building forward.</span></p>
+              <p className="swati-dedication"><Star size={16} fill="currentColor" aria-hidden /><span><strong>My guiding star</strong>A quiet tribute to my daughter—my brightest reason to keep building forward.</span></p>
             </div>
             <SwatiObservatory />
           </div>
@@ -532,7 +532,7 @@ function App() {
               <p className="contact-kicker">05 / Initiate the next system</p>
               <h2>Ready to move an intelligent product into production?</h2>
               <p>Let’s talk about AI platforms, full-stack product delivery, cloud modernisation, or enterprise engineering leadership.</p>
-              <p className="contact-starline"><Star size={14} fill="currentColor" aria-hidden /> Built for the future. Guided by Swati.</p>
+              <p className="contact-starline"><Star size={14} fill="currentColor" aria-hidden /> Built for the future. Guided by purpose.</p>
             </div>
             <div className="contact-actions">
               <a className="button button--cream" href={`mailto:${SITE_EMAIL}`}><Mail size={17} aria-hidden /> Email Manish</a>
@@ -550,7 +550,7 @@ function App() {
       <footer className="site-footer">
         <div className="page-shell footer-inner">
           <div><strong>Manish Ukirade</strong><span>Senior AI & Full-Stack Engineer</span></div>
-          <p className="footer-swati"><Star size={13} fill="currentColor" aria-hidden /> Swati / guiding star</p>
+          <p className="footer-swati"><Star size={13} fill="currentColor" aria-hidden /> Guiding star</p>
           <p><MapPin size={14} aria-hidden /> Thane, India</p>
           <a href="#top">Back to top <ArrowUpRight size={14} aria-hidden /></a>
         </div>
