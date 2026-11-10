@@ -19,6 +19,7 @@ import {
   Phone,
   ShieldCheck,
   Sparkles,
+  Star,
   type LucideIcon,
   X,
 } from 'lucide-react'
@@ -276,8 +277,8 @@ function Header() {
     <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
       <div className="page-shell nav-shell">
         <a className="brand" href="#top" aria-label="Manish Ukirade — back to top">
-          <span className="brand-mark" aria-hidden="true">MU</span>
-          <span className="brand-copy"><strong>Manish Ukirade</strong><small>AI systems, built for production.</small></span>
+          <span className="brand-mark" aria-hidden="true"><Star size={15} fill="currentColor" /></span>
+          <span className="brand-copy"><strong>Manish Ukirade</strong><small>AI systems, guided by purpose.</small></span>
         </a>
 
         <nav className="desktop-nav" aria-label="Primary navigation">
@@ -319,27 +320,66 @@ function SectionIntro({ index, eyebrow, title, copy }: { index: string; eyebrow:
   )
 }
 
-function TechnologyCore() {
+function SwatiObservatory() {
   return (
-    <aside className="technology-core" aria-label="Technology evolution from signal to production system">
-      <div className="technology-core__topline">
-        <span><i /> System online</span>
-        <span>Evolution engine / 2026</span>
+    <aside className="swati-observatory" aria-label="Swati guiding-star observatory">
+      <div className="swati-observatory__topline">
+        <span><i /> Signal locked</span>
+        <span>Swati observatory / 2026</span>
       </div>
-      <div className="core-scene" aria-hidden="true">
-        <div className="core-grid" />
-        <div className="core-halo core-halo--outer"><i /><i /><i /></div>
-        <div className="core-halo core-halo--middle"><i /><i /></div>
-        <div className="core-halo core-halo--inner" />
-        <div className="core-sphere"><span>MU</span></div>
-        <div className="core-node core-node--signal"><span>01</span>Signal</div>
-        <div className="core-node core-node--intelligence"><span>02</span>Intelligence</div>
-        <div className="core-node core-node--scale"><span>03</span>Scale</div>
+      <div className="swati-map" aria-hidden="true">
+        <div className="swati-map__aurora" />
+        <svg viewBox="0 0 520 430" role="presentation">
+          <defs>
+            <radialGradient id="swati-star-glow">
+              <stop offset="0" stopColor="#fff8d6" />
+              <stop offset="0.24" stopColor="#f6d477" />
+              <stop offset="0.6" stopColor="#b983ff" stopOpacity=".72" />
+              <stop offset="1" stopColor="#6be8ff" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="swati-line" x1="0" y1="0" x2="1" y2="1">
+              <stop stopColor="#62e7ff" stopOpacity=".12" />
+              <stop offset=".52" stopColor="#f6d477" stopOpacity=".82" />
+              <stop offset="1" stopColor="#9b7cff" stopOpacity=".16" />
+            </linearGradient>
+          </defs>
+          <g className="swati-map__orbits">
+            <ellipse cx="260" cy="214" rx="186" ry="92" />
+            <ellipse cx="260" cy="214" rx="140" ry="194" transform="rotate(38 260 214)" />
+            <circle cx="260" cy="214" r="110" />
+          </g>
+          <g className="swati-map__paths">
+            <path d="M74 266 L153 192 L260 214 L352 142 L445 197" />
+            <path d="M153 192 L196 90 L260 214 L320 332 L412 300" />
+          </g>
+          <g className="swati-map__stars">
+            <circle cx="74" cy="266" r="3" />
+            <circle cx="153" cy="192" r="4" />
+            <circle cx="196" cy="90" r="2.5" />
+            <circle cx="352" cy="142" r="3.5" />
+            <circle cx="445" cy="197" r="2.5" />
+            <circle cx="320" cy="332" r="3" />
+            <circle cx="412" cy="300" r="2.5" />
+          </g>
+          <circle className="swati-map__glow" cx="260" cy="214" r="78" fill="url(#swati-star-glow)" />
+          <g className="swati-map__primary" transform="translate(260 214)">
+            <path d="M0-25 6-6 25 0 6 6 0 25-6 6-25 0-6-6Z" />
+            <circle r="7" />
+          </g>
+        </svg>
+        <div className="swati-signal swati-signal--one"><span>01</span>Curiosity</div>
+        <div className="swati-signal swati-signal--two"><span>02</span>Clarity</div>
+        <div className="swati-signal swati-signal--three"><span>03</span>Care</div>
+        <div className="swati-map__caption">
+          <span>Guiding signal</span>
+          <strong>SWATI</strong>
+          <small>Always in orbit</small>
+        </div>
       </div>
-      <div className="technology-core__footer">
+      <div className="swati-observatory__footer">
         <div><span>Current</span><strong>W.E. Matter</strong></div>
-        <div><span>Focus</span><strong>Production AI</strong></div>
-        <div><span>Mode</span><strong>Build → Scale</strong></div>
+        <div><span>Focus</span><strong>Safe production AI</strong></div>
+        <div><span>Trajectory</span><strong>Build → Evolve</strong></div>
       </div>
     </aside>
   )
@@ -354,11 +394,13 @@ function App() {
 
       <main id="main">
         <section className="hero hero--future" id="top">
+          <div className="cosmic-field" aria-hidden="true"><i /><i /><i /></div>
           <div className="hero-orbit" aria-hidden="true" />
           <div className="page-shell hero-grid">
             <div className="hero-copy">
               <p className="hero-kicker"><span>Manish Ukirade</span><span>AI / Full-stack / Cloud</span></p>
-              <h1>Engineering the next evolution of <em>intelligent systems.</em></h1>
+              <div className="swati-beacon"><Star size={13} fill="currentColor" aria-hidden /> Swati / guiding star</div>
+              <h1>Engineering intelligent systems for the <em>next horizon.</em></h1>
               <p className="hero-lede">
                 From raw signal to governed agentic decisions to enterprise scale—I build AI products that move beyond prototypes and operate in the real world.
               </p>
@@ -367,8 +409,9 @@ function App() {
                 <a className="button button--outline" href={RESUME_PATH} download={RESUME_FILENAME}><Download size={17} aria-hidden /> Download resume</a>
               </div>
               <p className="hero-proof"><strong>7 years</strong> evolving ideas across the intelligence layer, product surface, and platform underneath.</p>
+              <p className="swati-dedication"><Star size={16} fill="currentColor" aria-hidden /><span><strong>Guided by Swati</strong>A quiet tribute to my daughter—my brightest reason to keep building forward.</span></p>
             </div>
-            <TechnologyCore />
+            <SwatiObservatory />
           </div>
         </section>
 
@@ -449,7 +492,7 @@ function App() {
 
             <div className="timeline">
               {career.map((role, index) => (
-                <article className="timeline-item" key={role.company}>
+                <article className="timeline-item" key={`${role.company}-${role.period}`}>
                   <div className="timeline-index">{String(index + 1).padStart(2, '0')}</div>
                   <div className="timeline-body">
                     <p className="timeline-period">{role.period}</p>
@@ -489,6 +532,7 @@ function App() {
               <p className="contact-kicker">05 / Initiate the next system</p>
               <h2>Ready to move an intelligent product into production?</h2>
               <p>Let’s talk about AI platforms, full-stack product delivery, cloud modernisation, or enterprise engineering leadership.</p>
+              <p className="contact-starline"><Star size={14} fill="currentColor" aria-hidden /> Built for the future. Guided by Swati.</p>
             </div>
             <div className="contact-actions">
               <a className="button button--cream" href={`mailto:${SITE_EMAIL}`}><Mail size={17} aria-hidden /> Email Manish</a>
@@ -506,6 +550,7 @@ function App() {
       <footer className="site-footer">
         <div className="page-shell footer-inner">
           <div><strong>Manish Ukirade</strong><span>Senior AI & Full-Stack Engineer</span></div>
+          <p className="footer-swati"><Star size={13} fill="currentColor" aria-hidden /> Swati / guiding star</p>
           <p><MapPin size={14} aria-hidden /> Thane, India</p>
           <a href="#top">Back to top <ArrowUpRight size={14} aria-hidden /></a>
         </div>
