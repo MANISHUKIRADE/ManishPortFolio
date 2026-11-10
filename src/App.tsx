@@ -36,13 +36,22 @@ const recentWork: {
   icon: Icon
 }[] = [
   {
-    date: 'Sep 29—Oct 9',
-    category: 'Governed agentic AI',
-    title: 'Built Kyara\'s manager intelligence system.',
+    date: 'Nov 3—10',
+    category: 'AI Chief of Staff & safeguards',
+    title: 'Governed Kyara as a safe AI Chief of Staff.',
     description:
-      'Designed a role-aware multi-agent experience that connects survey intelligence, goals, tasks, policy knowledge, and coaching guidance while keeping sensitive reads scoped and every write explicitly confirmed.',
-    detail: 'LangGraph · MCP · grounded reasoning · governed writes',
+      'Evolved Kyara into 16 versioned specialist agents that connect engagement, goals, workload, policy, coaching, and rehearsal while enforcing scope, privacy thresholds, human approval, and evidence-grounded replies.',
+    detail: 'Agent contracts · privacy gates · approval-bound writes · safety evals',
     icon: BrainCircuit,
+  },
+  {
+    date: 'Nov 10',
+    category: 'Multilingual AI safety',
+    title: 'Kept manager guidance safe across languages.',
+    description:
+      'Added Azure Translator and a versioned translation-agent fallback for Indian-language guidance, preserving names, contacts, links, numbers, and approved content with automatic English fallback when integrity checks fail.',
+    detail: 'Protected entities · glossary control · integrity checks · safe fallback',
+    icon: ShieldCheck,
   },
   {
     date: 'Aug 17—18',
@@ -103,16 +112,16 @@ const recentWork: {
 const selectedSystems = [
   {
     number: '01',
-    category: 'Agentic decision intelligence',
-    title: 'Kyara Agentic Manager',
+    category: 'AI Chief of Staff',
+    title: 'Kyara Chief of Staff',
     description:
-      'A governed manager copilot that plans across specialist agents, explains team signals from grounded evidence, and turns approved coaching decisions into reliable goal and task workflows.',
+      'A governed AI Chief of Staff for managers that explains team signals, prepares coaching and 1:1 actions, and turns approved decisions into reliable goal and task workflows.',
     outcomes: [
-      'Role-aware orchestration for managers, leaders, and team members',
-      'Grounded survey-and-work reasoning with privacy and scope controls',
-      'Confirmed, idempotent writes with checkpoints, outbox recovery, and evaluation gates',
+      '16 versioned specialist agents with evidence and tool allowlists',
+      'Code-enforced tenant, role, team, privacy, and sensitive-HR safeguards',
+      'Exact-draft approval, idempotent writes, reviewer fallback, and a 177-case safety evaluation',
     ],
-    stack: ['Python', 'LangGraph', 'MCP', 'FastAPI', 'Redis', 'Promptfoo'],
+    stack: ['Python', 'LangGraph', 'MCP', 'FastAPI', 'Redis', 'Promptfoo', 'Azure OpenAI'],
     featured: true,
   },
   {
@@ -130,6 +139,19 @@ const selectedSystems = [
   },
   {
     number: '03',
+    category: 'Personal AI product',
+    title: 'Tiknod — Safe SEO Delivery',
+    description:
+      'A local-first AI-assisted delivery platform that moves SEO and accessibility changes from evidence to client approval, deployment, public verification, reporting, and safe rollback across multiple web stacks.',
+    outcomes: [
+      'The AI drafts and checks; only authorised people can send, approve, publish, or roll back',
+      'Version hashes, conflict checks, idempotency, read-back verification, receipts, and append-only audit history',
+      'Tenant isolation and SSRF, DNS-rebinding, redirect, credential, and emergency stop controls',
+    ],
+    stack: ['Python', 'FastAPI', 'Ollama', 'PostgreSQL', 'WordPress', 'Next.js', 'React', 'Git'],
+  },
+  {
+    number: '04',
     category: 'Enterprise data product',
     title: 'Survey Intelligence',
     description:
@@ -138,7 +160,7 @@ const selectedSystems = [
     stack: ['Node.js', 'Fastify', 'Python', 'React', 'MySQL'],
   },
   {
-    number: '04',
+    number: '05',
     category: 'Platform engineering',
     title: 'Enterprise Access & Operations',
     description:
@@ -147,7 +169,7 @@ const selectedSystems = [
     stack: ['Azure', 'Docker', 'SAML', 'Teams', 'CI/CD', 'Nginx'],
   },
   {
-    number: '05',
+    number: '06',
     category: 'Production machine learning',
     title: 'Attrition Prediction',
     description:
@@ -159,11 +181,18 @@ const selectedSystems = [
 
 const career = [
   {
-    period: 'Apr 2023—Present',
-    role: 'Senior AI & Full-Stack Engineer / Tech Lead',
+    period: 'Mar 2026—Present',
+    role: 'AI/ML Engineer',
     company: 'W.E. Matter',
     summary:
-      'Leading production AI, enterprise SaaS, cloud infrastructure, integrations, and compliance across a multi-product engineering surface.',
+      'Building Kyara Chief of Staff, governed multi-agent workflows, production RAG, AI safeguards, evaluations, and enterprise integrations.',
+  },
+  {
+    period: 'Apr 2023—Feb 2026',
+    role: 'Tech Lead',
+    company: 'W.E. Matter',
+    summary:
+      'Led enterprise SaaS, cloud infrastructure, client integrations, security, compliance, and engineering delivery across a multi-product platform.',
   },
   {
     period: 'Feb 2022—Mar 2023',
@@ -209,9 +238,9 @@ const skillGroups: { icon: Icon; title: string; description: string; items: stri
   },
   {
     icon: ShieldCheck,
-    title: 'Enterprise delivery',
-    description: 'The identity, security, and governance details adoption depends on.',
-    items: ['SSO', 'SAML', 'OAuth 2.0', 'Azure AD', 'SOC 2', 'VAPT', 'VPAT', 'Microsoft Teams'],
+    title: 'AI security & enterprise delivery',
+    description: 'The safeguards, identity, security, and governance details real adoption depends on.',
+    items: ['AI Safety', 'Human Approval', 'RBAC', 'Tenant Isolation', 'Audit Trails', 'SSRF Defence', 'SSO', 'SAML', 'SOC 2', 'VAPT'],
   },
 ]
 

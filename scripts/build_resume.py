@@ -12,7 +12,7 @@ from docx.shared import Inches, Pt, RGBColor
 
 DOCS_SKILL = Path(
     "/home/sirus/.codex/plugins/cache/openai-primary-runtime/documents/"
-    "26.1007.11041/skills/documents"
+    "26.1105.12137/skills/documents"
 )
 sys.path.insert(0, str(DOCS_SKILL / "scripts"))
 from table_geometry import apply_table_geometry  # noqa: E402
@@ -364,7 +364,7 @@ def build_resume():
     set_run(
         p.add_run(
             "Hands-on AI/ML engineer with 7+ years of production engineering experience across "
-            "Generative AI, RAG, governed agentic workflows, machine learning, enterprise SaaS, and cloud "
+            "Generative AI, RAG, governed AI Chief of Staff workflows, machine learning, secure automation, enterprise SaaS, and cloud "
             "platforms. Owns end-to-end delivery from architecture and implementation through "
             "evaluation, deployment, observability, and reliability across Azure, GCP, and AWS."
         ),
@@ -378,14 +378,16 @@ def build_resume():
     add_skill_line(doc, "Backend", "Python, FastAPI, Node.js, TypeScript, Fastify, Hapi.js, REST APIs, WebSockets, microservices, JWT, system design")
     add_skill_line(doc, "Frontend", "React.js, Vue.js, JavaScript, TypeScript, responsive interfaces, data visualization, accessible UX")
     add_skill_line(doc, "Cloud & DevOps", "Azure, AWS, GCP, Docker, Kubernetes, Docker Swarm, CI/CD, Jenkins, GitHub Actions, Linux, Nginx")
-    add_skill_line(doc, "Enterprise", "Azure AD, ADFS, SSO, SAML, OAuth 2.0, Microsoft Teams, HRMS integrations, SOC 2 Type II, VAPT, VPAT")
+    add_skill_line(doc, "AI Safety & Security", "AI safeguards, prompt-injection defence, evidence allowlists, human approval, RBAC, tenant isolation, privacy thresholds, audit trails, idempotent writes, SSRF controls, OWASP testing")
+    add_skill_line(doc, "Enterprise", "Azure AD, SSO, SAML, OAuth 2.0, Microsoft Teams, SOC 2 Type II, VAPT, VPAT")
 
     add_section_heading(doc, "Professional Experience")
     add_role(doc, "AI/ML Engineer", "Mar 2026 - Present", "W.E. Matter - TheOther 2 Thirds Consulting LLP", "Mumbai, India")
-    add_bullet(doc, "Built KYARA Agentic Manager, a role-aware multi-agent system that combines survey intelligence, APS goals and tasks, policy RAG, coaching knowledge, and grounded reasoning for managers, leaders, and team members.")
-    add_bullet(doc, "Implemented LangGraph orchestration and MCP tool access with tenant and role scoping, Redis-backed checkpoints, privacy controls, explicit confirmation, idempotent goal and task writes, outbox recovery, and versioned evaluation gates.")
-    add_bullet(doc, "Expanded KYARA with intent recognition, scoped conversational routing, chart and heatmap insights, retry-aware chat UX, and multi-turn FAQ orchestration with automated regression coverage.")
-    add_bullet(doc, "Built qualitative-insights pipelines for comment summarization and comparative sentiment analysis, including concurrency controls, LLM-call management, dashboard visualizations, and exports.")
+    add_bullet(doc, "Built KYARA Chief of Staff, a governed system of 16 versioned specialist agents that combines engagement, goals, workload, policy RAG, coaching knowledge, reasoning, rehearsal, and multilingual response delivery.")
+    add_bullet(doc, "Implemented AI safeguards in code: tenant, role, and team scoping; minimum-five-response privacy thresholds; blocked raw comments and aggregate-to-individual inference; evidence and tool allowlists; and prompt-injection-resistant retrieval.")
+    add_bullet(doc, "Governed every write with exact-draft approval, hash and TTL validation, Redis-backed checkpoints, idempotent outbox delivery, audit traces, and fact-only fallback replies after reviewer failures.")
+    add_bullet(doc, "Validated the safety classifier on 177 cases at 99.4% overall accuracy, 100% threat-and-abuse recall, and 0% false positives across 62 frustration, quotation, and fair-management cases.")
+    add_bullet(doc, "Added multilingual fixed-text delivery using Azure Translator with a versioned translation-agent fallback, preserving names, contacts, links, numbers, and approved content; integrity failures fall back to English.")
     add_bullet(doc, "Built KYARA's production RAG policy Q&A and conversational employee-intelligence platform using Python, FastAPI, LangChain, ChromaDB, and LLM prompting for 10+ enterprise clients.")
 
     add_role(doc, "Tech Lead", "Apr 2023 - Feb 2026", "W.E. Matter - TheOther 2 Thirds Consulting LLP", "Mumbai, India")
@@ -412,24 +414,15 @@ def build_resume():
     add_bullet(doc, "Owned GCP infrastructure, server provisioning, database architecture, CI/CD, and pub/sub systems; modernized Node.js 0.10 services to Node.js 14, removing three critical vulnerabilities and improving response time by 60%.")
 
     add_section_heading(doc, "Selected Systems & Recent Work")
-    add_bullet(doc, "KYARA Agentic Manager: Multi-agent planning, evidence-grounded explanations, manager-of-managers and team-member modes, governed APS writes, durable workflow state, privacy guardrails, and safety evaluations.")
-    add_bullet(doc, "KYARA Intelligence Platform: RAG policy search, conversational analytics, intent routing, multi-turn FAQ orchestration, scorecards, and qualitative insights.")
+    add_bullet(doc, "KYARA Chief of Staff: 16 versioned specialist agents, evidence-grounded manager guidance, privacy and sensitive-HR safeguards, exact-draft approval, idempotent APS writes, reviewer fallback, and measured safety evaluations.")
+    add_bullet(doc, "Tiknod - Personal: Built a local-first AI-assisted SEO delivery platform for WordPress, Next.js, React, and Git; the AI drafts only, while authorised people control version-bound approval, idempotent publishing, public verification, audit receipts, and rollback.")
+    add_bullet(doc, "Tiknod safeguards include RBAC, PostgreSQL row-level tenant isolation, append-only audit history, encrypted secrets, SSRF and DNS-rebinding protection, redirect credential stripping, rate limits, conflict checks, and an emergency stop.")
+    add_bullet(doc, "Linux VAPT Agent - Personal: Built a local-first multi-agent security assistant with strict authorized scope, read-only audit defaults, guarded commands, route and TLS checks, CISA KEV/NVD intelligence, and Word/PDF reports.")
     add_bullet(doc, "Production ML: Employee-attrition modeling with CatBoost, 122 engineered features, 83.48% accuracy, and 82% recall for at-risk employees.")
-    add_bullet(doc, "Survey Intelligence: Theme score matrices, comparison dashboards, action-plan APIs, response-integrity controls, user-specific filter ordering, and production export tooling.")
 
     add_section_heading(doc, "Leadership & Product Ownership")
     add_bullet(doc, "Designed and delivered a Performance Management System for NBFC clients and owned the product roadmap as Technical Product Manager across the engineering team.")
     add_bullet(doc, "Turns enterprise requirements into end-to-end releases spanning product architecture, AI, frontend, backend, cloud operations, security, compliance, and client integrations.")
-
-    add_section_heading(doc, "Certifications & Compliance")
-    p = doc.add_paragraph()
-    p.paragraph_format.space_after = Pt(2)
-    set_run(p.add_run("SOC 2 Type II"), size=9.15, bold=True, color=TOKENS["navy"])
-    set_run(p.add_run(" - Technical lead for controls, evidence, VAPT, policies, and audit coordination.  "), size=9.0, color=TOKENS["ink"])
-    set_run(p.add_run("CyberCube"), size=9.15, bold=True, color=TOKENS["navy"])
-    set_run(p.add_run(" - Enterprise cyber-risk certification.  "), size=9.0, color=TOKENS["ink"])
-    set_run(p.add_run("VPAT"), size=9.15, bold=True, color=TOKENS["navy"])
-    set_run(p.add_run(" - Accessibility compliance supporting enterprise procurement."), size=9.0, color=TOKENS["ink"])
 
     add_section_heading(doc, "Education")
     add_role(doc, "B.E. in Information Technology", "2015 - 2019", "Bharati Vidyapeeth College of Engineering", "Navi Mumbai, India")
@@ -437,9 +430,9 @@ def build_resume():
     # Keep document metadata professional and deterministic.
     props = doc.core_properties
     props.title = "Manish Ukirade - AI/ML Engineer Resume"
-    props.subject = "Resume updated with W.E. Matter agentic AI engineering through October 2026"
+    props.subject = "Resume updated with W.E. Matter and personal AI engineering through November 2026"
     props.author = "Manish Ukirade"
-    props.keywords = "Generative AI, RAG, Agentic AI, LangGraph, MCP, Machine Learning, MLOps, FastAPI, Azure"
+    props.keywords = "Generative AI, RAG, Agentic AI, AI Safety, LangGraph, LangChain, MCP, VAPT, OWASP, Machine Learning, MLOps, FastAPI, Azure"
 
     doc.save(OUTPUT)
     print(OUTPUT)
